@@ -1,0 +1,827 @@
+{
+  "taxonomyVersion": 1,
+  "status": "draft",
+  "lastUpdated": "2026-09-14",
+  "locale": "sv-SE",
+  "licenseClass": "B",
+  "skillCount": 38,
+  "notes": "Canonical input till senare seed av skills och skill_definitions. Inte databasseed och inte Canonical förrän efter separat review. area-status är proposed, skill-status är draft.",
+  "sources": [
+    {
+      "id": "tsfs-2011-20",
+      "title": "TSFS 2011:20 Kursplan, behörighet B",
+      "url": "https://www.transportstyrelsen.se/tsfs/TSFS%202011_20.pdf"
+    },
+    {
+      "id": "tsfs-2012-43",
+      "title": "TSFS 2012:43 Förarprov, behörighet B",
+      "url": "https://lagen.nu/tsfs/2012:43"
+    },
+    {
+      "id": "ts-planera-ovningskorning",
+      "title": "Transportstyrelsen — Planera övningskörningen",
+      "url": "https://www.transportstyrelsen.se/sv/vagtrafik/korkort/ta-korkort/handledarskap-och-ovningskorning/planera-ovningsskorningen/"
+    },
+    {
+      "id": "ts-ovningskora",
+      "title": "Transportstyrelsen — Övningsköra",
+      "url": "https://www.transportstyrelsen.se/sv/vagtrafik/korkort/ta-korkort/handledarskap-och-ovningskorning/ovningskora/"
+    },
+    {
+      "id": "ts-handledare",
+      "title": "Transportstyrelsen — Handledare",
+      "url": "https://www.transportstyrelsen.se/sv/vagtrafik/korkort/ta-korkort/handledarskap-och-ovningskorning/handledare/"
+    },
+    {
+      "id": "ts-rad-handledaren-2026",
+      "title": "Råd till handledaren vid privat övningskörning (2026-08-01)",
+      "url": "https://www.transportstyrelsen.se/globalassets/global/publikationer-och-rapporter/vag/korkort/rad_till_handledaren_a5_2026-08-01.pdf"
+    },
+    {
+      "id": "ts-riskutbildning-b",
+      "title": "Transportstyrelsen — Riskutbildning för personbil",
+      "url": "https://www.transportstyrelsen.se/sv/vagtrafik/korkort/ta-korkort/riskutbildning/riskutbildning-bil/"
+    },
+    {
+      "id": "trv-korprov-b",
+      "title": "Trafikverket — Så går körprovet till (behörighet B)",
+      "url": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/"
+    }
+  ],
+  "contextDimensions": {
+    "environment": ["residential", "urban", "rural", "highway"],
+    "light": ["daylight", "dusk_dawn", "night"],
+    "weather": ["dry", "rain", "snow_ice", "fog"],
+    "traffic": ["light", "moderate", "heavy"]
+  },
+  "observationLevels": ["needs_help", "with_support", "independent"],
+  "areas": [
+    {
+      "areaKey": "car_control",
+      "title": "Bilkontroll",
+      "sortOrder": 1,
+      "status": "proposed",
+      "skills": [
+        {
+          "skillKey": "car_control_pre_drive_check",
+          "title": "Säkerhetskontroll",
+          "description": "Eleven gör en enkel kontroll av bilen och körställning innan ni kör: ljus, däck, vätskor, speglar, stol, bälte.",
+          "whyNeeded": "Varje körprov börjar här. Transportstyrelsen råder handledare att göra kontroll före varje övning.",
+          "officialBasis": ["TSFS 2011:20, 2 kap. 2 § p. 3", "TSFS 2012:43, 14–17 §§", "Råd till handledaren 2026-08-01"],
+          "sortOrder": 10,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": [],
+          "relevantContext": {
+            "environment": ["residential", "urban", "rural", "highway"],
+            "light": ["daylight", "dusk_dawn", "night"],
+            "weather": ["dry", "rain", "snow_ice", "fog"],
+            "traffic": []
+          }
+        },
+        {
+          "skillKey": "car_control_smooth_start_stop",
+          "title": "Start och stannande",
+          "description": "Eleven får i gång bilen och stannar den mjukt, utan ryck, rullning eller onödiga motorstopp.",
+          "whyNeeded": "Första praktiska tröskeln innan eleven ska ut i trafik.",
+          "officialBasis": ["TSFS 2011:20, 2 kap. 2 § p. 4", "Trafikverket: start från vägkant"],
+          "sortOrder": 20,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": ["car_control_pre_drive_check"],
+          "relevantContext": {
+            "environment": ["residential", "urban"],
+            "light": ["daylight", "dusk_dawn", "night"],
+            "weather": ["dry", "rain", "snow_ice"],
+            "traffic": ["light"]
+          }
+        },
+        {
+          "skillKey": "car_control_braking",
+          "title": "Bromsning",
+          "description": "Eleven doserar bromsen så att farten sjunker i tid, mjukt i vanlig körning och bestämt när det behövs.",
+          "whyNeeded": "Kursplanen kräver olika sätt att bromsa. v1 bedömer kontrollerad broms, inte halkbanans nödbroms.",
+          "officialBasis": ["TSFS 2011:20, 2 kap. 2 § p. 5", "TSFS 2012:43, 18 §"],
+          "sortOrder": 30,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": ["car_control_smooth_start_stop"],
+          "relevantContext": {
+            "environment": ["residential", "urban", "rural", "highway"],
+            "light": ["daylight", "dusk_dawn", "night"],
+            "weather": ["dry", "rain", "snow_ice", "fog"],
+            "traffic": ["light", "moderate", "heavy"]
+          }
+        },
+        {
+          "skillKey": "car_control_gear_shifting",
+          "title": "Växling",
+          "description": "Eleven väljer och byter växel i tid, utan att tappa uppmärksamheten från vägen. Gäller manuell låda.",
+          "whyNeeded": "Standard-B utan villkor 78 prövas med manuell växellåda. Hoppa över på automatresor.",
+          "officialBasis": ["TSFS 2011:20, 2 kap. 2 § p. 4", "Trafikverket: villkor 78"],
+          "sortOrder": 40,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": ["car_control_smooth_start_stop"],
+          "relevantContext": {
+            "environment": ["residential", "urban", "rural", "highway"],
+            "light": ["daylight", "dusk_dawn", "night"],
+            "weather": ["dry", "rain", "snow_ice"],
+            "traffic": ["light", "moderate", "heavy"]
+          }
+        },
+        {
+          "skillKey": "car_control_speed_adaptation",
+          "title": "Hastighetsanpassning",
+          "description": "Eleven håller en fart som passar skylt, sikt, väglag och trafik — inte bara den skyltade maxfarten.",
+          "whyNeeded": "Tvärgående kärnförmåga. Modelleras en gång och bedöms i det context där den övades.",
+          "officialBasis": ["TSFS 2011:20, 3 kap. 2 § p. 6", "TSFS 2012:43, 19 § p. 3"],
+          "sortOrder": 50,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": ["car_control_braking"],
+          "relevantContext": {
+            "environment": ["residential", "urban", "rural", "highway"],
+            "light": ["daylight", "dusk_dawn", "night"],
+            "weather": ["dry", "rain", "snow_ice", "fog"],
+            "traffic": ["light", "moderate", "heavy"]
+          }
+        }
+      ]
+    },
+    {
+      "areaKey": "observation_interaction",
+      "title": "Blick & samspel",
+      "sortOrder": 2,
+      "status": "proposed",
+      "skills": [
+        {
+          "skillKey": "observation_mirror_routine",
+          "title": "Spegelrutin",
+          "description": "Eleven tittar i speglarna före fartsänkning, sväng, körfältsbyte och när något händer bakom.",
+          "whyNeeded": "Konkret, träningsbar del av goda avsökningsrutiner.",
+          "officialBasis": ["TSFS 2011:20, 3 kap. 2 § p. 3", "TSFS 2012:43, 19 § p. 2"],
+          "sortOrder": 10,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": ["car_control_smooth_start_stop"],
+          "relevantContext": {
+            "environment": ["urban", "highway"],
+            "light": ["daylight", "dusk_dawn", "night"],
+            "weather": ["dry", "rain"],
+            "traffic": ["moderate", "heavy"]
+          }
+        },
+        {
+          "skillKey": "observation_blind_spot",
+          "title": "Döda vinkeln",
+          "description": "Eleven tar en kontrollblick över axeln innan körfältsbyte, start från kant och sväng där det behövs.",
+          "whyNeeded": "Eget vanligt fel, inte samma sak som spegelrutin.",
+          "officialBasis": ["TSFS 2011:20, 3 kap. 2 § p. 3", "Trafikverket: körfältsbyte"],
+          "sortOrder": 20,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": ["observation_mirror_routine"],
+          "relevantContext": {
+            "environment": ["urban", "highway"],
+            "light": ["daylight", "dusk_dawn", "night"],
+            "weather": ["dry", "rain"],
+            "traffic": ["moderate", "heavy"]
+          }
+        },
+        {
+          "skillKey": "observation_signaling",
+          "title": "Tecken och blinkers",
+          "description": "Eleven visar avsikt i tid — blinkers, och ibland tecken med hand — och släcker när momentet är klart.",
+          "whyNeeded": "Samspel mer än blick. Klassiskt fel i rondellutfart och landsvägssväng.",
+          "officialBasis": ["TSFS 2011:20, 3 kap. 2 § p. 2–3", "Trafikverket: cirkulationsplats, körfältsbyte, sväng från landsväg"],
+          "sortOrder": 30,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": ["car_control_smooth_start_stop"],
+          "relevantContext": {
+            "environment": ["residential", "urban", "rural", "highway"],
+            "light": ["daylight", "dusk_dawn", "night"],
+            "weather": ["dry", "rain"],
+            "traffic": ["light", "moderate", "heavy"]
+          }
+        },
+        {
+          "skillKey": "observation_scanning",
+          "title": "Avsökning",
+          "description": "Eleven letar långt fram, åt sidorna och efter det som kan hända — inte bara på bilen framför.",
+          "whyNeeded": "Samlar generell avsökning och tidig upptäckt. observation_anticipation slogs ihop hit.",
+          "officialBasis": ["TSFS 2011:20, 3 kap. 2 § p. 3, 7–8", "TSFS 2012:43, 19 § p. 1–2"],
+          "sortOrder": 40,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": ["observation_mirror_routine"],
+          "relevantContext": {
+            "environment": ["residential", "urban", "rural", "highway"],
+            "light": ["daylight", "dusk_dawn", "night"],
+            "weather": ["dry", "rain", "snow_ice", "fog"],
+            "traffic": ["light", "moderate", "heavy"]
+          }
+        }
+      ]
+    },
+    {
+      "areaKey": "positioning_lanes",
+      "title": "Placering & körfält",
+      "sortOrder": 3,
+      "status": "proposed",
+      "skills": [
+        {
+          "skillKey": "positioning_road_position",
+          "title": "Placering på vägen",
+          "description": "Eleven ligger rätt i körfältet — inte för nära kant, mittlinje, parkerade bilar eller mötande.",
+          "whyNeeded": "Grundplacering syns i nästan varje pass.",
+          "officialBasis": ["TSFS 2011:20, 3 kap. 2 § p. 6", "TSFS 2012:43, 19 § p. 5"],
+          "sortOrder": 10,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": ["car_control_smooth_start_stop"],
+          "relevantContext": {
+            "environment": ["residential", "urban", "rural", "highway"],
+            "light": ["daylight", "dusk_dawn", "night"],
+            "weather": ["dry", "rain", "snow_ice"],
+            "traffic": ["light", "moderate", "heavy"]
+          }
+        },
+        {
+          "skillKey": "positioning_lane_selection",
+          "title": "Val av körfält",
+          "description": "Eleven väljer körfält efter vart hen ska, inte efter att alla andra ligger här.",
+          "whyNeeded": "Eget provmoment när flera fält går åt samma håll.",
+          "officialBasis": ["TSFS 2012:43, 19 §", "Trafikverket: körning i körfält"],
+          "sortOrder": 20,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": ["positioning_road_position", "observation_scanning"],
+          "relevantContext": {
+            "environment": ["urban", "highway"],
+            "light": ["daylight", "dusk_dawn", "night"],
+            "weather": ["dry", "rain"],
+            "traffic": ["moderate", "heavy"]
+          }
+        },
+        {
+          "skillKey": "positioning_lane_change",
+          "title": "Körfältsbyte",
+          "description": "Eleven planerar bytet, speglar, blinkar, tar döda vinkeln och byter med avstånd till andra.",
+          "whyNeeded": "Sätter ihop blick, tecken och placering i ett observerbart moment.",
+          "officialBasis": ["Trafikverket: körfältsbyte", "TSFS 2012:43, 19 §"],
+          "sortOrder": 30,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": [
+            "observation_mirror_routine",
+            "observation_blind_spot",
+            "observation_signaling",
+            "positioning_road_position"
+          ],
+          "relevantContext": {
+            "environment": ["urban", "highway"],
+            "light": ["daylight", "dusk_dawn", "night"],
+            "weather": ["dry", "rain"],
+            "traffic": ["moderate", "heavy"]
+          }
+        },
+        {
+          "skillKey": "positioning_turning",
+          "title": "Sväng",
+          "description": "Eleven närmar sig, placerar sig och spårar genom svängen utan att skära eller svänga för vitt.",
+          "whyNeeded": "Placering i sväng är ett beteende. Korsningens regler är andra skills.",
+          "officialBasis": ["TSFS 2011:20, 3 kap. 2 § p. 6", "Trafikverket: gatukorsning, sväng från landsväg"],
+          "sortOrder": 40,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": [
+            "positioning_road_position",
+            "observation_signaling",
+            "car_control_speed_adaptation"
+          ],
+          "relevantContext": {
+            "environment": ["urban", "rural"],
+            "light": ["daylight", "dusk_dawn", "night"],
+            "weather": ["dry", "rain", "snow_ice"],
+            "traffic": ["light", "moderate", "heavy"]
+          }
+        }
+      ]
+    },
+    {
+      "areaKey": "intersections_roundabouts",
+      "title": "Korsningar & rondeller",
+      "sortOrder": 4,
+      "status": "proposed",
+      "skills": [
+        {
+          "skillKey": "intersections_right_hand_rule",
+          "title": "Högerregeln",
+          "description": "Eleven känner igen korsningar utan väjningsmärke och lämnar företräde åt höger när det krävs.",
+          "whyNeeded": "Svensk särregel, vanlig i bostadsområden. Inte samma sak som skyltad väjningsplikt.",
+          "officialBasis": ["TSFS 2011:20, 3 kap. 2 § p. 2", "Trafikverket: gatukorsning"],
+          "sortOrder": 10,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": ["car_control_speed_adaptation", "observation_scanning"],
+          "relevantContext": {
+            "environment": ["residential", "urban"],
+            "light": ["daylight", "dusk_dawn", "night"],
+            "weather": ["dry", "rain"],
+            "traffic": ["light", "moderate"]
+          }
+        },
+        {
+          "skillKey": "intersections_give_way",
+          "title": "Väjningsplikt och stopp",
+          "description": "Eleven stannar eller lämnar företräde när märken, linjer eller sikt kräver det, och kör ut först när luckan räcker.",
+          "whyNeeded": "Skyltad väjningsplikt och stopplikt bedöms som ett praktiskt paket.",
+          "officialBasis": ["TSFS 2011:20, 3 kap. 2 § p. 2", "TSFS 2012:43, 19 § färd i vägkorsning"],
+          "sortOrder": 20,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": ["car_control_smooth_start_stop", "observation_scanning"],
+          "relevantContext": {
+            "environment": ["urban", "rural"],
+            "light": ["daylight", "dusk_dawn", "night"],
+            "weather": ["dry", "rain", "fog"],
+            "traffic": ["light", "moderate", "heavy"]
+          }
+        },
+        {
+          "skillKey": "intersections_traffic_lights",
+          "title": "Trafikljus",
+          "description": "Eleven anpassar farten mot ljuset, är beredd på skifte och hamnar inte i korsningen på rött.",
+          "whyNeeded": "Eget provmoment. Kräver timing mer än att kunna färgerna.",
+          "officialBasis": ["Trafikverket: signalerande korsning", "TSFS 2012:43, 19 § p. 2"],
+          "sortOrder": 30,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": ["car_control_speed_adaptation", "observation_scanning"],
+          "relevantContext": {
+            "environment": ["urban"],
+            "light": ["daylight", "dusk_dawn", "night"],
+            "weather": ["dry", "rain"],
+            "traffic": ["moderate", "heavy"]
+          }
+        },
+        {
+          "skillKey": "roundabout_entry",
+          "title": "Infart i rondell",
+          "description": "Eleven sänker farten, lämnar företräde åt trafiken i cirkulationen och tar en lucka utan att stanna i onödan.",
+          "whyNeeded": "Annat beteende än placering inne i rondellen eller utfart.",
+          "officialBasis": ["TSFS 2012:43, 19 § cirkulationsplats", "Trafikverket: cirkulationsplats"],
+          "sortOrder": 40,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": [
+            "intersections_give_way",
+            "observation_scanning",
+            "car_control_speed_adaptation"
+          ],
+          "relevantContext": {
+            "environment": ["urban"],
+            "light": ["daylight", "dusk_dawn", "night"],
+            "weather": ["dry", "rain", "snow_ice"],
+            "traffic": ["light", "moderate", "heavy"]
+          }
+        },
+        {
+          "skillKey": "roundabout_positioning",
+          "title": "Placering i rondell",
+          "description": "Eleven väljer rätt läge i cirkulationen, särskilt i flerfältsrondell, och håller spåret utan att skära.",
+          "whyNeeded": "Skilt från infart. Vanligt fel i större svenska rondeller.",
+          "officialBasis": ["Trafikverket: cirkulationsplats (placering)", "TSFS 2012:43, 19 §"],
+          "sortOrder": 50,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": ["roundabout_entry", "positioning_road_position"],
+          "relevantContext": {
+            "environment": ["urban"],
+            "light": ["daylight", "dusk_dawn", "night"],
+            "weather": ["dry", "rain"],
+            "traffic": ["moderate", "heavy"]
+          }
+        },
+        {
+          "skillKey": "roundabout_exit",
+          "title": "Utfart ur rondell",
+          "description": "Eleven visar tecken i tid, byter till ytterläge om det behövs och lämnar rondellen utan att störa andra.",
+          "whyNeeded": "Missat blinkers ut är ett av de vanligaste handledarkommentarerna.",
+          "officialBasis": ["Trafikverket: cirkulationsplats (tecken, avsikt)", "TSFS 2012:43, 19 §"],
+          "sortOrder": 60,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": ["roundabout_positioning", "observation_signaling"],
+          "relevantContext": {
+            "environment": ["urban"],
+            "light": ["daylight", "dusk_dawn", "night"],
+            "weather": ["dry", "rain"],
+            "traffic": ["light", "moderate", "heavy"]
+          }
+        }
+      ]
+    },
+    {
+      "areaKey": "urban_traffic",
+      "title": "Stadstrafik",
+      "sortOrder": 5,
+      "status": "proposed",
+      "skills": [
+        {
+          "skillKey": "urban_vulnerable_road_users",
+          "title": "Oskyddade trafikanter",
+          "description": "Eleven upptäcker gående, cyklister och barn i tid och anpassar fart, lucka och ögonkontakt.",
+          "whyNeeded": "Trafikverket behandlar oskyddade trafikanter som ett paket.",
+          "officialBasis": ["TSFS 2012:43, 19 §", "Trafikverket: oskyddade trafikanter"],
+          "sortOrder": 10,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": ["observation_scanning", "car_control_speed_adaptation"],
+          "relevantContext": {
+            "environment": ["residential", "urban"],
+            "light": ["daylight", "dusk_dawn", "night"],
+            "weather": ["dry", "rain", "fog"],
+            "traffic": ["light", "moderate", "heavy"]
+          }
+        },
+        {
+          "skillKey": "urban_passing_stationary",
+          "title": "Passera stillastående fordon",
+          "description": "Eleven sänker farten och lämnar lucka när hen passerar parkerade bilar, buss i hållplats eller andra stillastående hinder.",
+          "whyNeeded": "Matchar Trafikverkets provpunkt. Ersätter den mer teoretiska kandidaten urban_public_transport.",
+          "officialBasis": ["TSFS 2012:43, 19 §", "Trafikverket: passerande av stillastående fordon"],
+          "sortOrder": 20,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": ["positioning_road_position", "observation_scanning"],
+          "relevantContext": {
+            "environment": ["urban"],
+            "light": ["daylight", "dusk_dawn", "night"],
+            "weather": ["dry", "rain"],
+            "traffic": ["moderate", "heavy"]
+          }
+        },
+        {
+          "skillKey": "urban_tight_spaces",
+          "title": "Trånga gator",
+          "description": "Eleven tar sig fram där det är smalt — bilar på båda sidor, mötande i villagata — utan att skrapa eller frysa.",
+          "whyNeeded": "Vanlig svensk bostadsträning. Inte samma sak som landsvägsmote.",
+          "officialBasis": ["TSFS 2011:20, 3 kap. 1–2 §§", "Trafikverket: körning i tätort"],
+          "sortOrder": 30,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": ["positioning_road_position", "car_control_smooth_start_stop"],
+          "relevantContext": {
+            "environment": ["residential", "urban"],
+            "light": ["daylight", "dusk_dawn"],
+            "weather": ["dry", "rain"],
+            "traffic": ["light", "moderate"]
+          }
+        }
+      ]
+    },
+    {
+      "areaKey": "rural_roads",
+      "title": "Landsväg",
+      "sortOrder": 6,
+      "status": "proposed",
+      "skills": [
+        {
+          "skillKey": "rural_joining_and_leaving",
+          "title": "Infart och avfart på landsväg",
+          "description": "Eleven kommer ut på, och svänger av från, en mer högtrafikerad landsväg med rätt fart, placering och tecken.",
+          "whyNeeded": "Trafikverket har egna provpunkter för infart till och sväng från landsväg.",
+          "officialBasis": ["Trafikverket: infart till landsväg, sväng från landsväg", "TSFS 2012:43, 19 §"],
+          "sortOrder": 10,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": [
+            "car_control_speed_adaptation",
+            "observation_signaling",
+            "intersections_give_way",
+            "positioning_turning"
+          ],
+          "relevantContext": {
+            "environment": ["rural"],
+            "light": ["daylight", "dusk_dawn", "night"],
+            "weather": ["dry", "rain", "snow_ice"],
+            "traffic": ["light", "moderate", "heavy"]
+          }
+        },
+        {
+          "skillKey": "rural_curves",
+          "title": "Kurvor på landsväg",
+          "description": "Eleven läser kurvan, sänker före, placerar sig och gasar ut utan att skära eller bromsa mitt i.",
+          "whyNeeded": "Eget landsvägsbeteende, inte bara hastighet plus rural context.",
+          "officialBasis": ["Trafikverket: smal och/eller krokig väg", "TSFS 2011:20, 3 kap. 2 § p. 6–7"],
+          "sortOrder": 20,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": ["car_control_speed_adaptation", "positioning_road_position"],
+          "relevantContext": {
+            "environment": ["rural"],
+            "light": ["daylight", "dusk_dawn", "night"],
+            "weather": ["dry", "rain", "snow_ice"],
+            "traffic": ["light", "moderate"]
+          }
+        },
+        {
+          "skillKey": "rural_meeting_traffic",
+          "title": "Möte",
+          "description": "Eleven möter andra fordon med rätt lucka, fart och placering, även på smal väg.",
+          "whyNeeded": "Trafikverket har möte som egen bedömning. Skilt från omkörning.",
+          "officialBasis": ["TSFS 2012:43, 19 § möte", "Trafikverket: möte"],
+          "sortOrder": 30,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": ["positioning_road_position", "car_control_speed_adaptation"],
+          "relevantContext": {
+            "environment": ["rural"],
+            "light": ["daylight", "dusk_dawn", "night"],
+            "weather": ["dry", "rain", "snow_ice"],
+            "traffic": ["light", "moderate"]
+          }
+        },
+        {
+          "skillKey": "rural_passing",
+          "title": "Omkörning",
+          "description": "Eleven väljer plats, visar tecken, accelererar och går tillbaka utan att skära in för tidigt. Inkluderar att avstå.",
+          "whyNeeded": "Högriskmoment. independent inkluderar att låta bli när det inte är säkert.",
+          "officialBasis": ["TSFS 2012:43, 19 § omkörning", "Trafikverket: omkörning"],
+          "sortOrder": 40,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": [
+            "observation_mirror_routine",
+            "observation_signaling",
+            "car_control_speed_adaptation",
+            "rural_meeting_traffic"
+          ],
+          "relevantContext": {
+            "environment": ["rural", "highway"],
+            "light": ["daylight", "dusk_dawn"],
+            "weather": ["dry", "rain"],
+            "traffic": ["light", "moderate"]
+          }
+        }
+      ]
+    },
+    {
+      "areaKey": "highway",
+      "title": "Motorväg & större leder",
+      "sortOrder": 7,
+      "status": "proposed",
+      "skills": [
+        {
+          "skillKey": "highway_merging",
+          "title": "Påfart",
+          "description": "Eleven använder accelerationsfältet, speglar, blinkar och smälter in i luckan utan att stanna på rampen.",
+          "whyNeeded": "Eget motorvägsbeteende. Förutsätter fart, spegel och körfältsbyte.",
+          "officialBasis": ["TSFS 2012:43, 19 § infart på motorväg/motortrafikled", "Trafikverket: motorväg"],
+          "sortOrder": 10,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": [
+            "car_control_speed_adaptation",
+            "observation_mirror_routine",
+            "observation_blind_spot",
+            "positioning_lane_change"
+          ],
+          "relevantContext": {
+            "environment": ["highway"],
+            "light": ["daylight", "dusk_dawn", "night"],
+            "weather": ["dry", "rain", "snow_ice", "fog"],
+            "traffic": ["light", "moderate", "heavy"]
+          }
+        },
+        {
+          "skillKey": "highway_lane_discipline",
+          "title": "Körfält på motorväg",
+          "description": "Eleven håller höger när det går, använder vänster till omkörning och håller jämn placering i hög fart.",
+          "whyNeeded": "Inte samma sak som urbant körfältsval. Avstånd hör till independent_safety_margins.",
+          "officialBasis": ["TSFS 2012:43, 19 § val av körfält", "Trafikverket: motorväg, motortrafikled"],
+          "sortOrder": 20,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": ["positioning_lane_selection", "highway_merging"],
+          "relevantContext": {
+            "environment": ["highway"],
+            "light": ["daylight", "dusk_dawn", "night"],
+            "weather": ["dry", "rain"],
+            "traffic": ["moderate", "heavy"]
+          }
+        },
+        {
+          "skillKey": "highway_exiting",
+          "title": "Avfart",
+          "description": "Eleven planerar avfarten i tid, byter fält, blinkar och sänker farten på decelerationsfältet — inte ute i körfältet.",
+          "whyNeeded": "Spegelvänt mot påfart. Vanligt att farten sänks för tidigt.",
+          "officialBasis": ["TSFS 2012:43, 19 § avfart från motorväg", "Trafikverket: motorväg"],
+          "sortOrder": 30,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": [
+            "highway_lane_discipline",
+            "observation_signaling",
+            "car_control_speed_adaptation"
+          ],
+          "relevantContext": {
+            "environment": ["highway"],
+            "light": ["daylight", "dusk_dawn", "night"],
+            "weather": ["dry", "rain"],
+            "traffic": ["light", "moderate", "heavy"]
+          }
+        }
+      ]
+    },
+    {
+      "areaKey": "maneuvering",
+      "title": "Manövrering",
+      "sortOrder": 8,
+      "status": "proposed",
+      "skills": [
+        {
+          "skillKey": "maneuver_reversing",
+          "title": "Backning",
+          "description": "Eleven backar rakt och i sväng med uppsikt, långsamt och utan att gissa sig fram.",
+          "whyNeeded": "Minst ett backmoment krävs på körprovet.",
+          "officialBasis": ["TSFS 2012:43, 18 §", "Trafikverket: backning"],
+          "sortOrder": 10,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": ["car_control_smooth_start_stop", "observation_scanning"],
+          "relevantContext": {
+            "environment": ["residential", "urban"],
+            "light": ["daylight", "dusk_dawn", "night"],
+            "weather": ["dry", "rain"],
+            "traffic": ["light"]
+          }
+        },
+        {
+          "skillKey": "maneuver_hill_start",
+          "title": "Start i lutning",
+          "description": "Eleven startar i motlut och medlut utan att rulla okontrollerat bakåt eller framåt.",
+          "whyNeeded": "Uttryckligt tilläggsmoment på körprovet. Vanlig tröskel med manuell låda.",
+          "officialBasis": ["TSFS 2012:43, 18 §", "Trafikverket: start i lutning"],
+          "sortOrder": 20,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": ["car_control_smooth_start_stop", "car_control_gear_shifting"],
+          "relevantContext": {
+            "environment": ["residential", "urban", "rural"],
+            "light": ["daylight"],
+            "weather": ["dry", "rain", "snow_ice"],
+            "traffic": ["light"]
+          }
+        },
+        {
+          "skillKey": "maneuver_parallel_parking",
+          "title": "Parallellparkering",
+          "description": "Eleven parkerar längs gatan, vanligen genom att backa in, med kontroll på hörn och trafik.",
+          "whyNeeded": "Det moment svenska familjer övar mest. Hålls isär från övrig parkering.",
+          "officialBasis": ["TSFS 2012:43, 18 § parkering", "Trafikverket: parkering i ficka längs väg"],
+          "sortOrder": 30,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": [
+            "maneuver_reversing",
+            "observation_scanning",
+            "positioning_road_position"
+          ],
+          "relevantContext": {
+            "environment": ["urban", "residential"],
+            "light": ["daylight", "dusk_dawn"],
+            "weather": ["dry", "rain"],
+            "traffic": ["light"]
+          }
+        },
+        {
+          "skillKey": "maneuver_parking",
+          "title": "Övrig parkering",
+          "description": "Eleven parkerar på tomt, vinkelplats eller annan ficka som inte är klassisk parallellparkering.",
+          "whyNeeded": "Körprovet kan be om olika parkeringssätt. Inte samma motorik som längs gata.",
+          "officialBasis": ["TSFS 2012:43, 18 §", "Trafikverket: parkering på parkeringsplats"],
+          "sortOrder": 40,
+          "mvpPriority": "supporting",
+          "status": "draft",
+          "likelyPrerequisites": ["maneuver_reversing"],
+          "relevantContext": {
+            "environment": ["urban", "residential"],
+            "light": ["daylight"],
+            "weather": ["dry"],
+            "traffic": ["light"]
+          }
+        },
+        {
+          "skillKey": "maneuver_turning_around",
+          "title": "Vändning",
+          "description": "Eleven väljer en säker plats och vänder — trepunkt, slinga eller motsvarande — med uppsikt.",
+          "whyNeeded": "Eget provmoment. Kopplar till självständig körning när eleven kört fel.",
+          "officialBasis": ["TSFS 2012:43, 18 §", "Trafikverket: vändning"],
+          "sortOrder": 50,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": ["maneuver_reversing", "observation_scanning"],
+          "relevantContext": {
+            "environment": ["residential", "urban", "rural"],
+            "light": ["daylight", "dusk_dawn"],
+            "weather": ["dry", "rain"],
+            "traffic": ["light"]
+          }
+        }
+      ]
+    },
+    {
+      "areaKey": "independent_safe_driving",
+      "title": "Självständig & säker körning",
+      "sortOrder": 9,
+      "status": "proposed",
+      "skills": [
+        {
+          "skillKey": "independent_route_planning",
+          "title": "Köra mot mål",
+          "description": "Eleven hittar fram mot ett mål själv — känt mål eller skyltat — och rättar till om hen kör fel.",
+          "whyNeeded": "Trafikverkets självständig körning mot mål. Sista kilen före uppkörning.",
+          "officialBasis": ["TSFS 2012:43, 12 §", "Trafikverket: självständig körning mot mål"],
+          "sortOrder": 10,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": [
+            "positioning_lane_selection",
+            "observation_scanning",
+            "independent_risk_awareness"
+          ],
+          "relevantContext": {
+            "environment": ["urban", "rural"],
+            "light": ["daylight", "dusk_dawn"],
+            "weather": ["dry", "rain"],
+            "traffic": ["moderate", "heavy"]
+          }
+        },
+        {
+          "skillKey": "independent_risk_awareness",
+          "title": "Riskmedvetenhet",
+          "description": "Eleven ser risker i tid och agerar tidigt — sänker, väntar, byter plan — utan att handledaren behöver peka.",
+          "whyNeeded": "Samlar förutseende och proaktiva beslut. observation_anticipation och independent_proactive_decisions slogs ihop hit.",
+          "officialBasis": ["TSFS 2011:20, 3 kap. 2 § p. 7–9", "TSFS 2012:43, 11 § och 19 § p. 1"],
+          "sortOrder": 20,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": ["observation_scanning", "car_control_speed_adaptation"],
+          "relevantContext": {
+            "environment": ["residential", "urban", "rural", "highway"],
+            "light": ["daylight", "dusk_dawn", "night"],
+            "weather": ["dry", "rain", "snow_ice", "fog"],
+            "traffic": ["light", "moderate", "heavy"]
+          }
+        },
+        {
+          "skillKey": "independent_safety_margins",
+          "title": "Säkerhetsmarginaler",
+          "description": "Eleven håller avstånd framåt, åt sidorna och i tid — inte stötvis, inte tätt inpå.",
+          "whyNeeded": "Eget kursplanemål. Ersätter rural_speed_and_distance och highway_distance som egna skills.",
+          "officialBasis": ["TSFS 2011:20, 3 kap. 2 § p. 4", "TSFS 2012:43, 19 § p. 3"],
+          "sortOrder": 30,
+          "mvpPriority": "core",
+          "status": "draft",
+          "likelyPrerequisites": ["car_control_speed_adaptation", "observation_scanning"],
+          "relevantContext": {
+            "environment": ["residential", "urban", "rural", "highway"],
+            "light": ["daylight", "dusk_dawn", "night"],
+            "weather": ["dry", "rain", "snow_ice", "fog"],
+            "traffic": ["light", "moderate", "heavy"]
+          }
+        },
+        {
+          "skillKey": "independent_eco_driving",
+          "title": "Sparsam körning",
+          "description": "Eleven planerar så att hen kan rulla, undvika onödiga stopp och hålla jämn fart utan att jaga växlar.",
+          "whyNeeded": "Finns i både kursplan och körprov. Supporting så den inte tränger ut kärnloopen.",
+          "officialBasis": [
+            "TSFS 2011:20, 3 kap. 2 § p. 5",
+            "TSFS 2012:43, 19 § p. 4",
+            "Planera övningskörningen",
+            "Råd till handledaren 2026-08-01"
+          ],
+          "sortOrder": 40,
+          "mvpPriority": "supporting",
+          "status": "draft",
+          "likelyPrerequisites": [
+            "car_control_speed_adaptation",
+            "car_control_gear_shifting",
+            "independent_route_planning"
+          ],
+          "relevantContext": {
+            "environment": ["urban", "rural", "highway"],
+            "light": ["daylight"],
+            "weather": ["dry"],
+            "traffic": ["light", "moderate"]
+          }
+        }
+      ]
+    }
+  ]
+}
