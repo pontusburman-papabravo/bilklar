@@ -215,12 +215,49 @@ export async function getDriveFocusSkills(
   return getSkillsByIds(skillIds, journeyId);
 }
 
+function canEndDrive(
+  access: Awaited<ReturnType<typeof requireJourneyAccess>>,
+  userId: string,
+  supervisorUserId: string,
+): boolean {
+  return access.role === "student" || userId === supervisorUserId;
+}
+
 export async function endDrive(
   journeyId: string,
   driveId: string,
   userId: string,
 ): Promise<Drive> {
-  await requireJourneyAccess(journeyId, userId);
+  const access = await requireJourneyAccess(journeyId, userId);
+
+  const existingResult = await getPool().query(
+    `SELECT id, journey_id, started_by_user_id, supervisor_user_id, started_at, ended_at
+     FROM drives
+     WHERE id = $1 AND journey_id = $2`,
+    [driveId, journeyId],
+  );
+  if (existingResult.rowCount === 0) {
+    throw new NotFoundError("Drive not found");
+  }
+
+  const existing = existingResult.rows[0];
+  if (!canEndDrive(access, userId, existing.supervisor_user_id)) {
+    throw new ForbiddenError(
+      "Only the student or assigned supervisor can end this drive",
+    );
+  }
+
+  if (existing.ended_at) {
+    return {
+      id: existing.id,
+      journeyId: existing.journey_id,
+      startedByUserId: existing.started_by_user_id,
+      supervisorUserId: existing.supervisor_user_id,
+      startedAt: existing.started_at,
+      endedAt: existing.ended_at,
+    };
+  }
+
   const result = await getPool().query(
     `UPDATE drives
      SET ended_at = now()
@@ -230,9 +267,6 @@ export async function endDrive(
     [driveId, journeyId],
   );
   if (result.rowCount === 0) {
-    const existing = await getDrive(journeyId, driveId, userId);
-    if (!existing) throw new NotFoundError("Drive not found");
-    if (existing.endedAt) return existing;
     throw new AppError("Drive could not be ended");
   }
   const row = result.rows[0];

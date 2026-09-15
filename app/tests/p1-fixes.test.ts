@@ -15,7 +15,7 @@ import {
 } from "../src/services/drives.js";
 import { saveDriveObservations } from "../src/services/observations.js";
 import { recommendNextFocus } from "../src/services/recommendations.js";
-import { AppError } from "../src/errors.js";
+import { AppError, ForbiddenError } from "../src/errors.js";
 import { resetDatabaseData } from "./setup.js";
 
 async function setupJourneyWithSupervisors(
@@ -272,6 +272,57 @@ describe("P1 fixes", () => {
       (error: Error) =>
         error instanceof AppError && error.code === "active_drive_exists",
     );
+  });
+
+  it("P1.6 student can end drive", async () => {
+    const { journey, studentId, supervisors } = await setupJourneyWithSupervisors(
+      "Anna",
+      ["Erik"],
+    );
+    const ids = await skillIds(2);
+    const { drive } = await createDriveWithFocus(journey.id, studentId, ids);
+
+    const ended = await endDrive(journey.id, drive.id, studentId);
+    assert.ok(ended.endedAt);
+  });
+
+  it("P1.6 assigned supervisor can end drive", async () => {
+    const { journey, studentId, supervisors } = await setupJourneyWithSupervisors(
+      "Anna",
+      ["Erik"],
+    );
+    const ids = await skillIds(2);
+    const { drive } = await createDriveWithFocus(journey.id, studentId, ids);
+
+    const ended = await endDrive(journey.id, drive.id, supervisors[0].userId);
+    assert.ok(ended.endedAt);
+  });
+
+  it("P1.6 other active supervisor cannot end drive", async () => {
+    const { journey, studentId, supervisors } = await setupJourneyWithSupervisors(
+      "Anna",
+      ["Erik", "Karin"],
+    );
+    const [erik, karin] = supervisors;
+    const ids = await skillIds(2);
+
+    const { drive } = await createDriveWithFocus(
+      journey.id,
+      studentId,
+      ids,
+      erik.userId,
+    );
+
+    await assert.rejects(
+      () => endDrive(journey.id, drive.id, karin.userId),
+      (error: Error) => error instanceof ForbiddenError,
+    );
+
+    const row = await getPool().query(
+      `SELECT ended_at FROM drives WHERE id = $1`,
+      [drive.id],
+    );
+    assert.equal(row.rows[0].ended_at, null);
   });
 
   it("P1.5 allows new drive after previous drive ended", async () => {

@@ -450,10 +450,19 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
         );
       }
 
+      const access = await requireJourneyAccess(journeyId, userId);
       const focusSkills = await getDriveFocusSkills(journeyId, driveId, userId);
       const focusList = focusSkills
         .map((skill) => `<li>${escapeHtml(skill.title)}</li>`)
         .join("");
+
+      const canEnd =
+        access.role === "student" || drive.supervisorUserId === userId;
+      const endSection = canEnd
+        ? `<form method="post" action="/journey/${escapeHtml(journeyId)}/drive/${escapeHtml(driveId)}/end">
+             ${primaryButton("Körpasset klart")}
+           </form>`
+        : "";
 
       reply.type("text/html").send(
         layout(
@@ -461,9 +470,7 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
           `<h1>Körpass pågår</h1>
            <p>Ni tränar på:</p>
            <ul class="focus-list">${focusList}</ul>
-           <form method="post" action="/journey/${escapeHtml(journeyId)}/drive/${escapeHtml(driveId)}/end">
-             ${primaryButton("Körpasset klart")}
-           </form>`,
+           ${endSection}`,
         ),
       );
     } catch (error) {
