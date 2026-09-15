@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: bilklar
+      POSTGRES_PASSWORD: bilklar
+      POSTGRES_DB: bilklar_test
+    ports:
+      - "54329:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bilklar -d bilklar_test"]
+      interval: 2s
+      timeout: 5s
+      retries: 10
