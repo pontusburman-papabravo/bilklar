@@ -33,15 +33,16 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "ts-rad-2026",
+          "sourceId": "ts-rad-handledaren-2026",
           "reference": "Råd till handledaren 2026-08-01",
-          "sourceTitle": "Råd till handledaren 2026-08-01",
-          "sourceUrl": null,
+          "sourceTitle": "Råd till handledaren vid privat övningskörning (2026-08-01)",
+          "sourceUrl": "https://www.transportstyrelsen.se/globalassets/global/publikationer-och-rapporter/vag/korkort/rad_till_handledaren_a5_2026-08-01.pdf",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
       "introductionStage": "foundation",
       "prerequisites": [],
+      "contextSensitivity": "none",
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -61,19 +62,8 @@
           "environment": "residential",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
-        },
-        {
-          "environment": "urban",
-          "traffic": "light",
-          "light": "daylight",
-          "weather": "dry"
-        },
-        {
-          "environment": "rural",
-          "traffic": "light",
-          "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "En representativ startkontext"
         }
       ],
       "progressionGuidance": {
@@ -99,10 +89,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: start från vägkant",
-          "sourceTitle": "Trafikverket: start från vägkant",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -115,6 +105,7 @@
           "rationale": "Säkerhetskontroll är officiell rutin före varje pass; start/stopp kan övas parallellt på tom yta."
         }
       ],
+      "contextSensitivity": "traffic_and_conditions",
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -134,19 +125,22 @@
           "environment": "residential",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Introduktion"
         },
         {
           "environment": "residential",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Ökad trafik, samma miljö"
         },
         {
-          "environment": "urban",
-          "traffic": "light",
-          "light": "daylight",
-          "weather": "dry"
+          "environment": "residential",
+          "traffic": "moderate",
+          "light": "dusk_dawn",
+          "weather": "dry",
+          "ladderNote": "Sämre sikt, samma miljö"
         }
       ],
       "progressionGuidance": {
@@ -188,6 +182,7 @@
           "rationale": "Grundläggande fartkontroll före finare bromsteknik."
         }
       ],
+      "contextSensitivity": "traffic_and_conditions",
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -207,25 +202,29 @@
           "environment": "residential",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Grundbroms i lugn miljö"
         },
         {
-          "environment": "urban",
+          "environment": "residential",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Mer trafik, samma miljö"
         },
         {
-          "environment": "rural",
+          "environment": "residential",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "rain",
+          "ladderNote": "Sämre grepp, samma miljö"
         },
         {
-          "environment": "urban",
+          "environment": "residential",
           "traffic": "moderate",
-          "light": "daylight",
-          "weather": "rain"
+          "light": "dusk_dawn",
+          "weather": "rain",
+          "ladderNote": "Kombinerade förhållanden"
         }
       ],
       "progressionGuidance": {
@@ -251,10 +250,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: villkor 78",
-          "sourceTitle": "Trafikverket: villkor 78",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -263,10 +262,11 @@
         {
           "skillKey": "car_control_smooth_start_stop",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 §18 — rutinmässig manövrering inkluderar växling vid manuell bil."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: växling bygger på grundläggande start/stopp-kontroll (manuell bil)."
         }
       ],
+      "contextSensitivity": "traffic_and_conditions",
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -286,25 +286,22 @@
           "environment": "residential",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Växling i lugn fart"
         },
         {
-          "environment": "urban",
+          "environment": "residential",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Växling med mer trafik"
         },
         {
-          "environment": "rural",
+          "environment": "residential",
           "traffic": "moderate",
-          "light": "daylight",
-          "weather": "dry"
-        },
-        {
-          "environment": "highway",
-          "traffic": "moderate",
-          "light": "daylight",
-          "weather": "dry"
+          "light": "dusk_dawn",
+          "weather": "dry",
+          "ladderNote": "Växling vid sämre sikt"
         }
       ],
       "progressionGuidance": {
@@ -342,8 +339,8 @@
         {
           "skillKey": "car_control_braking",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2011:20 kap. 3 — anpassa hastighet till omständigheter."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: hastighetsanpassning kräver kontrollerad bromsning."
         },
         {
           "skillKey": "positioning_road_position",
@@ -352,6 +349,7 @@
           "rationale": "Placering och hastighet övas ofta tillsammans i bostadsområde."
         }
       ],
+      "contextSensitivity": "traffic_and_conditions",
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -371,31 +369,29 @@
           "environment": "residential",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Grundfart"
         },
         {
-          "environment": "urban",
+          "environment": "residential",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Fartanpassning med mer trafik"
         },
         {
-          "environment": "rural",
-          "traffic": "moderate",
-          "light": "daylight",
-          "weather": "dry"
-        },
-        {
-          "environment": "urban",
+          "environment": "residential",
           "traffic": "heavy",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Tät trafik, samma miljö"
         },
         {
-          "environment": "rural",
+          "environment": "residential",
           "traffic": "moderate",
           "light": "dusk_dawn",
-          "weather": "rain"
+          "weather": "rain",
+          "ladderNote": "Sämre sikt och grepp"
         }
       ],
       "progressionGuidance": {
@@ -437,6 +433,7 @@
           "rationale": "Spegelrutin kräver grundläggande fordonskontroll."
         }
       ],
+      "contextSensitivity": "traffic_and_conditions",
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -456,19 +453,22 @@
           "environment": "residential",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Etablera rutin"
         },
         {
-          "environment": "urban",
+          "environment": "residential",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Rutin under mer trafik"
         },
         {
-          "environment": "highway",
+          "environment": "residential",
           "traffic": "moderate",
-          "light": "daylight",
-          "weather": "dry"
+          "light": "dusk_dawn",
+          "weather": "dry",
+          "ladderNote": "Rutin vid sämre sikt"
         }
       ],
       "progressionGuidance": {
@@ -494,10 +494,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: körfältsbyte",
-          "sourceTitle": "Trafikverket: körfältsbyte",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -510,6 +510,7 @@
           "rationale": "Döda vinkeln kompletterar spegelrutin, inte ersätter den."
         }
       ],
+      "contextSensitivity": "traffic_and_conditions",
       "recommendedStartingContexts": {
         "environment": [
           "urban"
@@ -529,19 +530,22 @@
           "environment": "urban",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
-        },
-        {
-          "environment": "highway",
-          "traffic": "moderate",
-          "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Typisk stadsmiljö för döda vinkeln"
         },
         {
           "environment": "urban",
           "traffic": "heavy",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Mer sidotrafik"
+        },
+        {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "dusk_dawn",
+          "weather": "dry",
+          "ladderNote": "Sämre sikt"
         }
       ],
       "progressionGuidance": {
@@ -567,10 +571,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: cirkulationsplats, körfältsbyte, sväng från landsväg",
-          "sourceTitle": "Trafikverket: cirkulationsplats, körfältsbyte, sväng från landsväg",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -583,6 +587,7 @@
           "rationale": "Blinkers kan övas tidigt i lugn miljö."
         }
       ],
+      "contextSensitivity": "traffic_and_conditions",
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -602,19 +607,22 @@
           "environment": "residential",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Blinkers i lugn miljö"
         },
         {
-          "environment": "urban",
+          "environment": "residential",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Tecken med mer trafik"
         },
         {
-          "environment": "rural",
+          "environment": "residential",
           "traffic": "moderate",
-          "light": "daylight",
-          "weather": "dry"
+          "light": "dusk_dawn",
+          "weather": "dry",
+          "ladderNote": "Tecken vid sämre sikt"
         }
       ],
       "progressionGuidance": {
@@ -656,6 +664,7 @@
           "rationale": "Avsökning bygger på etablerad blickvana."
         }
       ],
+      "contextSensitivity": "traffic_and_conditions",
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -675,25 +684,29 @@
           "environment": "residential",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Grundavsökning"
         },
         {
-          "environment": "urban",
+          "environment": "residential",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Mer att scanna"
         },
         {
-          "environment": "rural",
-          "traffic": "moderate",
-          "light": "daylight",
-          "weather": "dry"
-        },
-        {
-          "environment": "urban",
+          "environment": "residential",
           "traffic": "heavy",
+          "light": "daylight",
+          "weather": "dry",
+          "ladderNote": "Tät trafik"
+        },
+        {
+          "environment": "residential",
+          "traffic": "moderate",
           "light": "dusk_dawn",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Sämre sikt"
         }
       ],
       "progressionGuidance": {
@@ -735,6 +748,7 @@
           "rationale": "Placering övas när eleven kan starta/stanna kontrollerat."
         }
       ],
+      "contextSensitivity": "traffic_and_conditions",
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -754,25 +768,29 @@
           "environment": "residential",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Grundplacering"
         },
         {
-          "environment": "urban",
+          "environment": "residential",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Placering med mer trafik"
         },
         {
-          "environment": "urban",
+          "environment": "residential",
           "traffic": "heavy",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Placering i tät trafik"
         },
         {
-          "environment": "rural",
+          "environment": "residential",
           "traffic": "moderate",
           "light": "dusk_dawn",
-          "weather": "rain"
+          "weather": "rain",
+          "ladderNote": "Placering under sämre förhållanden"
         }
       ],
       "progressionGuidance": {
@@ -798,10 +816,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: körning i körfält",
-          "sourceTitle": "Trafikverket: körning i körfält",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -810,8 +828,8 @@
         {
           "skillKey": "positioning_road_position",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 §19 — val av körfält."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: körfältsval bygger på grundplacering i körfält."
         },
         {
           "skillKey": "observation_scanning",
@@ -820,6 +838,7 @@
           "rationale": "Körfältsval kräver avsökning av skyltning och trafik."
         }
       ],
+      "contextSensitivity": "environment-bound",
       "recommendedStartingContexts": {
         "environment": [
           "urban"
@@ -839,19 +858,22 @@
           "environment": "urban",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Körfältsval i stad"
         },
         {
           "environment": "urban",
           "traffic": "heavy",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Tät stadstrafik"
         },
         {
           "environment": "highway",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Körfältsval på motorväg (egen arena)"
         }
       ],
       "progressionGuidance": {
@@ -870,10 +892,10 @@
       "title": "Körfältsbyte",
       "officialBasis": [
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: körfältsbyte",
-          "sourceTitle": "Trafikverket: körfältsbyte",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
@@ -889,19 +911,19 @@
         {
           "skillKey": "observation_mirror_routine",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "Trafikverket provpunkt körfältsbyte — spegel obligatorisk."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: körfältsbyte kräver etablerad spegelrutin."
         },
         {
           "skillKey": "observation_blind_spot",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
+          "dataType": "PEDAGOGICAL PRACTICE",
           "rationale": "Kontrollblick före körfältsbyte."
         },
         {
           "skillKey": "observation_signaling",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
+          "dataType": "PEDAGOGICAL PRACTICE",
           "rationale": "Tecken före körfältsbyte."
         },
         {
@@ -911,6 +933,7 @@
           "rationale": "Grundplacering före sidoförflyttning."
         }
       ],
+      "contextSensitivity": "environment-bound",
       "recommendedStartingContexts": {
         "environment": [
           "urban"
@@ -930,25 +953,29 @@
           "environment": "urban",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Enkelt körfältsbyte"
         },
         {
           "environment": "urban",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Mer trafik"
         },
         {
           "environment": "highway",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Körfältsbyte på motorväg"
         },
         {
           "environment": "highway",
           "traffic": "heavy",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Tät motorvägstrafik"
         }
       ],
       "progressionGuidance": {
@@ -974,10 +1001,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: gatukorsning, sväng från landsväg",
-          "sourceTitle": "Trafikverket: gatukorsning, sväng från landsväg",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -986,8 +1013,8 @@
         {
           "skillKey": "positioning_road_position",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 — placering i sväng."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: sväng kräver stabil grundplacering."
         },
         {
           "skillKey": "observation_signaling",
@@ -1002,6 +1029,7 @@
           "rationale": "Fart innan och i sväng."
         }
       ],
+      "contextSensitivity": "traffic_and_conditions",
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -1021,19 +1049,22 @@
           "environment": "residential",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Enkel sväng"
+        },
+        {
+          "environment": "residential",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry",
+          "ladderNote": "Sväng med mer trafik"
         },
         {
           "environment": "urban",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
-        },
-        {
-          "environment": "rural",
-          "traffic": "moderate",
-          "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Sväng i stad (arena med fler möten, ej strikt svårare)"
         }
       ],
       "progressionGuidance": {
@@ -1059,10 +1090,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: gatukorsning",
-          "sourceTitle": "Trafikverket: gatukorsning",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -1077,10 +1108,11 @@
         {
           "skillKey": "observation_scanning",
           "strength": "soft",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2011:20 — uppmärksamhet och avsökning i korsning."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: högerregel kräver avsökning av korsande trafik."
         }
       ],
+      "contextSensitivity": "traffic_and_conditions",
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -1100,19 +1132,22 @@
           "environment": "residential",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Enkel korsning"
         },
         {
           "environment": "residential",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Mer korsande trafik"
         },
         {
           "environment": "urban",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Stadskorsning (alternativ arena)"
         }
       ],
       "progressionGuidance": {
@@ -1162,10 +1197,11 @@
         {
           "skillKey": "observation_scanning",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 §19 — färd i vägkorsning."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: väjningsplikt kräver systematisk avsökning."
         }
       ],
+      "contextSensitivity": "traffic_and_conditions",
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -1185,25 +1221,29 @@
           "environment": "residential",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Väjning i lugn korsning"
+        },
+        {
+          "environment": "residential",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry",
+          "ladderNote": "Mer trafik"
         },
         {
           "environment": "urban",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
-        },
-        {
-          "environment": "urban",
-          "traffic": "heavy",
-          "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Stadskorsning"
         },
         {
           "environment": "urban",
           "traffic": "moderate",
           "light": "dusk_dawn",
-          "weather": "rain"
+          "weather": "rain",
+          "ladderNote": "Sämre sikt och grepp"
         }
       ],
       "progressionGuidance": {
@@ -1222,10 +1262,10 @@
       "title": "Trafikljus",
       "officialBasis": [
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: signalerande korsning",
-          "sourceTitle": "Trafikverket: signalerande korsning",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
@@ -1247,10 +1287,11 @@
         {
           "skillKey": "observation_scanning",
           "strength": "soft",
-          "dataType": "OFFICIAL REQUIREMENT",
+          "dataType": "PEDAGOGICAL PRACTICE",
           "rationale": "Uppmärksamhet på signal och korsande trafik."
         }
       ],
+      "contextSensitivity": "environment-bound",
       "recommendedStartingContexts": {
         "environment": [
           "urban"
@@ -1270,25 +1311,29 @@
           "environment": "urban",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Enkel signal"
         },
         {
           "environment": "urban",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Mer trafik"
         },
         {
           "environment": "urban",
           "traffic": "heavy",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Tät trafik"
         },
         {
           "environment": "urban",
           "traffic": "heavy",
           "light": "night",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Nattkörning"
         }
       ],
       "progressionGuidance": {
@@ -1314,10 +1359,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: cirkulationsplats",
-          "sourceTitle": "Trafikverket: cirkulationsplats",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -1326,8 +1371,8 @@
         {
           "skillKey": "intersections_give_way",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 §19 — lämna företräde i cirkulationsplats."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: rondellinfart bygger på väjningsbeteende i korsning."
         },
         {
           "skillKey": "car_control_speed_adaptation",
@@ -1336,6 +1381,7 @@
           "rationale": "Sänka fart före infart."
         }
       ],
+      "contextSensitivity": "environment-bound",
       "recommendedStartingContexts": {
         "environment": [
           "urban"
@@ -1355,19 +1401,22 @@
           "environment": "urban",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Enkel rondell"
         },
         {
           "environment": "urban",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Mer trafik"
         },
         {
           "environment": "urban",
           "traffic": "heavy",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Tät rondelltrafik"
         }
       ],
       "progressionGuidance": {
@@ -1386,10 +1435,10 @@
       "title": "Placering i rondell",
       "officialBasis": [
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: cirkulationsplats (placering)",
-          "sourceTitle": "Trafikverket: cirkulationsplats (placering)",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
@@ -1415,6 +1464,7 @@
           "rationale": "Spårning i körfält."
         }
       ],
+      "contextSensitivity": "environment-bound",
       "recommendedStartingContexts": {
         "environment": [
           "urban"
@@ -1434,19 +1484,22 @@
           "environment": "urban",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Placering i rondell"
         },
         {
           "environment": "urban",
           "traffic": "heavy",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Tät trafik"
         },
         {
           "environment": "urban",
           "traffic": "heavy",
           "light": "dusk_dawn",
-          "weather": "rain"
+          "weather": "rain",
+          "ladderNote": "Sämre förhållanden"
         }
       ],
       "progressionGuidance": {
@@ -1465,10 +1518,10 @@
       "title": "Utfart ur rondell",
       "officialBasis": [
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: cirkulationsplats (tecken, avsikt)",
-          "sourceTitle": "Trafikverket: cirkulationsplats (tecken, avsikt)",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
@@ -1490,10 +1543,11 @@
         {
           "skillKey": "observation_signaling",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "Trafikverket — tecken vid utfart ur cirkulationsplats."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: utfart ur rondell kräver tydlig signalering."
         }
       ],
+      "contextSensitivity": "environment-bound",
       "recommendedStartingContexts": {
         "environment": [
           "urban"
@@ -1513,19 +1567,22 @@
           "environment": "urban",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Utfart"
         },
         {
           "environment": "urban",
           "traffic": "heavy",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Utfart under tät trafik"
         },
         {
           "environment": "urban",
           "traffic": "heavy",
           "light": "dusk_dawn",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Sämre sikt"
         }
       ],
       "progressionGuidance": {
@@ -1551,10 +1608,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: oskyddade trafikanter",
-          "sourceTitle": "Trafikverket: oskyddade trafikanter",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -1563,8 +1620,8 @@
         {
           "skillKey": "observation_scanning",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 §19 — oskyddade trafikanter."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: oskyddade trafikanter kräver aktiv avsökning."
         },
         {
           "skillKey": "car_control_speed_adaptation",
@@ -1573,6 +1630,7 @@
           "rationale": "Fartanpassning vid gående/cyklister."
         }
       ],
+      "contextSensitivity": "multi-venue",
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -1592,25 +1650,29 @@
           "environment": "residential",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Gående/cyklister i bostadsområde"
         },
         {
           "environment": "urban",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Stadsmiljö med fler möten"
         },
         {
           "environment": "urban",
           "traffic": "heavy",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Tät stadstrafik"
         },
         {
           "environment": "urban",
           "traffic": "moderate",
           "light": "dusk_dawn",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Sämre sikt"
         }
       ],
       "progressionGuidance": {
@@ -1636,10 +1698,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: passerande av stillastående fordon",
-          "sourceTitle": "Trafikverket: passerande av stillastående fordon",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -1648,8 +1710,8 @@
         {
           "skillKey": "positioning_road_position",
           "strength": "soft",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 — passerande stillastående fordon."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: passerande stillastående kräver korrekt sidoplacering."
         },
         {
           "skillKey": "observation_scanning",
@@ -1658,6 +1720,7 @@
           "rationale": "Upptäcka dörrar, fotgängare mellan bilar."
         }
       ],
+      "contextSensitivity": "environment-bound",
       "recommendedStartingContexts": {
         "environment": [
           "urban"
@@ -1677,13 +1740,15 @@
           "environment": "urban",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Passera stillastående"
         },
         {
           "environment": "urban",
           "traffic": "heavy",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Tät stadstrafik"
         }
       ],
       "progressionGuidance": {
@@ -1709,10 +1774,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: körning i tätort",
-          "sourceTitle": "Trafikverket: körning i tätort",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -1731,6 +1796,7 @@
           "rationale": "Långsam kontroll vid möte i trång gata."
         }
       ],
+      "contextSensitivity": "traffic_and_conditions",
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -1750,19 +1816,22 @@
           "environment": "residential",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
-        },
-        {
-          "environment": "urban",
-          "traffic": "moderate",
-          "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Trång bostadsgata"
         },
         {
           "environment": "residential",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Möte i trång gata med trafik"
+        },
+        {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry",
+          "ladderNote": "Trång stadsgata (alternativ arena)"
         }
       ],
       "progressionGuidance": {
@@ -1781,10 +1850,10 @@
       "title": "Infart och avfart på landsväg",
       "officialBasis": [
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: infart till landsväg, sväng från landsväg",
-          "sourceTitle": "Trafikverket: infart till landsväg, sväng från landsväg",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
@@ -1800,8 +1869,8 @@
         {
           "skillKey": "car_control_speed_adaptation",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "Trafikverket — infart/sväng från landsväg."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: infart/sväng på landsväg kräver fartkontroll."
         },
         {
           "skillKey": "intersections_give_way",
@@ -1816,6 +1885,7 @@
           "rationale": "Svängteknik vid avfart."
         }
       ],
+      "contextSensitivity": "environment-bound",
       "recommendedStartingContexts": {
         "environment": [
           "rural"
@@ -1835,19 +1905,22 @@
           "environment": "rural",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Infart/sväng på landsväg"
         },
         {
           "environment": "rural",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Mer trafik"
         },
         {
           "environment": "rural",
           "traffic": "heavy",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Tät landsvägstrafik"
         }
       ],
       "progressionGuidance": {
@@ -1866,10 +1939,10 @@
       "title": "Kurvor på landsväg",
       "officialBasis": [
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: smal och/eller krokig väg",
-          "sourceTitle": "Trafikverket: smal och/eller krokig väg",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
@@ -1885,8 +1958,8 @@
         {
           "skillKey": "car_control_speed_adaptation",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2011:20 — anpassa fart i kurva."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: kurvkörning kräver fartkontroll."
         },
         {
           "skillKey": "positioning_road_position",
@@ -1895,6 +1968,7 @@
           "rationale": "Placering i kurva."
         }
       ],
+      "contextSensitivity": "environment-bound",
       "recommendedStartingContexts": {
         "environment": [
           "rural"
@@ -1914,19 +1988,22 @@
           "environment": "rural",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Kurva i lugn fart"
         },
         {
           "environment": "rural",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Kurva med mer trafik"
         },
         {
           "environment": "rural",
           "traffic": "moderate",
           "light": "dusk_dawn",
-          "weather": "rain"
+          "weather": "rain",
+          "ladderNote": "Kurva under sämre förhållanden"
         }
       ],
       "progressionGuidance": {
@@ -1952,10 +2029,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: möte",
-          "sourceTitle": "Trafikverket: möte",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -1964,8 +2041,8 @@
         {
           "skillKey": "positioning_road_position",
           "strength": "soft",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 §19 — möte."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: möte på landsväg kräver grundplacering."
         },
         {
           "skillKey": "car_control_speed_adaptation",
@@ -1974,6 +2051,7 @@
           "rationale": "Fart och lucka vid möte."
         }
       ],
+      "contextSensitivity": "environment-bound",
       "recommendedStartingContexts": {
         "environment": [
           "rural"
@@ -1993,19 +2071,22 @@
           "environment": "rural",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Möte på landsväg"
         },
         {
           "environment": "rural",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Möte med mer trafik"
         },
         {
           "environment": "rural",
           "traffic": "moderate",
           "light": "dusk_dawn",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Möte vid sämre sikt"
         }
       ],
       "progressionGuidance": {
@@ -2031,10 +2112,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: omkörning",
-          "sourceTitle": "Trafikverket: omkörning",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -2049,8 +2130,8 @@
         {
           "skillKey": "observation_mirror_routine",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 §19 — omkörning."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: omkörning kräver etablerad spegelrutin."
         },
         {
           "skillKey": "car_control_speed_adaptation",
@@ -2059,6 +2140,7 @@
           "rationale": "Acceleration och återgång."
         }
       ],
+      "contextSensitivity": "environment-bound",
       "recommendedStartingContexts": {
         "environment": [
           "rural"
@@ -2078,13 +2160,15 @@
           "environment": "rural",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Omkörning på landsväg"
         },
         {
           "environment": "rural",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Omkörning med mer trafik"
         }
       ],
       "progressionGuidance": {
@@ -2110,10 +2194,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: motorväg",
-          "sourceTitle": "Trafikverket: motorväg",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -2122,8 +2206,8 @@
         {
           "skillKey": "positioning_lane_change",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 — infart motorväg."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: motorvägspåfart bygger på körfältsbyte."
         },
         {
           "skillKey": "car_control_speed_adaptation",
@@ -2132,6 +2216,7 @@
           "rationale": "Accelerationsfält kräver fartmatchning."
         }
       ],
+      "contextSensitivity": "environment-bound",
       "recommendedStartingContexts": {
         "environment": [
           "highway"
@@ -2151,19 +2236,22 @@
           "environment": "highway",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Påfart"
         },
         {
           "environment": "highway",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Påfart med mer trafik"
         },
         {
           "environment": "highway",
           "traffic": "heavy",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Tät motorvägstrafik"
         }
       ],
       "progressionGuidance": {
@@ -2189,10 +2277,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: motorväg, motortrafikled",
-          "sourceTitle": "Trafikverket: motorväg, motortrafikled",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -2201,8 +2289,8 @@
         {
           "skillKey": "positioning_lane_selection",
           "strength": "soft",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 — körfält på motorväg."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: körfältsdisciplin på motorväg bygger på körfältsval."
         },
         {
           "skillKey": "highway_merging",
@@ -2211,6 +2299,7 @@
           "rationale": "Erfarenhet från påfart."
         }
       ],
+      "contextSensitivity": "environment-bound",
       "recommendedStartingContexts": {
         "environment": [
           "highway"
@@ -2230,19 +2319,22 @@
           "environment": "highway",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Körfältsdisciplin"
         },
         {
           "environment": "highway",
           "traffic": "heavy",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Tät trafik"
         },
         {
           "environment": "highway",
           "traffic": "heavy",
-          "light": "rain",
-          "weather": "dry"
+          "light": "daylight",
+          "weather": "rain",
+          "ladderNote": "Regn på motorväg"
         }
       ],
       "progressionGuidance": {
@@ -2268,10 +2360,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: motorväg",
-          "sourceTitle": "Trafikverket: motorväg",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -2280,8 +2372,8 @@
         {
           "skillKey": "highway_lane_discipline",
           "strength": "soft",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 — avfart motorväg."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: avfart kräver erfarenhet av körfältsdisciplin."
         },
         {
           "skillKey": "observation_signaling",
@@ -2290,6 +2382,7 @@
           "rationale": "Tidig planering och tecken."
         }
       ],
+      "contextSensitivity": "environment-bound",
       "recommendedStartingContexts": {
         "environment": [
           "highway"
@@ -2309,13 +2402,15 @@
           "environment": "highway",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Avfart"
         },
         {
           "environment": "highway",
           "traffic": "heavy",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Avfart under tät trafik"
         }
       ],
       "progressionGuidance": {
@@ -2341,10 +2436,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: backning",
-          "sourceTitle": "Trafikverket: backning",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -2353,8 +2448,8 @@
         {
           "skillKey": "car_control_smooth_start_stop",
           "strength": "soft",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 §18 — backning ingår i särskild manövrering."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: backning bygger på grundläggande start/stopp-kontroll."
         },
         {
           "skillKey": "observation_scanning",
@@ -2363,6 +2458,7 @@
           "rationale": "Uppsikt bakåt."
         }
       ],
+      "contextSensitivity": "traffic_and_conditions",
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -2382,13 +2478,15 @@
           "environment": "residential",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Backning på tom yta"
         },
         {
-          "environment": "urban",
+          "environment": "residential",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Backning med lätt sidotrafik"
         }
       ],
       "progressionGuidance": {
@@ -2414,10 +2512,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: start i lutning",
-          "sourceTitle": "Trafikverket: start i lutning",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -2426,16 +2524,17 @@
         {
           "skillKey": "car_control_smooth_start_stop",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 §18 — start i lutning."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: start i lutning kräver säker start/stopp-teknik."
         },
         {
           "skillKey": "car_control_gear_shifting",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
+          "dataType": "PEDAGOGICAL PRACTICE",
           "rationale": "Manuell bil — växling i lutning. Ej hard vid automatic_only."
         }
       ],
+      "contextSensitivity": "traffic_and_conditions",
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -2455,19 +2554,15 @@
           "environment": "residential",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Start i lutning, lugn miljö"
         },
         {
-          "environment": "urban",
-          "traffic": "light",
+          "environment": "residential",
+          "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
-        },
-        {
-          "environment": "rural",
-          "traffic": "light",
-          "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Start i lutning med trafik"
         }
       ],
       "progressionGuidance": {
@@ -2493,10 +2588,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: parkering i ficka längs väg",
-          "sourceTitle": "Trafikverket: parkering i ficka längs väg",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -2505,8 +2600,8 @@
         {
           "skillKey": "maneuver_reversing",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 §18 — parkering i ficka."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: fickparkering kräver säker backning."
         },
         {
           "skillKey": "observation_scanning",
@@ -2515,6 +2610,7 @@
           "rationale": "Uppsikt mot trafik under parkering."
         }
       ],
+      "contextSensitivity": "traffic_and_conditions",
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -2534,19 +2630,22 @@
           "environment": "residential",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Parkering i ficka"
+        },
+        {
+          "environment": "residential",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry",
+          "ladderNote": "Parkering med lätt sidotrafik"
         },
         {
           "environment": "urban",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
-        },
-        {
-          "environment": "urban",
-          "traffic": "moderate",
-          "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Parkering i stad (alternativ arena)"
         }
       ],
       "progressionGuidance": {
@@ -2572,10 +2671,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: parkering på parkeringsplats",
-          "sourceTitle": "Trafikverket: parkering på parkeringsplats",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -2584,10 +2683,11 @@
         {
           "skillKey": "maneuver_reversing",
           "strength": "soft",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 §18 — parkering."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: parkering bygger på backningsförmåga."
         }
       ],
+      "contextSensitivity": "traffic_and_conditions",
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -2607,13 +2707,15 @@
           "environment": "residential",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Parkering på plats"
         },
         {
-          "environment": "urban",
+          "environment": "residential",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Parkering med lätt sidotrafik"
         }
       ],
       "progressionGuidance": {
@@ -2639,10 +2741,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: vändning",
-          "sourceTitle": "Trafikverket: vändning",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -2651,8 +2753,8 @@
         {
           "skillKey": "maneuver_reversing",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 §18 — vändning."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: vändning kräver säker backning."
         },
         {
           "skillKey": "observation_scanning",
@@ -2661,6 +2763,7 @@
           "rationale": "Säker plats och uppsikt."
         }
       ],
+      "contextSensitivity": "traffic_and_conditions",
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -2680,13 +2783,15 @@
           "environment": "residential",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Vändning på lugn plats"
         },
         {
           "environment": "rural",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Vändning på landsväg (alternativ arena)"
         }
       ],
       "progressionGuidance": {
@@ -2712,10 +2817,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: självständig körning mot mål",
-          "sourceTitle": "Trafikverket: självständig körning mot mål",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -2724,8 +2829,8 @@
         {
           "skillKey": "positioning_lane_selection",
           "strength": "soft",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 §12 — självständig körning mot mål."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: självständig navigering kräver körfältsval och avsökning."
         },
         {
           "skillKey": "observation_scanning",
@@ -2740,6 +2845,7 @@
           "rationale": "Självständig körning kräver riskmedvetenhet."
         }
       ],
+      "contextSensitivity": "multi-venue",
       "recommendedStartingContexts": {
         "environment": [
           "urban"
@@ -2759,19 +2865,22 @@
           "environment": "urban",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Navigering i stad"
         },
         {
           "environment": "urban",
           "traffic": "heavy",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Navigering i tät stad"
         },
         {
           "environment": "rural",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Navigering på landsväg (alternativ arena)"
         }
       ],
       "progressionGuidance": {
@@ -2809,8 +2918,8 @@
         {
           "skillKey": "observation_scanning",
           "strength": "soft",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 §11, §19 p.1 — förutse risker."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: riskmedvetenhet bygger på systematisk avsökning."
         },
         {
           "skillKey": "car_control_speed_adaptation",
@@ -2819,6 +2928,7 @@
           "rationale": "Riskmedvetenhet kopplas till fart."
         }
       ],
+      "contextSensitivity": "multi-venue",
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -2838,31 +2948,36 @@
           "environment": "residential",
           "traffic": "light",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Grund i lugn miljö"
+        },
+        {
+          "environment": "residential",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry",
+          "ladderNote": "Mer stimuli"
         },
         {
           "environment": "urban",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
-        },
-        {
-          "environment": "rural",
-          "traffic": "moderate",
-          "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Stadsmiljö (alternativ arena)"
         },
         {
           "environment": "highway",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Motorväg (alternativ arena)"
         },
         {
-          "environment": "urban",
+          "environment": "residential",
           "traffic": "heavy",
           "light": "night",
-          "weather": "rain"
+          "weather": "rain",
+          "ladderNote": "Sammansatta förhållanden"
         }
       ],
       "progressionGuidance": {
@@ -2900,8 +3015,8 @@
         {
           "skillKey": "car_control_speed_adaptation",
           "strength": "soft",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2011:20 kap. 3 — säkerhetsmarginaler."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: säkerhetsmarginaler kopplas till fartkontroll."
         },
         {
           "skillKey": "observation_scanning",
@@ -2910,6 +3025,7 @@
           "rationale": "Avstånd kräver uppmärksamhet framåt."
         }
       ],
+      "contextSensitivity": "multi-venue",
       "recommendedStartingContexts": {
         "environment": [
           "urban"
@@ -2929,25 +3045,29 @@
           "environment": "urban",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Marginaler i stad"
         },
         {
           "environment": "rural",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Marginaler på landsväg"
         },
         {
           "environment": "highway",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Marginaler på motorväg"
         },
         {
           "environment": "highway",
           "traffic": "heavy",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Tät motorvägstrafik"
         }
       ],
       "progressionGuidance": {
@@ -2980,17 +3100,17 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "ts-planera",
+          "sourceId": "ts-planera-ovningskorning",
           "reference": "Planera övningskörningen",
-          "sourceTitle": "Planera övningskörningen",
-          "sourceUrl": null,
+          "sourceTitle": "Transportstyrelsen — Planera övningskörningen",
+          "sourceUrl": "https://www.transportstyrelsen.se/sv/vagtrafik/korkort/ta-korkort/handledarskap-och-ovningskorning/planera-ovningsskorningen/",
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "ts-rad-2026",
+          "sourceId": "ts-rad-handledaren-2026",
           "reference": "Råd till handledaren 2026-08-01",
-          "sourceTitle": "Råd till handledaren 2026-08-01",
-          "sourceUrl": null,
+          "sourceTitle": "Råd till handledaren vid privat övningskörning (2026-08-01)",
+          "sourceUrl": "https://www.transportstyrelsen.se/globalassets/global/publikationer-och-rapporter/vag/korkort/rad_till_handledaren_a5_2026-08-01.pdf",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -2999,8 +3119,8 @@
         {
           "skillKey": "car_control_speed_adaptation",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2011:20, TSFS 2012:43 §19 p.4 — sparsam körning."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: eco-körning kräver fartkontroll."
         },
         {
           "skillKey": "independent_route_planning",
@@ -3009,6 +3129,7 @@
           "rationale": "Planerad körning i blandad miljö."
         }
       ],
+      "contextSensitivity": "multi-venue",
       "recommendedStartingContexts": {
         "environment": [
           "urban"
@@ -3028,19 +3149,22 @@
           "environment": "urban",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Eco i stad"
         },
         {
           "environment": "rural",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Eco på landsväg"
         },
         {
           "environment": "highway",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry"
+          "weather": "dry",
+          "ladderNote": "Eco på motorväg"
         }
       ],
       "progressionGuidance": {

@@ -71,10 +71,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "ts-rad-2026",
+          "sourceId": "ts-rad-handledaren-2026",
           "reference": "Råd till handledaren 2026-08-01",
-          "sourceTitle": "Råd till handledaren 2026-08-01",
-          "sourceUrl": null,
+          "sourceTitle": "Råd till handledaren vid privat övningskörning (2026-08-01)",
+          "sourceUrl": "https://www.transportstyrelsen.se/globalassets/global/publikationer-och-rapporter/vag/korkort/rad_till_handledaren_a5_2026-08-01.pdf",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -95,10 +95,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: start från vägkant",
-          "sourceTitle": "Trafikverket: start från vägkant",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -143,10 +143,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: villkor 78",
-          "sourceTitle": "Trafikverket: villkor 78",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -215,10 +215,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: körfältsbyte",
-          "sourceTitle": "Trafikverket: körfältsbyte",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -239,10 +239,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: cirkulationsplats, körfältsbyte, sväng från landsväg",
-          "sourceTitle": "Trafikverket: cirkulationsplats, körfältsbyte, sväng från landsväg",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -311,10 +311,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: körning i körfält",
-          "sourceTitle": "Trafikverket: körning i körfält",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -328,10 +328,10 @@
       "mvpPriority": "core",
       "officialBasis": [
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: körfältsbyte",
-          "sourceTitle": "Trafikverket: körfältsbyte",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
@@ -359,10 +359,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: gatukorsning, sväng från landsväg",
-          "sourceTitle": "Trafikverket: gatukorsning, sväng från landsväg",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -383,10 +383,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: gatukorsning",
-          "sourceTitle": "Trafikverket: gatukorsning",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -424,10 +424,10 @@
       "mvpPriority": "core",
       "officialBasis": [
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: signalerande korsning",
-          "sourceTitle": "Trafikverket: signalerande korsning",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
@@ -455,10 +455,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: cirkulationsplats",
-          "sourceTitle": "Trafikverket: cirkulationsplats",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -472,10 +472,10 @@
       "mvpPriority": "core",
       "officialBasis": [
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: cirkulationsplats (placering)",
-          "sourceTitle": "Trafikverket: cirkulationsplats (placering)",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
@@ -496,10 +496,10 @@
       "mvpPriority": "core",
       "officialBasis": [
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: cirkulationsplats (tecken, avsikt)",
-          "sourceTitle": "Trafikverket: cirkulationsplats (tecken, avsikt)",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
@@ -527,10 +527,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: oskyddade trafikanter",
-          "sourceTitle": "Trafikverket: oskyddade trafikanter",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -551,10 +551,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: passerande av stillastående fordon",
-          "sourceTitle": "Trafikverket: passerande av stillastående fordon",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -575,10 +575,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: körning i tätort",
-          "sourceTitle": "Trafikverket: körning i tätort",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -592,10 +592,10 @@
       "mvpPriority": "core",
       "officialBasis": [
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: infart till landsväg, sväng från landsväg",
-          "sourceTitle": "Trafikverket: infart till landsväg, sväng från landsväg",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
@@ -616,10 +616,10 @@
       "mvpPriority": "core",
       "officialBasis": [
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: smal och/eller krokig väg",
-          "sourceTitle": "Trafikverket: smal och/eller krokig väg",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
@@ -647,10 +647,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: möte",
-          "sourceTitle": "Trafikverket: möte",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -671,10 +671,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: omkörning",
-          "sourceTitle": "Trafikverket: omkörning",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -695,10 +695,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: motorväg",
-          "sourceTitle": "Trafikverket: motorväg",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -719,10 +719,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: motorväg, motortrafikled",
-          "sourceTitle": "Trafikverket: motorväg, motortrafikled",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -743,10 +743,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: motorväg",
-          "sourceTitle": "Trafikverket: motorväg",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -767,10 +767,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: backning",
-          "sourceTitle": "Trafikverket: backning",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -791,10 +791,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: start i lutning",
-          "sourceTitle": "Trafikverket: start i lutning",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -815,10 +815,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: parkering i ficka längs väg",
-          "sourceTitle": "Trafikverket: parkering i ficka längs väg",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -839,10 +839,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: parkering på parkeringsplats",
-          "sourceTitle": "Trafikverket: parkering på parkeringsplats",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -863,10 +863,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: vändning",
-          "sourceTitle": "Trafikverket: vändning",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -887,10 +887,10 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "trv-korprov",
+          "sourceId": "trv-korprov-b",
           "reference": "Trafikverket: självständig körning mot mål",
-          "sourceTitle": "Trafikverket: självständig körning mot mål",
-          "sourceUrl": null,
+          "sourceTitle": "Trafikverket — Så går körprovet till (behörighet B)",
+          "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],
@@ -966,17 +966,17 @@
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "ts-planera",
+          "sourceId": "ts-planera-ovningskorning",
           "reference": "Planera övningskörningen",
-          "sourceTitle": "Planera övningskörningen",
-          "sourceUrl": null,
+          "sourceTitle": "Transportstyrelsen — Planera övningskörningen",
+          "sourceUrl": "https://www.transportstyrelsen.se/sv/vagtrafik/korkort/ta-korkort/handledarskap-och-ovningskorning/planera-ovningsskorningen/",
           "dataType": "OFFICIAL REQUIREMENT"
         },
         {
-          "sourceId": "ts-rad-2026",
+          "sourceId": "ts-rad-handledaren-2026",
           "reference": "Råd till handledaren 2026-08-01",
-          "sourceTitle": "Råd till handledaren 2026-08-01",
-          "sourceUrl": null,
+          "sourceTitle": "Råd till handledaren vid privat övningskörning (2026-08-01)",
+          "sourceUrl": "https://www.transportstyrelsen.se/globalassets/global/publikationer-och-rapporter/vag/korkort/rad_till_handledaren_a5_2026-08-01.pdf",
           "dataType": "OFFICIAL REQUIREMENT"
         }
       ],

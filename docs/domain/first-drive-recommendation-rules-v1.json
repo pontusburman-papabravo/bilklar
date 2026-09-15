@@ -12,29 +12,65 @@
       "skillKey": "car_control_pre_drive_check",
       "title": "Säkerhetskontroll",
       "priority": 1,
-      "dataType": "OFFICIAL REQUIREMENT",
-      "rationale": "TSFS 2012:43 §14–17; Råd till handledaren 2026 — rutin före varje pass."
+      "dataType": "PEDAGOGICAL PRACTICE",
+      "rationale": "Naturlig startpunkt före första passet — etablerar rutin.",
+      "officialEvidence": [
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 14–17 §§"
+        },
+        {
+          "sourceId": "ts-rad-handledaren-2026",
+          "reference": "Råd till handledaren 2026-08-01"
+        }
+      ]
     },
     {
       "skillKey": "car_control_smooth_start_stop",
       "title": "Start och stannande",
       "priority": 2,
-      "dataType": "OFFICIAL REQUIREMENT",
-      "rationale": "TSFS 2011:20 kap. 2 manövrering; första motoriska tröskel."
+      "dataType": "PEDAGOGICAL PRACTICE",
+      "rationale": "Första motoriska tröskel på lugn yta.",
+      "officialEvidence": [
+        {
+          "sourceId": "tsfs-2011-20",
+          "reference": "TSFS 2011:20, 2 kap. 2 § p. 4"
+        },
+        {
+          "sourceId": "trv-korprov-b",
+          "reference": "Trafikverket: start från vägkant"
+        }
+      ]
     },
     {
       "skillKey": "car_control_braking",
       "title": "Bromsning",
       "priority": 3,
-      "dataType": "OFFICIAL REQUIREMENT",
-      "rationale": "TSFS 2012:43 §18 — olika bromsmetoder."
+      "dataType": "PEDAGOGICAL PRACTICE",
+      "rationale": "Grundbroms direkt efter start/stopp i samma pass.",
+      "officialEvidence": [
+        {
+          "sourceId": "tsfs-2011-20",
+          "reference": "TSFS 2011:20, 2 kap. 2 § p. 5"
+        },
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 18 §"
+        }
+      ]
     },
     {
       "skillKey": "positioning_road_position",
       "title": "Placering på vägen",
       "priority": 4,
       "dataType": "PEDAGOGICAL PRACTICE",
-      "rationale": "Planera övningskörningen — lugna platser, sedan placering i körfält."
+      "rationale": "Nästa steg när eleven lämnar tom yta — placering i körfält.",
+      "officialEvidence": [
+        {
+          "sourceId": "ts-planera-ovningskorning",
+          "reference": "Planera övningskörningen — lugna platser först"
+        }
+      ]
     },
     {
       "skillKey": "observation_signaling",
@@ -42,7 +78,8 @@
       "priority": 5,
       "optional": true,
       "dataType": "PEDAGOGICAL PRACTICE",
-      "rationale": "Enkel tidig vinst; kan kombineras med start/stopp."
+      "rationale": "Enkel tidig vinst; kan kombineras med start/stopp.",
+      "officialEvidence": []
     }
   ],
   "firstDriveDataType": "PEDAGOGICAL PRACTICE",

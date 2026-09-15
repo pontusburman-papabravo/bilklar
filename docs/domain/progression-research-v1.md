@@ -23,11 +23,11 @@ Generator (ej runtime): `scripts/generate-progression-artifacts.mjs`
 
 | Typ | Tillförlitlighet | Var det finns |
 | --- | --- | --- |
-| **OFFICIAL REQUIREMENT** | Hög | `officialBasis`, vissa hard prerequisites |
-| **PEDAGOGICAL PRACTICE** | Medel | `introductionStage`, pedagogiska kedjor, first-drive lista |
+| **OFFICIAL REQUIREMENT** | Hög | `officialBasis` per skill (vad källan föreskriver/bedömer) |
+| **PEDAGOGICAL PRACTICE** | Medel | `introductionStage`, prerequisites mellan skills, first-drive lista |
 | **PRODUCT HYPOTHESIS** | Vår modell | context ladders, progressionGuidance, assessmentCriteria, recommendation rules |
 
-Varje fält i JSON som inte är officiellt märkt `dataType: "OFFICIAL REQUIREMENT"` är antingen pedagogisk struktur eller produkthypotes.
+Skill-till-skill-relationer (prerequisites, first-drive prioritering) är **inte** OFFICIAL REQUIREMENT — officiell grund finns separat i `officialBasis` / `officialEvidence`.
 
 ---
 
@@ -68,12 +68,12 @@ Varje påstående är märkt implicit genom avsnitt eller explicit med:
 | --- | --- | --- | --- |
 | `tsfs-2011-20` | [TSFS 2011:20 Kursplan B](https://www.transportstyrelsen.se/tsfs/TSFS%202011_20.pdf) | **Gällande** (i kraft 2011-04-01, ingen senare ändring identifierad) | Utbildningsmål: manövrering → trafikmiljöer → speciella sammanhang → personliga förutsättningar |
 | `tsfs-2012-43` | [TSFS 2012:43 Förarprov B](https://lagen.nu/tsfs/2012:43) (konsoliderad, ändrad t.ex. TSFS 2024:22) | **Gällande** | Säkerhetskontroll, särskild manövrering, trafikbeteende (19 §) |
-| `ts-planera` | [Planera övningskörningen](https://www.transportstyrelsen.se/sv/vagtrafik/korkort/ta-korkort/handledarskap-och-ovningskorning/planera-ovningsskorningen/) | **Aktuell** | Lugna platser först; öva till självständighet; planera nästa pass |
+| `ts-planera-ovningskorning` | [Planera övningskörningen](https://www.transportstyrelsen.se/sv/vagtrafik/korkort/ta-korkort/handledarskap-och-ovningskorning/planera-ovningsskorningen/) | **Aktuell** | Lugna platser först; öva till självständighet; planera nästa pass |
 | `ts-ovningskora` | [Övningsköra](https://www.transportstyrelsen.se/sv/vagtrafik/korkort/ta-korkort/handledarskap-och-ovningskorning/ovningskora/) | **Aktuell** | Ram för privat övningskörning |
 | `ts-handledare` | [Handledare](https://www.transportstyrelsen.se/sv/vagtrafik/korkort/ta-korkort/handledarskap-och-ovningskorning/handledare/) | **Aktuell** | Handledarkrav, ansvar |
-| `ts-rad-2026` | [Råd till handledaren (2026-08-01)](https://www.transportstyrelsen.se/globalassets/global/publikationer-och-rapporter/vag/korkort/rad_till_handledaren_a5_2026-08-01.pdf) | **Aktuell** | Praktisk handledarguidning, säkerhetskontroll före pass |
-| `ts-risk-b` | [Riskutbildning B](https://www.transportstyrelsen.se/sv/vagtrafik/korkort/ta-korkort/riskutbildning/riskutbildning-bil/) | **Aktuell** | Riskmedvetenhet, hastighet, alkohol/droger — påverkar *när* riskmedvetenhet är relevant, inte skill-listan |
-| `trv-korprov` | [Trafikverket — Så går körprovet till](https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/) (senast uppdaterad 2026-06-02) | **Aktuell** | Provpunkter, manövrering, självständig körning mot mål |
+| `ts-rad-handledaren-2026` | [Råd till handledaren (2026-08-01)](https://www.transportstyrelsen.se/globalassets/global/publikationer-och-rapporter/vag/korkort/rad_till_handledaren_a5_2026-08-01.pdf) | **Aktuell** | Praktisk handledarguidning, säkerhetskontroll före pass |
+| `ts-riskutbildning-b` | [Riskutbildning B](https://www.transportstyrelsen.se/sv/vagtrafik/korkort/ta-korkort/riskutbildning/riskutbildning-bil/) | **Aktuell** | Riskmedvetenhet, hastighet, alkohol/droger — påverkar *när* riskmedvetenhet är relevant, inte skill-listan |
+| `trv-korprov-b` | [Trafikverket — Så går körprovet till](https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/) (senast uppdaterad 2026-06-02) | **Aktuell** | Provpunkter, manövrering, självständig körning mot mål |
 | `trv-presentation` | [Presentation av körprov B](https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/) (protokoll/broschyr) | **Aktuell** | Fyra kompetensområden: fordonskännedom/manövrering, miljö, regler, säkerhet/beteende |
 
 ### Viktig myndighetsförändring 2026
@@ -123,23 +123,30 @@ Exempel:
 
 Samma skillKey. Olika pedagogisk svårighet. Progression kan öka context utan nya skills.
 
-### 3.4 Context difficulty-modell (ordinal, ingen procent)
+### 3.4 Context difficulty-modell (per skill, ingen global miljöranking)
 
-Fyra dimensioner från canonical taxonomy. Varje dimension har ordnade nivåer (lägst = 1):
+Fyra dimensioner från canonical taxonomy. **Ingen global ordning** `residential < urban < rural < highway` — svårighet modelleras per skill via `contextSensitivity`:
 
-| Dimension | 1 | 2 | 3 | 4 |
-| --- | --- | --- | --- | --- |
-| `environment` | residential | urban | rural | highway |
-| `traffic` | light | moderate | heavy | — |
-| `light` | daylight | dusk_dawn | night | — |
-| `weather` | dry | rain | snow_ice / fog | — |
+| `contextSensitivity` | Betydelse |
+| --- | --- |
+| `none` | Kontextoberoende (t.ex. säkerhetskontroll) — ingen falsk miljöstege |
+| `traffic_and_conditions` | Stege via trafik/ljus/väder inom en övningsarena |
+| `environment-bound` | Momentet gäller i specifik miljö (motorväg, landsväg, stad) |
+| `multi-venue` | Flera arenor utan att miljöbyte automatiskt = svårare |
+
+Ordinala nivåer per dimension (där de är meningsfulla):
+
+| Dimension | 1 | 2 | 3 |
+| --- | --- | --- | --- |
+| `traffic` | light | moderate | heavy |
+| `light` | daylight | dusk_dawn | night |
+| `weather` | dry | rain | snow_ice / fog |
 
 **PRODUCT HYPOTHESIS — enkel kombinationsregel:**
 
-1. *Context tier* = max av dimensionernas nivå (inte summa — undvik falsk precision).
-2. Öka **högst en dimension åt gången** mellan pass om föregående bedömning var `independent`.
-3. Vid `needs_help`: sänk minst en dimension eller behåll samma skill i enklare context.
-4. `weather` och `light` introduceras normalt **efter** eleven är `with_support` eller `independent` på samma skill i daylight/dry.
+1. Öka **högst en dimension åt gången** mellan pass om föregående bedömning var `independent` (inom skillens ladder-modell).
+2. Vid `needs_help`: sänk minst en dimension eller behåll samma skill i enklare context.
+3. `weather` och `light` introduceras normalt **efter** eleven är `with_support` eller `independent` på samma skill i daylight/dry.
 
 **PEDAGOGICAL PRACTICE:** Natt och halka är sällan första privatpass — men ska inte vara förbjudna för avancerade elever.
 
@@ -191,9 +198,9 @@ independent på skill S i context C
 
 | Prioritet | skillKey | Titel | Motivering |
 | --- | --- | --- | --- |
-| 1 | `car_control_pre_drive_check` | Säkerhetskontroll | OFFICIAL: varje prov och handledarrutin |
-| 2 | `car_control_smooth_start_stop` | Start och stannande | OFFICIAL + PRACTICE: första motoriska tröskeln |
-| 3 | `car_control_braking` | Bromsning | OFFICIAL: flera bromsmetoder i kursplan/prov |
+| 1 | `car_control_pre_drive_check` | Säkerhetskontroll | PRACTICE (officialEvidence: TSFS 2012:43, Råd till handledaren) |
+| 2 | `car_control_smooth_start_stop` | Start och stannande | PRACTICE (officialEvidence: TSFS 2011:20, Trafikverket) |
+| 3 | `car_control_braking` | Bromsning | PRACTICE (officialEvidence: TSFS 2011:20, TSFS 2012:43) |
 | 4 | `positioning_road_position` | Placering på vägen | PRACTICE: krävs så fort eleven lämnar tom yta |
 | 5 (valfri) | `observation_signaling` | Tecken och blinkers | PRACTICE: enkel, synlig vinst tidigt; SOFT intro |
 

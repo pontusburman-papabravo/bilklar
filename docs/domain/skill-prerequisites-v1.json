@@ -6,7 +6,7 @@
   "locale": "sv-SE",
   "licenseClass": "B",
   "artifact": "skill-prerequisites-v1",
-  "description": "Pedagogical and official prerequisite graph. strength=hard only where evidence supports blocking; most edges are soft.",
+  "description": "Pedagogical prerequisite graph between skills. Official requirements live in skill-official-basis-v1.json, not on edges. strength=hard marks strong pedagogical dependencies only.",
   "introductionStages": [
     {
       "key": "foundation",
@@ -118,8 +118,8 @@
         {
           "skillKey": "car_control_smooth_start_stop",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 §18 — rutinmässig manövrering inkluderar växling vid manuell bil."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: växling bygger på grundläggande start/stopp-kontroll (manuell bil)."
         }
       ],
       "taxonomyLikelyPrerequisites": [
@@ -136,8 +136,8 @@
         {
           "skillKey": "car_control_braking",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2011:20 kap. 3 — anpassa hastighet till omständigheter."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: hastighetsanpassning kräver kontrollerad bromsning."
         },
         {
           "skillKey": "positioning_road_position",
@@ -255,8 +255,8 @@
         {
           "skillKey": "positioning_road_position",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 §19 — val av körfält."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: körfältsval bygger på grundplacering i körfält."
         },
         {
           "skillKey": "observation_scanning",
@@ -280,19 +280,19 @@
         {
           "skillKey": "observation_mirror_routine",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "Trafikverket provpunkt körfältsbyte — spegel obligatorisk."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: körfältsbyte kräver etablerad spegelrutin."
         },
         {
           "skillKey": "observation_blind_spot",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
+          "dataType": "PEDAGOGICAL PRACTICE",
           "rationale": "Kontrollblick före körfältsbyte."
         },
         {
           "skillKey": "observation_signaling",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
+          "dataType": "PEDAGOGICAL PRACTICE",
           "rationale": "Tecken före körfältsbyte."
         },
         {
@@ -319,8 +319,8 @@
         {
           "skillKey": "positioning_road_position",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 — placering i sväng."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: sväng kräver stabil grundplacering."
         },
         {
           "skillKey": "observation_signaling",
@@ -357,8 +357,8 @@
         {
           "skillKey": "observation_scanning",
           "strength": "soft",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2011:20 — uppmärksamhet och avsökning i korsning."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: högerregel kräver avsökning av korsande trafik."
         }
       ],
       "taxonomyLikelyPrerequisites": [
@@ -388,8 +388,8 @@
         {
           "skillKey": "observation_scanning",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 §19 — färd i vägkorsning."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: väjningsplikt kräver systematisk avsökning."
         }
       ],
       "taxonomyLikelyPrerequisites": [
@@ -418,7 +418,7 @@
         {
           "skillKey": "observation_scanning",
           "strength": "soft",
-          "dataType": "OFFICIAL REQUIREMENT",
+          "dataType": "PEDAGOGICAL PRACTICE",
           "rationale": "Uppmärksamhet på signal och korsande trafik."
         }
       ],
@@ -437,8 +437,8 @@
         {
           "skillKey": "intersections_give_way",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 §19 — lämna företräde i cirkulationsplats."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: rondellinfart bygger på väjningsbeteende i korsning."
         },
         {
           "skillKey": "car_control_speed_adaptation",
@@ -494,8 +494,8 @@
         {
           "skillKey": "observation_signaling",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "Trafikverket — tecken vid utfart ur cirkulationsplats."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: utfart ur rondell kräver tydlig signalering."
         }
       ],
       "taxonomyLikelyPrerequisites": [
@@ -513,8 +513,8 @@
         {
           "skillKey": "observation_scanning",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 §19 — oskyddade trafikanter."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: oskyddade trafikanter kräver aktiv avsökning."
         },
         {
           "skillKey": "car_control_speed_adaptation",
@@ -538,8 +538,8 @@
         {
           "skillKey": "positioning_road_position",
           "strength": "soft",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 — passerande stillastående fordon."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: passerande stillastående kräver korrekt sidoplacering."
         },
         {
           "skillKey": "observation_scanning",
@@ -588,8 +588,8 @@
         {
           "skillKey": "car_control_speed_adaptation",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "Trafikverket — infart/sväng från landsväg."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: infart/sväng på landsväg kräver fartkontroll."
         },
         {
           "skillKey": "intersections_give_way",
@@ -621,8 +621,8 @@
         {
           "skillKey": "car_control_speed_adaptation",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2011:20 — anpassa fart i kurva."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: kurvkörning kräver fartkontroll."
         },
         {
           "skillKey": "positioning_road_position",
@@ -646,8 +646,8 @@
         {
           "skillKey": "positioning_road_position",
           "strength": "soft",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 §19 — möte."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: möte på landsväg kräver grundplacering."
         },
         {
           "skillKey": "car_control_speed_adaptation",
@@ -677,8 +677,8 @@
         {
           "skillKey": "observation_mirror_routine",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 §19 — omkörning."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: omkörning kräver etablerad spegelrutin."
         },
         {
           "skillKey": "car_control_speed_adaptation",
@@ -704,8 +704,8 @@
         {
           "skillKey": "positioning_lane_change",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 — infart motorväg."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: motorvägspåfart bygger på körfältsbyte."
         },
         {
           "skillKey": "car_control_speed_adaptation",
@@ -731,8 +731,8 @@
         {
           "skillKey": "positioning_lane_selection",
           "strength": "soft",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 — körfält på motorväg."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: körfältsdisciplin på motorväg bygger på körfältsval."
         },
         {
           "skillKey": "highway_merging",
@@ -756,8 +756,8 @@
         {
           "skillKey": "highway_lane_discipline",
           "strength": "soft",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 — avfart motorväg."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: avfart kräver erfarenhet av körfältsdisciplin."
         },
         {
           "skillKey": "observation_signaling",
@@ -782,8 +782,8 @@
         {
           "skillKey": "car_control_smooth_start_stop",
           "strength": "soft",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 §18 — backning ingår i särskild manövrering."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: backning bygger på grundläggande start/stopp-kontroll."
         },
         {
           "skillKey": "observation_scanning",
@@ -807,13 +807,13 @@
         {
           "skillKey": "car_control_smooth_start_stop",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 §18 — start i lutning."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: start i lutning kräver säker start/stopp-teknik."
         },
         {
           "skillKey": "car_control_gear_shifting",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
+          "dataType": "PEDAGOGICAL PRACTICE",
           "rationale": "Manuell bil — växling i lutning. Ej hard vid automatic_only."
         }
       ],
@@ -837,8 +837,8 @@
         {
           "skillKey": "maneuver_reversing",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 §18 — parkering i ficka."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: fickparkering kräver säker backning."
         },
         {
           "skillKey": "observation_scanning",
@@ -863,8 +863,8 @@
         {
           "skillKey": "maneuver_reversing",
           "strength": "soft",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 §18 — parkering."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: parkering bygger på backningsförmåga."
         }
       ],
       "taxonomyLikelyPrerequisites": [
@@ -881,8 +881,8 @@
         {
           "skillKey": "maneuver_reversing",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 §18 — vändning."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: vändning kräver säker backning."
         },
         {
           "skillKey": "observation_scanning",
@@ -906,8 +906,8 @@
         {
           "skillKey": "positioning_lane_selection",
           "strength": "soft",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 §12 — självständig körning mot mål."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: självständig navigering kräver körfältsval och avsökning."
         },
         {
           "skillKey": "observation_scanning",
@@ -938,8 +938,8 @@
         {
           "skillKey": "observation_scanning",
           "strength": "soft",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2012:43 §11, §19 p.1 — förutse risker."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: riskmedvetenhet bygger på systematisk avsökning."
         },
         {
           "skillKey": "car_control_speed_adaptation",
@@ -963,8 +963,8 @@
         {
           "skillKey": "car_control_speed_adaptation",
           "strength": "soft",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2011:20 kap. 3 — säkerhetsmarginaler."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: säkerhetsmarginaler kopplas till fartkontroll."
         },
         {
           "skillKey": "observation_scanning",
@@ -988,8 +988,8 @@
         {
           "skillKey": "car_control_speed_adaptation",
           "strength": "hard",
-          "dataType": "OFFICIAL REQUIREMENT",
-          "rationale": "TSFS 2011:20, TSFS 2012:43 §19 p.4 — sparsam körning."
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Pedagogiskt: eco-körning kräver fartkontroll."
         },
         {
           "skillKey": "independent_route_planning",

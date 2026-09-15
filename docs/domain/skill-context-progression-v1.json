@@ -8,13 +8,15 @@
   "artifact": "skill-context-progression-v1",
   "description": "Per-skill starting contexts, context ladders, and supervisor assessment guidance.",
   "contextCombinationRule": {
-    "rule": "Increase at most one ordinal dimension after independent; needs_help → same or easier step",
+    "rule": "Per-skill context ladder — no global environment ranking. Increase at most one ordinal dimension (traffic/light/weather) after independent within the skill's ladder model; needs_help → same or easier step.",
     "dataType": "PRODUCT HYPOTHESIS"
   },
   "skills": [
     {
       "skillKey": "car_control_pre_drive_check",
       "title": "Säkerhetskontroll",
+      "contextSensitivity": "none",
+      "contextNote": "Kontextoberoende — miljö/trafik påverkar inte momentets svårighetsgrad.",
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -28,6 +30,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "none",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -37,23 +40,8 @@
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "En representativ startkontext",
           "dataType": "PEDAGOGICAL PRACTICE"
-        },
-        {
-          "step": 2,
-          "environment": "urban",
-          "traffic": "light",
-          "light": "daylight",
-          "weather": "dry",
-          "dataType": "PRODUCT HYPOTHESIS"
-        },
-        {
-          "step": 3,
-          "environment": "rural",
-          "traffic": "light",
-          "light": "daylight",
-          "weather": "dry",
-          "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
       "progressionGuidance": {
@@ -73,6 +61,8 @@
     {
       "skillKey": "car_control_smooth_start_stop",
       "title": "Start och stannande",
+      "contextSensitivity": "traffic_and_conditions",
+      "contextNote": "Progression via trafik och förhållanden i samma övningsmiljö.",
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -86,6 +76,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "traffic_and_conditions",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -95,6 +86,7 @@
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Introduktion",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
@@ -103,14 +95,16 @@
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Ökad trafik, samma miljö",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
           "step": 3,
-          "environment": "urban",
-          "traffic": "light",
-          "light": "daylight",
+          "environment": "residential",
+          "traffic": "moderate",
+          "light": "dusk_dawn",
           "weather": "dry",
+          "ladderNote": "Sämre sikt, samma miljö",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -131,6 +125,8 @@
     {
       "skillKey": "car_control_braking",
       "title": "Bromsning",
+      "contextSensitivity": "traffic_and_conditions",
+      "contextNote": null,
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -144,6 +140,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "traffic_and_conditions",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -153,30 +150,34 @@
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Grundbroms i lugn miljö",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
           "step": 2,
-          "environment": "urban",
+          "environment": "residential",
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Mer trafik, samma miljö",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
           "step": 3,
-          "environment": "rural",
+          "environment": "residential",
           "traffic": "moderate",
           "light": "daylight",
-          "weather": "dry",
+          "weather": "rain",
+          "ladderNote": "Sämre grepp, samma miljö",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
           "step": 4,
-          "environment": "urban",
+          "environment": "residential",
           "traffic": "moderate",
-          "light": "daylight",
+          "light": "dusk_dawn",
           "weather": "rain",
+          "ladderNote": "Kombinerade förhållanden",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -197,6 +198,8 @@
     {
       "skillKey": "car_control_gear_shifting",
       "title": "Växling",
+      "contextSensitivity": "traffic_and_conditions",
+      "contextNote": null,
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -210,6 +213,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "traffic_and_conditions",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -219,30 +223,25 @@
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Växling i lugn fart",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
           "step": 2,
-          "environment": "urban",
+          "environment": "residential",
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Växling med mer trafik",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
           "step": 3,
-          "environment": "rural",
+          "environment": "residential",
           "traffic": "moderate",
-          "light": "daylight",
+          "light": "dusk_dawn",
           "weather": "dry",
-          "dataType": "PRODUCT HYPOTHESIS"
-        },
-        {
-          "step": 4,
-          "environment": "highway",
-          "traffic": "moderate",
-          "light": "daylight",
-          "weather": "dry",
+          "ladderNote": "Växling vid sämre sikt",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -263,6 +262,8 @@
     {
       "skillKey": "car_control_speed_adaptation",
       "title": "Hastighetsanpassning",
+      "contextSensitivity": "traffic_and_conditions",
+      "contextNote": null,
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -276,6 +277,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "traffic_and_conditions",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -285,38 +287,34 @@
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Grundfart",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
           "step": 2,
-          "environment": "urban",
+          "environment": "residential",
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Fartanpassning med mer trafik",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
           "step": 3,
-          "environment": "rural",
-          "traffic": "moderate",
+          "environment": "residential",
+          "traffic": "heavy",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Tät trafik, samma miljö",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
           "step": 4,
-          "environment": "urban",
-          "traffic": "heavy",
-          "light": "daylight",
-          "weather": "dry",
-          "dataType": "PRODUCT HYPOTHESIS"
-        },
-        {
-          "step": 5,
-          "environment": "rural",
+          "environment": "residential",
           "traffic": "moderate",
           "light": "dusk_dawn",
           "weather": "rain",
+          "ladderNote": "Sämre sikt och grepp",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -337,6 +335,8 @@
     {
       "skillKey": "observation_mirror_routine",
       "title": "Spegelrutin",
+      "contextSensitivity": "traffic_and_conditions",
+      "contextNote": null,
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -350,6 +350,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "traffic_and_conditions",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -359,22 +360,25 @@
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Etablera rutin",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
           "step": 2,
-          "environment": "urban",
+          "environment": "residential",
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Rutin under mer trafik",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
           "step": 3,
-          "environment": "highway",
+          "environment": "residential",
           "traffic": "moderate",
-          "light": "daylight",
+          "light": "dusk_dawn",
           "weather": "dry",
+          "ladderNote": "Rutin vid sämre sikt",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -395,6 +399,8 @@
     {
       "skillKey": "observation_blind_spot",
       "title": "Döda vinkeln",
+      "contextSensitivity": "traffic_and_conditions",
+      "contextNote": null,
       "recommendedStartingContexts": {
         "environment": [
           "urban"
@@ -408,6 +414,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "traffic_and_conditions",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -417,22 +424,25 @@
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Typisk stadsmiljö för döda vinkeln",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
           "step": 2,
-          "environment": "highway",
-          "traffic": "moderate",
+          "environment": "urban",
+          "traffic": "heavy",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Mer sidotrafik",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
           "step": 3,
           "environment": "urban",
-          "traffic": "heavy",
-          "light": "daylight",
+          "traffic": "moderate",
+          "light": "dusk_dawn",
           "weather": "dry",
+          "ladderNote": "Sämre sikt",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -453,6 +463,8 @@
     {
       "skillKey": "observation_signaling",
       "title": "Tecken och blinkers",
+      "contextSensitivity": "traffic_and_conditions",
+      "contextNote": null,
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -466,6 +478,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "traffic_and_conditions",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -475,22 +488,25 @@
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Blinkers i lugn miljö",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
           "step": 2,
-          "environment": "urban",
+          "environment": "residential",
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Tecken med mer trafik",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
           "step": 3,
-          "environment": "rural",
+          "environment": "residential",
           "traffic": "moderate",
-          "light": "daylight",
+          "light": "dusk_dawn",
           "weather": "dry",
+          "ladderNote": "Tecken vid sämre sikt",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -511,6 +527,8 @@
     {
       "skillKey": "observation_scanning",
       "title": "Avsökning",
+      "contextSensitivity": "traffic_and_conditions",
+      "contextNote": null,
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -524,6 +542,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "traffic_and_conditions",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -533,30 +552,34 @@
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Grundavsökning",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
           "step": 2,
-          "environment": "urban",
+          "environment": "residential",
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Mer att scanna",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
           "step": 3,
-          "environment": "rural",
-          "traffic": "moderate",
+          "environment": "residential",
+          "traffic": "heavy",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Tät trafik",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
           "step": 4,
-          "environment": "urban",
-          "traffic": "heavy",
+          "environment": "residential",
+          "traffic": "moderate",
           "light": "dusk_dawn",
           "weather": "dry",
+          "ladderNote": "Sämre sikt",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -577,6 +600,8 @@
     {
       "skillKey": "positioning_road_position",
       "title": "Placering på vägen",
+      "contextSensitivity": "traffic_and_conditions",
+      "contextNote": null,
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -590,6 +615,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "traffic_and_conditions",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -599,30 +625,34 @@
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Grundplacering",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
           "step": 2,
-          "environment": "urban",
+          "environment": "residential",
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Placering med mer trafik",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
           "step": 3,
-          "environment": "urban",
+          "environment": "residential",
           "traffic": "heavy",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Placering i tät trafik",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
           "step": 4,
-          "environment": "rural",
+          "environment": "residential",
           "traffic": "moderate",
           "light": "dusk_dawn",
           "weather": "rain",
+          "ladderNote": "Placering under sämre förhållanden",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -643,6 +673,8 @@
     {
       "skillKey": "positioning_lane_selection",
       "title": "Val av körfält",
+      "contextSensitivity": "environment-bound",
+      "contextNote": "Körfältsval kräver fler körfält — typiskt urban eller highway.",
       "recommendedStartingContexts": {
         "environment": [
           "urban"
@@ -656,6 +688,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "environment-bound",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -665,6 +698,7 @@
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Körfältsval i stad",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
@@ -673,6 +707,7 @@
           "traffic": "heavy",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Tät stadstrafik",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
@@ -681,6 +716,7 @@
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Körfältsval på motorväg (egen arena)",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -701,6 +737,8 @@
     {
       "skillKey": "positioning_lane_change",
       "title": "Körfältsbyte",
+      "contextSensitivity": "environment-bound",
+      "contextNote": "Körfältsbyte i miljöer med flera körfält.",
       "recommendedStartingContexts": {
         "environment": [
           "urban"
@@ -714,6 +752,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "environment-bound",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -723,6 +762,7 @@
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Enkelt körfältsbyte",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
@@ -731,6 +771,7 @@
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Mer trafik",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
@@ -739,6 +780,7 @@
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Körfältsbyte på motorväg",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
@@ -747,6 +789,7 @@
           "traffic": "heavy",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Tät motorvägstrafik",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -767,6 +810,8 @@
     {
       "skillKey": "positioning_turning",
       "title": "Sväng",
+      "contextSensitivity": "traffic_and_conditions",
+      "contextNote": null,
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -780,6 +825,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "traffic_and_conditions",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -789,22 +835,25 @@
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Enkel sväng",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
           "step": 2,
-          "environment": "urban",
+          "environment": "residential",
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Sväng med mer trafik",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
           "step": 3,
-          "environment": "rural",
+          "environment": "urban",
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Sväng i stad (arena med fler möten, ej strikt svårare)",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -825,6 +874,8 @@
     {
       "skillKey": "intersections_right_hand_rule",
       "title": "Högerregeln",
+      "contextSensitivity": "traffic_and_conditions",
+      "contextNote": null,
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -838,6 +889,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "traffic_and_conditions",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -847,6 +899,7 @@
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Enkel korsning",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
@@ -855,6 +908,7 @@
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Mer korsande trafik",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
@@ -863,6 +917,7 @@
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Stadskorsning (alternativ arena)",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -883,6 +938,8 @@
     {
       "skillKey": "intersections_give_way",
       "title": "Väjningsplikt och stopp",
+      "contextSensitivity": "traffic_and_conditions",
+      "contextNote": null,
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -896,6 +953,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "traffic_and_conditions",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -905,22 +963,25 @@
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Väjning i lugn korsning",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
           "step": 2,
-          "environment": "urban",
+          "environment": "residential",
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Mer trafik",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
           "step": 3,
           "environment": "urban",
-          "traffic": "heavy",
+          "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Stadskorsning",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
@@ -929,6 +990,7 @@
           "traffic": "moderate",
           "light": "dusk_dawn",
           "weather": "rain",
+          "ladderNote": "Sämre sikt och grepp",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -949,6 +1011,8 @@
     {
       "skillKey": "intersections_traffic_lights",
       "title": "Trafikljus",
+      "contextSensitivity": "environment-bound",
+      "contextNote": "Signalkorsningar finns främst i urban miljö.",
       "recommendedStartingContexts": {
         "environment": [
           "urban"
@@ -962,6 +1026,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "environment-bound",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -971,6 +1036,7 @@
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Enkel signal",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
@@ -979,6 +1045,7 @@
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Mer trafik",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
@@ -987,6 +1054,7 @@
           "traffic": "heavy",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Tät trafik",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
@@ -995,6 +1063,7 @@
           "traffic": "heavy",
           "light": "night",
           "weather": "dry",
+          "ladderNote": "Nattkörning",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -1015,6 +1084,8 @@
     {
       "skillKey": "roundabout_entry",
       "title": "Infart i rondell",
+      "contextSensitivity": "environment-bound",
+      "contextNote": "Rondeller finns främst i urban miljö.",
       "recommendedStartingContexts": {
         "environment": [
           "urban"
@@ -1028,6 +1099,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "environment-bound",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -1037,6 +1109,7 @@
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Enkel rondell",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
@@ -1045,6 +1118,7 @@
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Mer trafik",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
@@ -1053,6 +1127,7 @@
           "traffic": "heavy",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Tät rondelltrafik",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -1073,6 +1148,8 @@
     {
       "skillKey": "roundabout_positioning",
       "title": "Placering i rondell",
+      "contextSensitivity": "environment-bound",
+      "contextNote": null,
       "recommendedStartingContexts": {
         "environment": [
           "urban"
@@ -1086,6 +1163,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "environment-bound",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -1095,6 +1173,7 @@
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Placering i rondell",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
@@ -1103,6 +1182,7 @@
           "traffic": "heavy",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Tät trafik",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
@@ -1111,6 +1191,7 @@
           "traffic": "heavy",
           "light": "dusk_dawn",
           "weather": "rain",
+          "ladderNote": "Sämre förhållanden",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -1131,6 +1212,8 @@
     {
       "skillKey": "roundabout_exit",
       "title": "Utfart ur rondell",
+      "contextSensitivity": "environment-bound",
+      "contextNote": null,
       "recommendedStartingContexts": {
         "environment": [
           "urban"
@@ -1144,6 +1227,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "environment-bound",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -1153,6 +1237,7 @@
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Utfart",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
@@ -1161,6 +1246,7 @@
           "traffic": "heavy",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Utfart under tät trafik",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
@@ -1169,6 +1255,7 @@
           "traffic": "heavy",
           "light": "dusk_dawn",
           "weather": "dry",
+          "ladderNote": "Sämre sikt",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -1189,6 +1276,8 @@
     {
       "skillKey": "urban_vulnerable_road_users",
       "title": "Oskyddade trafikanter",
+      "contextSensitivity": "multi-venue",
+      "contextNote": "Oskyddade trafikanter i bostads- och stadsmiljö — arenor utan global ranking.",
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -1202,6 +1291,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "multi-venue",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -1211,6 +1301,7 @@
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Gående/cyklister i bostadsområde",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
@@ -1219,6 +1310,7 @@
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Stadsmiljö med fler möten",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
@@ -1227,6 +1319,7 @@
           "traffic": "heavy",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Tät stadstrafik",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
@@ -1235,6 +1328,7 @@
           "traffic": "moderate",
           "light": "dusk_dawn",
           "weather": "dry",
+          "ladderNote": "Sämre sikt",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -1255,6 +1349,8 @@
     {
       "skillKey": "urban_passing_stationary",
       "title": "Passera stillastående fordon",
+      "contextSensitivity": "environment-bound",
+      "contextNote": null,
       "recommendedStartingContexts": {
         "environment": [
           "urban"
@@ -1268,6 +1364,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "environment-bound",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -1277,6 +1374,7 @@
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Passera stillastående",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
@@ -1285,6 +1383,7 @@
           "traffic": "heavy",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Tät stadstrafik",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -1305,6 +1404,8 @@
     {
       "skillKey": "urban_tight_spaces",
       "title": "Trånga gator",
+      "contextSensitivity": "traffic_and_conditions",
+      "contextNote": null,
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -1318,6 +1419,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "traffic_and_conditions",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -1327,22 +1429,25 @@
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Trång bostadsgata",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
           "step": 2,
-          "environment": "urban",
-          "traffic": "moderate",
-          "light": "daylight",
-          "weather": "dry",
-          "dataType": "PRODUCT HYPOTHESIS"
-        },
-        {
-          "step": 3,
           "environment": "residential",
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Möte i trång gata med trafik",
+          "dataType": "PRODUCT HYPOTHESIS"
+        },
+        {
+          "step": 3,
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry",
+          "ladderNote": "Trång stadsgata (alternativ arena)",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -1363,6 +1468,8 @@
     {
       "skillKey": "rural_joining_and_leaving",
       "title": "Infart och avfart på landsväg",
+      "contextSensitivity": "environment-bound",
+      "contextNote": null,
       "recommendedStartingContexts": {
         "environment": [
           "rural"
@@ -1376,6 +1483,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "environment-bound",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -1385,6 +1493,7 @@
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Infart/sväng på landsväg",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
@@ -1393,6 +1502,7 @@
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Mer trafik",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
@@ -1401,6 +1511,7 @@
           "traffic": "heavy",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Tät landsvägstrafik",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -1421,6 +1532,8 @@
     {
       "skillKey": "rural_curves",
       "title": "Kurvor på landsväg",
+      "contextSensitivity": "environment-bound",
+      "contextNote": null,
       "recommendedStartingContexts": {
         "environment": [
           "rural"
@@ -1434,6 +1547,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "environment-bound",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -1443,6 +1557,7 @@
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Kurva i lugn fart",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
@@ -1451,6 +1566,7 @@
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Kurva med mer trafik",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
@@ -1459,6 +1575,7 @@
           "traffic": "moderate",
           "light": "dusk_dawn",
           "weather": "rain",
+          "ladderNote": "Kurva under sämre förhållanden",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -1479,6 +1596,8 @@
     {
       "skillKey": "rural_meeting_traffic",
       "title": "Möte",
+      "contextSensitivity": "environment-bound",
+      "contextNote": null,
       "recommendedStartingContexts": {
         "environment": [
           "rural"
@@ -1492,6 +1611,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "environment-bound",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -1501,6 +1621,7 @@
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Möte på landsväg",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
@@ -1509,6 +1630,7 @@
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Möte med mer trafik",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
@@ -1517,6 +1639,7 @@
           "traffic": "moderate",
           "light": "dusk_dawn",
           "weather": "dry",
+          "ladderNote": "Möte vid sämre sikt",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -1537,6 +1660,8 @@
     {
       "skillKey": "rural_passing",
       "title": "Omkörning",
+      "contextSensitivity": "environment-bound",
+      "contextNote": null,
       "recommendedStartingContexts": {
         "environment": [
           "rural"
@@ -1550,6 +1675,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "environment-bound",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -1559,6 +1685,7 @@
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Omkörning på landsväg",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
@@ -1567,6 +1694,7 @@
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Omkörning med mer trafik",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -1587,6 +1715,8 @@
     {
       "skillKey": "highway_merging",
       "title": "Påfart",
+      "contextSensitivity": "environment-bound",
+      "contextNote": "Endast motorväg; progression via trafik.",
       "recommendedStartingContexts": {
         "environment": [
           "highway"
@@ -1600,6 +1730,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "environment-bound",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -1609,6 +1740,7 @@
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Påfart",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
@@ -1617,6 +1749,7 @@
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Påfart med mer trafik",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
@@ -1625,6 +1758,7 @@
           "traffic": "heavy",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Tät motorvägstrafik",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -1645,6 +1779,8 @@
     {
       "skillKey": "highway_lane_discipline",
       "title": "Körfält på motorväg",
+      "contextSensitivity": "environment-bound",
+      "contextNote": null,
       "recommendedStartingContexts": {
         "environment": [
           "highway"
@@ -1658,6 +1794,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "environment-bound",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -1667,6 +1804,7 @@
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Körfältsdisciplin",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
@@ -1675,14 +1813,16 @@
           "traffic": "heavy",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Tät trafik",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
           "step": 3,
           "environment": "highway",
           "traffic": "heavy",
-          "light": "rain",
-          "weather": "dry",
+          "light": "daylight",
+          "weather": "rain",
+          "ladderNote": "Regn på motorväg",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -1703,6 +1843,8 @@
     {
       "skillKey": "highway_exiting",
       "title": "Avfart",
+      "contextSensitivity": "environment-bound",
+      "contextNote": null,
       "recommendedStartingContexts": {
         "environment": [
           "highway"
@@ -1716,6 +1858,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "environment-bound",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -1725,6 +1868,7 @@
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Avfart",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
@@ -1733,6 +1877,7 @@
           "traffic": "heavy",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Avfart under tät trafik",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -1753,6 +1898,8 @@
     {
       "skillKey": "maneuver_reversing",
       "title": "Backning",
+      "contextSensitivity": "traffic_and_conditions",
+      "contextNote": null,
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -1766,6 +1913,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "traffic_and_conditions",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -1775,14 +1923,16 @@
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Backning på tom yta",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
           "step": 2,
-          "environment": "urban",
+          "environment": "residential",
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Backning med lätt sidotrafik",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -1803,6 +1953,8 @@
     {
       "skillKey": "maneuver_hill_start",
       "title": "Start i lutning",
+      "contextSensitivity": "traffic_and_conditions",
+      "contextNote": null,
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -1816,6 +1968,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "traffic_and_conditions",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -1825,22 +1978,16 @@
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Start i lutning, lugn miljö",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
           "step": 2,
-          "environment": "urban",
-          "traffic": "light",
+          "environment": "residential",
+          "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
-          "dataType": "PRODUCT HYPOTHESIS"
-        },
-        {
-          "step": 3,
-          "environment": "rural",
-          "traffic": "light",
-          "light": "daylight",
-          "weather": "dry",
+          "ladderNote": "Start i lutning med trafik",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -1861,6 +2008,8 @@
     {
       "skillKey": "maneuver_parallel_parking",
       "title": "Parallellparkering",
+      "contextSensitivity": "traffic_and_conditions",
+      "contextNote": null,
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -1874,6 +2023,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "traffic_and_conditions",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -1883,22 +2033,25 @@
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Parkering i ficka",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
           "step": 2,
-          "environment": "urban",
+          "environment": "residential",
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Parkering med lätt sidotrafik",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
           "step": 3,
           "environment": "urban",
-          "traffic": "moderate",
+          "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Parkering i stad (alternativ arena)",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -1919,6 +2072,8 @@
     {
       "skillKey": "maneuver_parking",
       "title": "Övrig parkering",
+      "contextSensitivity": "traffic_and_conditions",
+      "contextNote": null,
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -1932,6 +2087,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "traffic_and_conditions",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -1941,14 +2097,16 @@
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Parkering på plats",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
           "step": 2,
-          "environment": "urban",
+          "environment": "residential",
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Parkering med lätt sidotrafik",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -1969,6 +2127,8 @@
     {
       "skillKey": "maneuver_turning_around",
       "title": "Vändning",
+      "contextSensitivity": "traffic_and_conditions",
+      "contextNote": null,
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -1982,6 +2142,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "traffic_and_conditions",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -1991,6 +2152,7 @@
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Vändning på lugn plats",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
@@ -1999,6 +2161,7 @@
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Vändning på landsväg (alternativ arena)",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -2019,6 +2182,8 @@
     {
       "skillKey": "independent_route_planning",
       "title": "Köra mot mål",
+      "contextSensitivity": "multi-venue",
+      "contextNote": "Självständig körning mot mål i varierande arenor — ingen global miljöranking.",
       "recommendedStartingContexts": {
         "environment": [
           "urban"
@@ -2032,6 +2197,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "multi-venue",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -2041,6 +2207,7 @@
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Navigering i stad",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
@@ -2049,6 +2216,7 @@
           "traffic": "heavy",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Navigering i tät stad",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
@@ -2057,6 +2225,7 @@
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Navigering på landsväg (alternativ arena)",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -2077,6 +2246,8 @@
     {
       "skillKey": "independent_risk_awareness",
       "title": "Riskmedvetenhet",
+      "contextSensitivity": "multi-venue",
+      "contextNote": "Riskmedvetenhet i flera arenor — miljöbyte är inte samma sak som strikt svårighetssteg.",
       "recommendedStartingContexts": {
         "environment": [
           "residential"
@@ -2090,6 +2261,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "multi-venue",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -2099,22 +2271,25 @@
           "traffic": "light",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Grund i lugn miljö",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
           "step": 2,
-          "environment": "urban",
+          "environment": "residential",
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Mer stimuli",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
           "step": 3,
-          "environment": "rural",
+          "environment": "urban",
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Stadsmiljö (alternativ arena)",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
@@ -2123,14 +2298,16 @@
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Motorväg (alternativ arena)",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
           "step": 5,
-          "environment": "urban",
+          "environment": "residential",
           "traffic": "heavy",
           "light": "night",
           "weather": "rain",
+          "ladderNote": "Sammansatta förhållanden",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -2151,6 +2328,8 @@
     {
       "skillKey": "independent_safety_margins",
       "title": "Säkerhetsmarginaler",
+      "contextSensitivity": "multi-venue",
+      "contextNote": null,
       "recommendedStartingContexts": {
         "environment": [
           "urban"
@@ -2164,6 +2343,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "multi-venue",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -2173,6 +2353,7 @@
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Marginaler i stad",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
@@ -2181,6 +2362,7 @@
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Marginaler på landsväg",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
@@ -2189,6 +2371,7 @@
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Marginaler på motorväg",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
@@ -2197,6 +2380,7 @@
           "traffic": "heavy",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Tät motorvägstrafik",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
@@ -2217,6 +2401,8 @@
     {
       "skillKey": "independent_eco_driving",
       "title": "Sparsam körning",
+      "contextSensitivity": "multi-venue",
+      "contextNote": null,
       "recommendedStartingContexts": {
         "environment": [
           "urban"
@@ -2230,6 +2416,7 @@
         "weather": [
           "dry"
         ],
+        "contextSensitivity": "multi-venue",
         "dataType": "PEDAGOGICAL PRACTICE"
       },
       "contextProgression": [
@@ -2239,6 +2426,7 @@
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Eco i stad",
           "dataType": "PEDAGOGICAL PRACTICE"
         },
         {
@@ -2247,6 +2435,7 @@
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Eco på landsväg",
           "dataType": "PRODUCT HYPOTHESIS"
         },
         {
@@ -2255,6 +2444,7 @@
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry",
+          "ladderNote": "Eco på motorväg",
           "dataType": "PRODUCT HYPOTHESIS"
         }
       ],
