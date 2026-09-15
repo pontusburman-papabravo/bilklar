@@ -1,0 +1,1467 @@
+{
+  "progressionModelVersion": 1,
+  "status": "draft",
+  "lastUpdated": "2026-09-15",
+  "taxonomyVersion": 1,
+  "locale": "sv-SE",
+  "licenseClass": "B",
+  "notRuntime": true,
+  "sourceDocument": "docs/domain/progression-research-v1.md",
+  "stages": [
+    {
+      "key": "foundation",
+      "title": "Grund",
+      "description": "Fordonskännedom och grundmanövrering i nästan trafikfri miljö"
+    },
+    {
+      "key": "controlled_traffic",
+      "title": "Lugn trafik",
+      "description": "Bostadsområde och lätt trafik med grundläggande observation"
+    },
+    {
+      "key": "mixed_traffic",
+      "title": "Blandad trafik",
+      "description": "Korsningar, signaler, stad, måttlig komplexitet"
+    },
+    {
+      "key": "complex_traffic",
+      "title": "Komplex trafik",
+      "description": "Rondell, landsväg, motorväg, svårare förhållanden"
+    },
+    {
+      "key": "independent_readiness",
+      "title": "Självständighetsnära",
+      "description": "Självständig körning mot mål och examensnära helhet"
+    }
+  ],
+  "contextDifficulty": {
+    "model": "ordinal_per_dimension",
+    "combinationRule": "context_tier = max(dimension_levels); increase at most one dimension between passes after independent",
+    "dimensions": [
+      {
+        "dimension": "traffic",
+        "sequence": [
+          "light",
+          "moderate",
+          "heavy"
+        ]
+      },
+      {
+        "dimension": "environment",
+        "sequence": [
+          "residential",
+          "urban",
+          "rural",
+          "highway"
+        ]
+      },
+      {
+        "dimension": "light",
+        "sequence": [
+          "daylight",
+          "dusk_dawn",
+          "night"
+        ]
+      },
+      {
+        "dimension": "weather",
+        "sequence": [
+          "dry",
+          "rain",
+          "snow_ice"
+        ]
+      }
+    ]
+  },
+  "observationProgressionRules": {
+    "needs_help": "Repeat same skill in same or easier context",
+    "with_support": "Repeat same skill in same context",
+    "independent": "Increase one context dimension for same skill, or introduce adjacent skill at same/easier context"
+  },
+  "firstDriveStartingPoints": [
+    {
+      "skillKey": "car_control_pre_drive_check",
+      "priority": 1,
+      "sourceType": "OFFICIAL REQUIREMENT"
+    },
+    {
+      "skillKey": "car_control_smooth_start_stop",
+      "priority": 2,
+      "sourceType": "OFFICIAL REQUIREMENT"
+    },
+    {
+      "skillKey": "car_control_braking",
+      "priority": 3,
+      "sourceType": "OFFICIAL REQUIREMENT"
+    },
+    {
+      "skillKey": "positioning_road_position",
+      "priority": 4,
+      "sourceType": "PEDAGOGICAL PRACTICE"
+    },
+    {
+      "skillKey": "observation_signaling",
+      "priority": 5,
+      "optional": true,
+      "sourceType": "PEDAGOGICAL PRACTICE"
+    }
+  ],
+  "taxonomyPrerequisiteDeviations": [
+    {
+      "skillKey": "maneuver_hill_start",
+      "issue": "gear_shifting hard prerequisite should be conditional on manual transmission"
+    },
+    {
+      "skillKey": "independent_eco_driving",
+      "issue": "route_planning as sole hard gate is late; speed_adaptation sufficient for early eco habits"
+    },
+    {
+      "skillKey": "intersections_give_way",
+      "issue": "taxonomy omits soft prerequisite on braking"
+    },
+    {
+      "skillKey": "car_control_speed_adaptation",
+      "issue": "taxonomy omits soft prerequisite on road positioning"
+    }
+  ],
+  "skills": [
+    {
+      "skillKey": "car_control_pre_drive_check",
+      "areaKey": "car_control",
+      "title": "Säkerhetskontroll",
+      "mvpPriority": "core",
+      "introductionStage": "foundation",
+      "prerequisites": [],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "residential",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "car_control_smooth_start_stop",
+      "areaKey": "car_control",
+      "title": "Start och stannande",
+      "mvpPriority": "core",
+      "introductionStage": "foundation",
+      "prerequisites": [
+        {
+          "skillKey": "car_control_pre_drive_check",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "residential",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "car_control_braking",
+      "areaKey": "car_control",
+      "title": "Bromsning",
+      "mvpPriority": "core",
+      "introductionStage": "foundation",
+      "prerequisites": [
+        {
+          "skillKey": "car_control_smooth_start_stop",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "residential",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "car_control_gear_shifting",
+      "areaKey": "car_control",
+      "title": "Växling",
+      "mvpPriority": "core",
+      "introductionStage": "foundation",
+      "prerequisites": [
+        {
+          "skillKey": "car_control_smooth_start_stop",
+          "strength": "hard",
+          "note": "Manual transmission only; not_applicable when automatic_only"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "residential",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent",
+      "notes": "Not applicable when journey.transmission_scope = automatic_only"
+    },
+    {
+      "skillKey": "car_control_speed_adaptation",
+      "areaKey": "car_control",
+      "title": "Hastighetsanpassning",
+      "mvpPriority": "core",
+      "introductionStage": "controlled_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "car_control_braking",
+          "strength": "hard"
+        },
+        {
+          "skillKey": "positioning_road_position",
+          "strength": "soft"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "residential",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "observation_mirror_routine",
+      "areaKey": "observation_interaction",
+      "title": "Spegelrutin",
+      "mvpPriority": "core",
+      "introductionStage": "controlled_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "car_control_smooth_start_stop",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "residential",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "observation_blind_spot",
+      "areaKey": "observation_interaction",
+      "title": "Döda vinkeln",
+      "mvpPriority": "core",
+      "introductionStage": "mixed_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "observation_mirror_routine",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "observation_signaling",
+      "areaKey": "observation_interaction",
+      "title": "Tecken och blinkers",
+      "mvpPriority": "core",
+      "introductionStage": "controlled_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "car_control_smooth_start_stop",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "residential",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "observation_scanning",
+      "areaKey": "observation_interaction",
+      "title": "Avsökning",
+      "mvpPriority": "core",
+      "introductionStage": "controlled_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "observation_mirror_routine",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "residential",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "positioning_road_position",
+      "areaKey": "positioning_lanes",
+      "title": "Placering på vägen",
+      "mvpPriority": "core",
+      "introductionStage": "controlled_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "car_control_smooth_start_stop",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "residential",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "positioning_lane_selection",
+      "areaKey": "positioning_lanes",
+      "title": "Val av körfält",
+      "mvpPriority": "core",
+      "introductionStage": "mixed_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "positioning_road_position",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "observation_scanning",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "positioning_lane_change",
+      "areaKey": "positioning_lanes",
+      "title": "Körfältsbyte",
+      "mvpPriority": "core",
+      "introductionStage": "mixed_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "observation_mirror_routine",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "observation_blind_spot",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "observation_signaling",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "positioning_road_position",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "positioning_turning",
+      "areaKey": "positioning_lanes",
+      "title": "Sväng",
+      "mvpPriority": "core",
+      "introductionStage": "mixed_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "positioning_road_position",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "observation_signaling",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "car_control_speed_adaptation",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "intersections_right_hand_rule",
+      "areaKey": "intersections_roundabouts",
+      "title": "Högerregeln",
+      "mvpPriority": "core",
+      "introductionStage": "controlled_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "car_control_speed_adaptation",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "observation_scanning",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "residential",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "intersections_give_way",
+      "areaKey": "intersections_roundabouts",
+      "title": "Väjningsplikt och stopp",
+      "mvpPriority": "core",
+      "introductionStage": "mixed_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "car_control_smooth_start_stop",
+          "strength": "hard"
+        },
+        {
+          "skillKey": "observation_scanning",
+          "strength": "hard"
+        },
+        {
+          "skillKey": "car_control_braking",
+          "strength": "soft"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "intersections_traffic_lights",
+      "areaKey": "intersections_roundabouts",
+      "title": "Trafikljus",
+      "mvpPriority": "core",
+      "introductionStage": "mixed_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "car_control_speed_adaptation",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "observation_scanning",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "roundabout_entry",
+      "areaKey": "intersections_roundabouts",
+      "title": "Infart i rondell",
+      "mvpPriority": "core",
+      "introductionStage": "complex_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "intersections_give_way",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "observation_scanning",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "car_control_speed_adaptation",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "rural",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "roundabout_positioning",
+      "areaKey": "intersections_roundabouts",
+      "title": "Placering i rondell",
+      "mvpPriority": "core",
+      "introductionStage": "complex_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "roundabout_entry",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "positioning_road_position",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "rural",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "roundabout_exit",
+      "areaKey": "intersections_roundabouts",
+      "title": "Utfart ur rondell",
+      "mvpPriority": "core",
+      "introductionStage": "complex_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "roundabout_positioning",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "observation_signaling",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "rural",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "urban_vulnerable_road_users",
+      "areaKey": "urban_traffic",
+      "title": "Oskyddade trafikanter",
+      "mvpPriority": "core",
+      "introductionStage": "mixed_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "observation_scanning",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "car_control_speed_adaptation",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "urban_passing_stationary",
+      "areaKey": "urban_traffic",
+      "title": "Passera stillastående fordon",
+      "mvpPriority": "core",
+      "introductionStage": "mixed_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "positioning_road_position",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "observation_scanning",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "urban_tight_spaces",
+      "areaKey": "urban_traffic",
+      "title": "Trånga gator",
+      "mvpPriority": "core",
+      "introductionStage": "mixed_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "positioning_road_position",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "car_control_smooth_start_stop",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "rural_joining_and_leaving",
+      "areaKey": "rural_roads",
+      "title": "Infart och avfart på landsväg",
+      "mvpPriority": "core",
+      "introductionStage": "complex_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "car_control_speed_adaptation",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "observation_signaling",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "intersections_give_way",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "positioning_turning",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "rural",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "rural_curves",
+      "areaKey": "rural_roads",
+      "title": "Kurvor på landsväg",
+      "mvpPriority": "core",
+      "introductionStage": "complex_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "car_control_speed_adaptation",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "positioning_road_position",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "rural",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "rural_meeting_traffic",
+      "areaKey": "rural_roads",
+      "title": "Möte",
+      "mvpPriority": "core",
+      "introductionStage": "complex_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "positioning_road_position",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "car_control_speed_adaptation",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "rural",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "rural_passing",
+      "areaKey": "rural_roads",
+      "title": "Omkörning",
+      "mvpPriority": "supporting",
+      "introductionStage": "complex_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "observation_mirror_routine",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "observation_signaling",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "car_control_speed_adaptation",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "rural_meeting_traffic",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "rural",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent",
+      "notes": "Supporting skill; late introduction aligned with TSFS 2012:43 omkörning"
+    },
+    {
+      "skillKey": "highway_merging",
+      "areaKey": "highway",
+      "title": "Påfart",
+      "mvpPriority": "core",
+      "introductionStage": "complex_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "car_control_speed_adaptation",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "observation_mirror_routine",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "observation_blind_spot",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "positioning_lane_change",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "rural",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "highway_lane_discipline",
+      "areaKey": "highway",
+      "title": "Körfält på motorväg",
+      "mvpPriority": "core",
+      "introductionStage": "complex_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "positioning_lane_selection",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "highway_merging",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "rural",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "highway_exiting",
+      "areaKey": "highway",
+      "title": "Avfart",
+      "mvpPriority": "core",
+      "introductionStage": "complex_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "highway_lane_discipline",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "observation_signaling",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "car_control_speed_adaptation",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "rural",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "maneuver_reversing",
+      "areaKey": "maneuvering",
+      "title": "Backning",
+      "mvpPriority": "core",
+      "introductionStage": "foundation",
+      "prerequisites": [
+        {
+          "skillKey": "car_control_smooth_start_stop",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "observation_scanning",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "residential",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "maneuver_hill_start",
+      "areaKey": "maneuvering",
+      "title": "Start i lutning",
+      "mvpPriority": "core",
+      "introductionStage": "mixed_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "car_control_smooth_start_stop",
+          "strength": "hard"
+        },
+        {
+          "skillKey": "car_control_gear_shifting",
+          "strength": "hard",
+          "note": "Manual only; otherwise soft dependency"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "maneuver_parallel_parking",
+      "areaKey": "maneuvering",
+      "title": "Parallellparkering",
+      "mvpPriority": "core",
+      "introductionStage": "mixed_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "maneuver_reversing",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "observation_scanning",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "positioning_road_position",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "maneuver_parking",
+      "areaKey": "maneuvering",
+      "title": "Övrig parkering",
+      "mvpPriority": "supporting",
+      "introductionStage": "mixed_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "maneuver_reversing",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "maneuver_turning_around",
+      "areaKey": "maneuvering",
+      "title": "Vändning",
+      "mvpPriority": "core",
+      "introductionStage": "mixed_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "maneuver_reversing",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "observation_scanning",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "independent_route_planning",
+      "areaKey": "independent_safe_driving",
+      "title": "Köra mot mål",
+      "mvpPriority": "core",
+      "introductionStage": "independent_readiness",
+      "prerequisites": [
+        {
+          "skillKey": "positioning_lane_selection",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "observation_scanning",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "independent_risk_awareness",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "independent_risk_awareness",
+      "areaKey": "independent_safe_driving",
+      "title": "Riskmedvetenhet",
+      "mvpPriority": "core",
+      "introductionStage": "mixed_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "observation_scanning",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "car_control_speed_adaptation",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "independent_safety_margins",
+      "areaKey": "independent_safe_driving",
+      "title": "Säkerhetsmarginaler",
+      "mvpPriority": "core",
+      "introductionStage": "mixed_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "car_control_speed_adaptation",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        },
+        {
+          "skillKey": "observation_scanning",
+          "strength": "hard",
+          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    },
+    {
+      "skillKey": "independent_eco_driving",
+      "areaKey": "independent_safe_driving",
+      "title": "Sparsam körning",
+      "mvpPriority": "supporting",
+      "introductionStage": "independent_readiness",
+      "prerequisites": [
+        {
+          "skillKey": "car_control_speed_adaptation",
+          "strength": "hard"
+        },
+        {
+          "skillKey": "independent_route_planning",
+          "strength": "soft",
+          "note": "Full eco in varied traffic benefits from route planning experience"
+        }
+      ],
+      "contextProgression": {
+        "typicalStart": {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
+        "relevantDimensions": [
+          "environment",
+          "light",
+          "weather",
+          "traffic"
+        ]
+      },
+      "independenceBeforeContextIncrease": "independent"
+    }
+  ]
+}
