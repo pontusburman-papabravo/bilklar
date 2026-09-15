@@ -6,7 +6,7 @@
   "locale": "sv-SE",
   "licenseClass": "B",
   "artifact": "skill-official-basis-v1",
-  "description": "Mapping of each canonical skill to official Swedish sources. Does not imply training order.",
+  "description": "Mapping of each canonical skill to official Swedish sources (skill → officialBasis[]). Does not imply training order. Taxonomy whyNeeded is intentionally omitted — it is not guaranteed official text.",
   "sourceCatalog": [
     {
       "id": "tsfs-2011-20",
@@ -77,9 +77,7 @@
           "sourceUrl": "https://www.transportstyrelsen.se/globalassets/global/publikationer-och-rapporter/vag/korkort/rad_till_handledaren_a5_2026-08-01.pdf",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Varje körprov börjar här. Transportstyrelsen råder handledare att göra kontroll före varje övning.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "car_control_smooth_start_stop",
@@ -101,9 +99,7 @@
           "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Första praktiska tröskeln innan eleven ska ut i trafik.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "car_control_braking",
@@ -125,9 +121,7 @@
           "sourceUrl": "https://lagen.nu/tsfs/2012:43",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Kursplanen kräver olika sätt att bromsa. v1 bedömer kontrollerad broms, inte halkbanans nödbroms.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "car_control_gear_shifting",
@@ -149,9 +143,7 @@
           "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Standard-B utan villkor 78 prövas med manuell växellåda. Vid transmission_scope automatic_only behandlas som not_applicable i progression.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "car_control_speed_adaptation",
@@ -173,9 +165,7 @@
           "sourceUrl": "https://lagen.nu/tsfs/2012:43",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Tvärgående kärnförmåga. Modelleras en gång och bedöms i det context där den övades.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "observation_mirror_routine",
@@ -197,9 +187,7 @@
           "sourceUrl": "https://lagen.nu/tsfs/2012:43",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Konkret, träningsbar del av goda avsökningsrutiner.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "observation_blind_spot",
@@ -221,9 +209,7 @@
           "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Eget vanligt fel, inte samma sak som spegelrutin.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "observation_signaling",
@@ -245,9 +231,7 @@
           "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Samspel mer än blick. Klassiskt fel i rondellutfart och landsvägssväng.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "observation_scanning",
@@ -269,9 +253,7 @@
           "sourceUrl": "https://lagen.nu/tsfs/2012:43",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Samlar generell avsökning och tidig upptäckt. observation_anticipation slogs ihop hit.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "positioning_road_position",
@@ -293,9 +275,7 @@
           "sourceUrl": "https://lagen.nu/tsfs/2012:43",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Grundplacering syns i nästan varje pass.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "positioning_lane_selection",
@@ -317,9 +297,7 @@
           "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Eget provmoment när flera fält går åt samma håll.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "positioning_lane_change",
@@ -341,9 +319,7 @@
           "sourceUrl": "https://lagen.nu/tsfs/2012:43",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Sätter ihop blick, tecken och placering i ett observerbart moment.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "positioning_turning",
@@ -365,9 +341,7 @@
           "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Placering i sväng är ett beteende. Korsningens regler är andra skills.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "intersections_right_hand_rule",
@@ -389,9 +363,7 @@
           "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Svensk särregel, vanlig i bostadsområden. Inte samma sak som skyltad väjningsplikt.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "intersections_give_way",
@@ -413,9 +385,7 @@
           "sourceUrl": "https://lagen.nu/tsfs/2012:43",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Skyltad väjningsplikt och stopplikt bedöms som ett praktiskt paket.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "intersections_traffic_lights",
@@ -437,9 +407,7 @@
           "sourceUrl": "https://lagen.nu/tsfs/2012:43",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Eget provmoment. Kräver timing mer än att kunna färgerna.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "roundabout_entry",
@@ -461,9 +429,7 @@
           "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Annat beteende än placering inne i rondellen eller utfart.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "roundabout_positioning",
@@ -485,9 +451,7 @@
           "sourceUrl": "https://lagen.nu/tsfs/2012:43",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Skilt från infart. Vanligt fel i större svenska rondeller.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "roundabout_exit",
@@ -509,9 +473,7 @@
           "sourceUrl": "https://lagen.nu/tsfs/2012:43",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Missat blinkers ut är ett av de vanligaste handledarkommentarerna.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "urban_vulnerable_road_users",
@@ -533,9 +495,7 @@
           "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Trafikverket behandlar oskyddade trafikanter som ett paket.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "urban_passing_stationary",
@@ -557,9 +517,7 @@
           "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Matchar Trafikverkets provpunkt. Ersätter den mer teoretiska kandidaten urban_public_transport.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "urban_tight_spaces",
@@ -581,9 +539,7 @@
           "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Vanlig svensk bostadsträning. Inte samma sak som landsvägsmote.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "rural_joining_and_leaving",
@@ -605,9 +561,7 @@
           "sourceUrl": "https://lagen.nu/tsfs/2012:43",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Trafikverket har egna provpunkter för infart till och sväng från landsväg.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "rural_curves",
@@ -629,9 +583,7 @@
           "sourceUrl": "https://www.transportstyrelsen.se/tsfs/TSFS%202011_20.pdf",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Eget landsvägsbeteende, inte bara hastighet plus rural context.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "rural_meeting_traffic",
@@ -653,9 +605,7 @@
           "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Trafikverket har möte som egen bedömning. Skilt från omkörning.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "rural_passing",
@@ -677,9 +627,7 @@
           "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Högriskmoment. independent inkluderar att låta bli när det inte är säkert.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "highway_merging",
@@ -701,9 +649,7 @@
           "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Eget motorvägsbeteende. Förutsätter fart, spegel och körfältsbyte.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "highway_lane_discipline",
@@ -725,9 +671,7 @@
           "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Inte samma sak som urbant körfältsval. Avstånd hör till independent_safety_margins.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "highway_exiting",
@@ -749,9 +693,7 @@
           "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Spegelvänt mot påfart. Vanligt att farten sänks för tidigt.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "maneuver_reversing",
@@ -773,9 +715,7 @@
           "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Minst ett backmoment krävs på körprovet.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "maneuver_hill_start",
@@ -797,9 +737,7 @@
           "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Uttryckligt tilläggsmoment på körprovet. Vanlig tröskel med manuell låda.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "maneuver_parallel_parking",
@@ -821,9 +759,7 @@
           "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Det moment svenska familjer övar mest. Hålls isär från övrig parkering.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "maneuver_parking",
@@ -845,9 +781,7 @@
           "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Körprovet kan be om olika parkeringssätt. Inte samma motorik som längs gata.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "maneuver_turning_around",
@@ -869,9 +803,7 @@
           "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Eget provmoment. Kopplar till självständig körning när eleven kört fel.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "independent_route_planning",
@@ -893,9 +825,7 @@
           "sourceUrl": "https://www.trafikverket.se/korkort/ta-korkort/personbil-och-latt-lastbil/sa-gar-korprovet-till/",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Trafikverkets självständig körning mot mål. Sista kilen före uppkörning.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "independent_risk_awareness",
@@ -917,9 +847,7 @@
           "sourceUrl": "https://lagen.nu/tsfs/2012:43",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Samlar förutseende och proaktiva beslut. observation_anticipation och independent_proactive_decisions slogs ihop hit.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "independent_safety_margins",
@@ -941,9 +869,7 @@
           "sourceUrl": "https://lagen.nu/tsfs/2012:43",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Eget kursplanemål. Ersätter rural_speed_and_distance och highway_distance som egna skills.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     },
     {
       "skillKey": "independent_eco_driving",
@@ -979,9 +905,7 @@
           "sourceUrl": "https://www.transportstyrelsen.se/globalassets/global/publikationer-och-rapporter/vag/korkort/rad_till_handledaren_a5_2026-08-01.pdf",
           "dataType": "OFFICIAL REQUIREMENT"
         }
-      ],
-      "officialSummary": "Finns i både kursplan och körprov. Supporting så den inte tränger ut kärnloopen.",
-      "dataType": "OFFICIAL REQUIREMENT"
+      ]
     }
   ]
 }

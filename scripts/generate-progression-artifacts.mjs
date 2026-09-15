@@ -1061,7 +1061,8 @@ for (const area of taxonomy.areas) {
 const officialBasisArtifact = {
   ...META,
   artifact: "skill-official-basis-v1",
-  description: "Mapping of each canonical skill to official Swedish sources. Does not imply training order.",
+  description:
+    "Mapping of each canonical skill to official Swedish sources (skill → officialBasis[]). Does not imply training order. Taxonomy whyNeeded is intentionally omitted — it is not guaranteed official text.",
   sourceCatalog: taxonomy.sources,
   skills: allSkills.map((skill) => ({
     skillKey: skill.skillKey,
@@ -1069,8 +1070,6 @@ const officialBasisArtifact = {
     areaKey: skill.areaKey,
     mvpPriority: skill.mvpPriority,
     officialBasis: mapOfficialBasis(skill),
-    officialSummary: skill.whyNeeded,
-    dataType: "OFFICIAL REQUIREMENT",
   })),
 };
 
@@ -1383,8 +1382,29 @@ function validateArtifacts(artifacts) {
     }
   }
 
+  const disallowedOfficialBasisSkillFields = [
+    "officialSummary",
+    "whyNeeded",
+    "taxonomyRationale",
+    "dataType",
+  ];
   for (const s of officialBasisArtifact.skills) {
+    for (const field of disallowedOfficialBasisSkillFields) {
+      if (field in s) {
+        errors.push(
+          `officialBasis skill ${s.skillKey}: must not include ${field} (not guaranteed official)`,
+        );
+      }
+    }
+    if (!s.officialBasis?.length) {
+      errors.push(`officialBasis skill ${s.skillKey}: officialBasis must be non-empty`);
+    }
     for (const b of s.officialBasis) {
+      if (b.dataType !== "OFFICIAL REQUIREMENT") {
+        errors.push(
+          `officialBasis ${s.skillKey} → ${b.sourceId}: entry must be OFFICIAL REQUIREMENT`,
+        );
+      }
       if (!SOURCE_CATALOG[b.sourceId]) {
         errors.push(`officialBasis ${s.skillKey}: unknown sourceId ${b.sourceId}`);
       } else if (!b.sourceUrl) {
