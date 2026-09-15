@@ -37,8 +37,28 @@ En handledare som inte har autentiserat sig än får:
 | Token lagras endast hashad | `journey_invitations.token_hash` |
 | Expiry | `expires_at` + status `expired` |
 | Status | `pending` / `accepted` / `expired` / `revoked` |
-| One-time acceptance | `accepted_at` sätts en gång; status → `accepted` |
-| Replay protection | Unik token_hash; accepterad invitation kan inte återanvändas |
+| Accepted state | DB CHECK: `status = accepted` kräver `accepted_at` och `accepted_by_user_id` |
+| Pending state | DB CHECK: `status = pending` kräver att accept-fält är NULL |
+| One-time acceptance | Atomic UPDATE i service layer (se nedan) |
+| Replay protection | Unik `token_hash`; exakt en caller vinner race |
+
+### Atomic accept (service layer)
+
+Race condition mellan parallella accept-requests löses med en enda conditional UPDATE — inte med mer modellering:
+
+```sql
+UPDATE journey_invitations
+SET status = 'accepted',
+    accepted_at = now(),
+    accepted_by_user_id = $user_id,
+    updated_at = now()
+WHERE id = $invitation_id
+  AND status = 'pending'
+  AND expires_at > now()
+RETURNING *;
+```
+
+Exakt en caller får raden. `RETURNING` tom → invitation redan accepterad, expired eller revoked.
 
 ## Constraints (ej i UI ännu)
 

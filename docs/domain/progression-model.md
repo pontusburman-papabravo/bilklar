@@ -26,7 +26,7 @@ Recommendation logic och progression scores **lagras inte** som canonical tabell
 | Context på drive | `environment[]`, `light_condition`, `weather_condition`, `traffic_level` |
 | `context_override` på observation | Avvikande context för just den bedömningen |
 | `transmission_scope` på journey | `car_control_gear_shifting` → `not_applicable` vid `automatic_only` |
-| `supersedes_observation_id` | Korrigeringskedja — senaste giltiga observation per kedja |
+| `supersedes_observation_id` | Linjär korrigeringskedja — högst en correction per ursprungsobservation (DB unique index) |
 
 ## Assessment → progression
 

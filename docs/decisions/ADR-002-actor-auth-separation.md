@@ -12,13 +12,15 @@ Handledare ska kunna delta via QR/länk innan full autentisering. Senare ska sam
 - `users` = actor/person (stable identity)
 - `auth_identities` = authentication methods linked to a user
 - Guest actor får `account_state = guest` och kan senare få auth identities utan merge
-- Ingen normal guest→registered-process ska kräva merge av `users`
+- Normal claim av en tidigare oanvänd auth identity behåller samma `user_id`
+- Claim av en identity som redan hör till en annan user är ett separat account-reconciliation-fall och ingår inte i första vertical slice
 
 ## Consequences
 
 - Alla FK (`observer_user_id`, `supervisor_user_id`, etc.) pekar på `users.id` — stabilt genom hela livscykeln
 - Auth-provider integration är separat concern i framtida PR
 - Guest session kan skapas vid invitation accept utan login-formulär
+- Scenario "guest på ny telefon → gör körpass → loggar in med befintlig Apple-identitet som redan sitter på annan user" kräver reconciliation — byggs inte nu
 
 ## Relaterade dokument
 

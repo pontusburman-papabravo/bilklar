@@ -177,7 +177,17 @@ CREATE TABLE journey_invitations (
   created_at           timestamptz NOT NULL DEFAULT now(),
   updated_at           timestamptz NOT NULL DEFAULT now(),
   CONSTRAINT journey_invitations_token_hash_unique
-    UNIQUE (token_hash)
+    UNIQUE (token_hash),
+  CONSTRAINT journey_invitations_accepted_requires_fields
+    CHECK (
+      status != 'accepted'
+      OR (accepted_at IS NOT NULL AND accepted_by_user_id IS NOT NULL)
+    ),
+  CONSTRAINT journey_invitations_pending_not_accepted
+    CHECK (
+      status != 'pending'
+      OR (accepted_at IS NULL AND accepted_by_user_id IS NULL)
+    )
 );
 
 CREATE INDEX idx_journey_invitations_journey_id ON journey_invitations (journey_id);
@@ -224,9 +234,9 @@ CREATE TABLE drives (
   ended_at            timestamptz,
   distance_meters     integer,
   environment         driving_environment[] NOT NULL DEFAULT '{}',
-  light_condition     light_condition NOT NULL,
-  weather_condition   weather_condition NOT NULL,
-  traffic_level       traffic_level NOT NULL,
+  light_condition     light_condition,
+  weather_condition   weather_condition,
+  traffic_level       traffic_level,
   created_at          timestamptz NOT NULL DEFAULT now(),
   PRIMARY KEY (id, journey_id),
   CONSTRAINT drives_ended_after_started
@@ -337,5 +347,9 @@ CREATE INDEX idx_drive_observations_journey_id ON drive_observations (journey_id
 CREATE INDEX idx_drive_observations_drive_id ON drive_observations (drive_id, journey_id);
 CREATE INDEX idx_drive_observations_skill_id ON drive_observations (journey_id, skill_id);
 CREATE INDEX idx_drive_observations_observed_at ON drive_observations (journey_id, observed_at DESC);
+
+CREATE UNIQUE INDEX idx_drive_observations_single_superseder
+  ON drive_observations (supersedes_observation_id, journey_id)
+  WHERE supersedes_observation_id IS NOT NULL;
 
 COMMIT;

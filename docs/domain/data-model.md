@@ -106,9 +106,13 @@ Elevägd resa. Studenten är **inte** collaborator.
 | `expires_at` | `timestamptz` | |
 | `status` | `invitation_status` | |
 | `accepted_at` | `timestamptz` | Sätts vid accept |
-| `accepted_by_user_id` | `uuid` FK → `users` | Nullable |
+| `accepted_by_user_id` | `uuid` FK → `users` | Nullable tills accept |
 | `created_at` | `timestamptz` | |
 | `updated_at` | `timestamptz` | |
+
+**DB CHECK:** `status = accepted` kräver både `accepted_at` och `accepted_by_user_id`. `status = pending` kräver att båda är NULL.
+
+**One-time acceptance** (service layer): atomic conditional UPDATE — se [Onboarding & handoff](../product/onboarding-handoff.md).
 
 ### `skills` / `skill_definitions`
 
@@ -142,13 +146,15 @@ Elevägd resa. Studenten är **inte** collaborator.
 | `started_at` | `timestamptz` | |
 | `ended_at` | `timestamptz` | Nullable |
 | `distance_meters` | `integer` | Nullable, ≥ 0 |
-| `environment` | `driving_environment[]` | |
-| `light_condition` | `light_condition` | |
-| `weather_condition` | `weather_condition` | |
-| `traffic_level` | `traffic_level` | |
+| `environment` | `driving_environment[]` | Default `{}` = inte registrerat |
+| `light_condition` | `light_condition` | Nullable — `NULL` = inte observerat/registrerat |
+| `weather_condition` | `weather_condition` | Nullable |
+| `traffic_level` | `traffic_level` | Nullable |
 | `created_at` | `timestamptz` | |
 
 **Unik:** `(id, journey_id)` — composite key för journey-isolerade FK.
+
+Drive-context är valfri i v1. Första vertical slice ska inte tvinga handledaren att ange ljus, väder eller trafik.
 
 ### `training_focus_items`
 
@@ -213,14 +219,21 @@ Append-only ledger.
 | 2 | Drive focus får inte peka på focus item i annan journey | **DB** — composite FK `(training_focus_item_id, journey_id)` |
 | 3 | Observation får inte superseda observation i annan journey | **DB** — composite FK `(supersedes_observation_id, journey_id)` |
 | 4 | Observation får inte superseda sig själv | **DB** — CHECK `supersedes_observation_id != id` |
-| 5 | Correction-chain får inte skapa cykel | **Service layer** — validering vid insert |
-| 6 | Supervisor på drive måste höra till journey | **Service layer** — collaborator-check |
-| 7 | `started_by_user_id` måste ha relation till journey | **Service layer** — student eller collaborator |
-| 8 | Eleven får inte bjudas in som sin egen handledare | **Service layer** — validering vid invitation create/accept |
-| 9 | Invitation får inte accepteras två gånger | **DB** — partial unique på `accepted_at`; **service layer** — status transition |
-| 10 | Expired/revoked invitation får inte användas | **Service layer** — accept-validering |
-| 11 | Completed focus item ska ha `completed_at` | **DB** — CHECK constraint |
-| 12 | Active focus item ska normalt inte ha `completed_at` | **DB** — CHECK constraint |
+| 5 | Högst en observation får superseda en given observation | **DB** — unique index på `(supersedes_observation_id, journey_id)` |
+| 6 | Correction måste behålla samma `journey_id`, `drive_id`, `skill_id` | **Service layer** — validering vid insert |
+| 7 | Correction-chain får inte skapa cykel | **Service layer** — validering vid insert |
+| 8 | Supervisor på drive måste höra till journey | **Service layer** — collaborator-check |
+| 9 | `started_by_user_id` måste ha relation till journey | **Service layer** — student eller collaborator |
+| 10 | Eleven får inte bjudas in som sin egen handledare | **Service layer** — validering vid invitation create/accept |
+| 11 | Invitation får inte accepteras två gånger | **Service layer** — atomic conditional UPDATE |
+| 12 | Accepted invitation kräver accept-fält | **DB** — CHECK constraint |
+| 13 | Pending invitation får inte ha accept-fält | **DB** — CHECK constraint |
+| 14 | Expired/revoked invitation får inte användas | **Service layer** — accept-validering |
+| 15 | Completed focus item ska ha `completed_at` | **DB** — CHECK constraint |
+| 16 | Active focus item ska normalt inte ha `completed_at` | **DB** — CHECK constraint |
+| 17 | Student observation → `observer_user_id = student_user_id` | **Service layer** |
+| 18 | Supervisor observation → `observer_user_id` är aktiv supervisor | **Service layer** |
+| 19 | Actor identity hämtas från server session, inte klientinput | **Service layer** |
 
 ## Observation source rules
 
@@ -232,6 +245,17 @@ Append-only ledger.
 | `driving_school` | `observer_user_id` ELLER `external_source_ref` krävs |
 
 Implementerat som **DB CHECK** på `drive_observations`.
+
+## Observation provenance (service layer)
+
+DB säkerställer att `observer_user_id` finns för `supervisor`/`student`, men inte att personen har rätt roll. Följande gäller innan API byggs:
+
+| Source | Service-invariant |
+| --- | --- |
+| `student` | `observer_user_id = journey.student_user_id` |
+| `supervisor` | `observer_user_id` är aktiv supervisor på journey; normalt samma actor som `drive.supervisor_user_id` |
+
+**Authorization:** `observer_user_id`, `started_by_user_id` och accepterande user vid invitation hämtas från serverns actor/session — skickas inte in som betrodd identity från klienten.
 
 ## Relaterade dokument
 

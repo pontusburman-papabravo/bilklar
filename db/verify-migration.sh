@@ -213,5 +213,138 @@ EXCEPTION WHEN check_violation THEN
 END $$;
 SQL
 
+echo "==> Verify nullable drive context"
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
+INSERT INTO drives (id, journey_id, started_by_user_id, supervisor_user_id)
+VALUES ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
+        '33333333-3333-4333-8333-333333333333',
+        '11111111-1111-4111-8111-111111111111',
+        '22222222-2222-4222-8222-222222222222');
+
+DO $$
+DECLARE
+  ctx light_condition;
+BEGIN
+  SELECT light_condition INTO ctx
+  FROM drives
+  WHERE id = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
+
+  IF ctx IS NOT NULL THEN
+    RAISE EXCEPTION 'light_condition should be NULL when not provided';
+  END IF;
+END $$;
+SQL
+
+echo "==> Verify invitation state constraints"
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
+DO $$
+BEGIN
+  BEGIN
+    INSERT INTO journey_invitations (journey_id, invited_by_user_id, token_hash, expires_at, status,
+                                     accepted_at, accepted_by_user_id)
+    VALUES ('33333333-3333-4333-8333-333333333333',
+            '11111111-1111-4111-8111-111111111111',
+            'hash-accepted-without-fields',
+            now() + interval '1 day',
+            'accepted', NULL, NULL);
+    RAISE EXCEPTION 'accepted without fields should be rejected';
+  EXCEPTION WHEN check_violation THEN
+    RAISE NOTICE 'invitation accepted_requires_fields correctly enforced';
+  END;
+
+  BEGIN
+    INSERT INTO journey_invitations (journey_id, invited_by_user_id, token_hash, expires_at, status,
+                                     accepted_at, accepted_by_user_id)
+    VALUES ('33333333-3333-4333-8333-333333333333',
+            '11111111-1111-4111-8111-111111111111',
+            'hash-pending-with-fields',
+            now() + interval '1 day',
+            'pending', now(), '22222222-2222-4222-8222-222222222222');
+    RAISE EXCEPTION 'pending with accept fields should be rejected';
+  EXCEPTION WHEN check_violation THEN
+    RAISE NOTICE 'invitation pending_not_accepted correctly enforced';
+  END;
+END $$;
+SQL
+
+echo "==> Verify linear correction chain"
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
+DO $$
+DECLARE
+  original_id uuid := 'cccccccc-cccc-4ccc-8ccc-cccccccccccc';
+BEGIN
+  INSERT INTO drive_observations (id, journey_id, drive_id, skill_id, observer_user_id,
+                                  source_type, assessment)
+  VALUES (original_id, '33333333-3333-4333-8333-333333333333',
+          'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+          '44444444-4444-4444-8444-444444444444',
+          '22222222-2222-4222-8222-222222222222',
+          'supervisor', 'needs_help');
+
+  INSERT INTO drive_observations (journey_id, drive_id, skill_id, observer_user_id,
+                                  source_type, assessment, supersedes_observation_id)
+  VALUES ('33333333-3333-4333-8333-333333333333',
+          'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+          '44444444-4444-4444-8444-444444444444',
+          '22222222-2222-4222-8222-222222222222',
+          'supervisor', 'with_support', original_id);
+
+  BEGIN
+    INSERT INTO drive_observations (journey_id, drive_id, skill_id, observer_user_id,
+                                    source_type, assessment, supersedes_observation_id)
+    VALUES ('33333333-3333-4333-8333-333333333333',
+            'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+            '44444444-4444-4444-8444-444444444444',
+            '22222222-2222-4222-8222-222222222222',
+            'supervisor', 'independent', original_id);
+    RAISE EXCEPTION 'duplicate supersede should be rejected';
+  EXCEPTION WHEN unique_violation THEN
+    RAISE NOTICE 'linear correction chain correctly enforced';
+  END;
+END $$;
+SQL
+
+echo "==> Verify atomic invitation accept"
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
+INSERT INTO journey_invitations (id, journey_id, invited_by_user_id, token_hash, expires_at)
+VALUES ('dddddddd-dddd-4ddd-8ddd-dddddddddddd',
+        '33333333-3333-4333-8333-333333333333',
+        '11111111-1111-4111-8111-111111111111',
+        'hash-atomic-accept',
+        now() + interval '1 day');
+
+DO $$
+DECLARE
+  first_count integer;
+  second_count integer;
+BEGIN
+  UPDATE journey_invitations
+  SET status = 'accepted',
+      accepted_at = now(),
+      accepted_by_user_id = '22222222-2222-4222-8222-222222222222',
+      updated_at = now()
+  WHERE id = 'dddddddd-dddd-4ddd-8ddd-dddddddddddd'
+    AND status = 'pending'
+    AND expires_at > now();
+
+  GET DIAGNOSTICS first_count = ROW_COUNT;
+
+  UPDATE journey_invitations
+  SET status = 'accepted',
+      accepted_at = now(),
+      accepted_by_user_id = '22222222-2222-4222-8222-222222222222',
+      updated_at = now()
+  WHERE id = 'dddddddd-dddd-4ddd-8ddd-dddddddddddd'
+    AND status = 'pending'
+    AND expires_at > now();
+
+  GET DIAGNOSTICS second_count = ROW_COUNT;
+
+  IF first_count != 1 OR second_count != 0 THEN
+    RAISE EXCEPTION 'atomic accept failed: first=%, second=%', first_count, second_count;
+  END IF;
+END $$;
+SQL
+
 echo ""
 echo "All migration verification checks passed."
