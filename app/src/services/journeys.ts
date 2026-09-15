@@ -1,5 +1,5 @@
 import type pg from "pg";
-import { withTransaction } from "../db/pool.js";
+import { getPool, withTransaction } from "../db/pool.js";
 import { createGuestUser } from "./users.js";
 
 export interface DrivingJourney {
@@ -76,6 +76,38 @@ export async function getJourneyById(
     transmissionScope: row.transmission_scope,
     status: row.status,
   };
+}
+
+export async function resolveHomeJourneyId(
+  userId: string,
+  client?: pg.PoolClient,
+): Promise<string | null> {
+  const db = client ?? getPool();
+
+  const studentJourney = await db.query(
+    `SELECT id FROM driving_journeys
+     WHERE student_user_id = $1
+     ORDER BY created_at DESC
+     LIMIT 1`,
+    [userId],
+  );
+  if ((studentJourney.rowCount ?? 0) > 0) {
+    return studentJourney.rows[0].id as string;
+  }
+
+  const supervisorJourneys = await db.query(
+    `SELECT journey_id FROM journey_collaborators
+     WHERE user_id = $1
+       AND role = 'supervisor'
+       AND status = 'active'
+     ORDER BY created_at DESC`,
+    [userId],
+  );
+  if ((supervisorJourneys.rowCount ?? 0) === 1) {
+    return supervisorJourneys.rows[0].journey_id as string;
+  }
+
+  return null;
 }
 
 export async function listActiveSupervisors(
