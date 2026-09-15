@@ -8,7 +8,7 @@
     "start": "node dist/index.js",
     "build": "tsc",
     "seed": "tsx src/db/seed-taxonomy.ts",
-    "test": "tsx --test tests/**/*.test.ts"
+    "test": "tsx --import ./tests/register-hooks.ts --test --test-concurrency=1 tests/**/*.test.ts"
   },
   "dependencies": {
     "@fastify/cookie": "^11.0.2",

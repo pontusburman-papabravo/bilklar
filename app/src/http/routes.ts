@@ -17,7 +17,9 @@ import {
 import { getPool } from "../db/pool.js";
 import {
   createDriveWithFocus,
+  driveHasSupervisorRating,
   endDrive,
+  getActiveDrive,
   getDrive,
   getDriveFocusSkills,
 } from "../services/drives.js";
@@ -141,29 +143,52 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
            </section>`
         : "";
 
-      const activeDrive = await getPool().query(
-        `SELECT id, ended_at FROM drives
-         WHERE journey_id = $1
-         ORDER BY started_at DESC
+      const activeDrive = await getActiveDrive(journeyId);
+      const latestEnded = await getPool().query(
+        `SELECT id, supervisor_user_id FROM drives
+         WHERE journey_id = $1 AND ended_at IS NOT NULL
+         ORDER BY ended_at DESC
          LIMIT 1`,
         [journeyId],
       );
-      const latestDrive = activeDrive.rows[0];
-      const pendingRating =
-        latestDrive?.ended_at &&
-        access.role === "supervisor"
-          ? `<section class="card">
+      const latestEndedDrive = latestEnded.rows[0];
+
+      let pendingRating = "";
+      if (
+        latestEndedDrive &&
+        access.role === "supervisor" &&
+        latestEndedDrive.supervisor_user_id === userId
+      ) {
+        const alreadyRated = await driveHasSupervisorRating(
+          journeyId,
+          latestEndedDrive.id,
+        );
+        if (!alreadyRated) {
+          pendingRating = `<section class="card">
                <h2>Bedöm senaste körpasset</h2>
-               <a class="btn btn-primary" href="/journey/${escapeHtml(journeyId)}/drive/${escapeHtml(latestDrive.id)}/rate">Bedöm moment</a>
+               <a class="btn btn-primary" href="/journey/${escapeHtml(journeyId)}/drive/${escapeHtml(latestEndedDrive.id)}/rate">Bedöm moment</a>
+             </section>`;
+        }
+      }
+
+      const activeDriveSection = activeDrive
+        ? `<section class="card">
+             <h2>Körpass pågår</h2>
+             <a class="btn btn-primary" href="/journey/${escapeHtml(journeyId)}/drive/${escapeHtml(activeDrive.id)}">Gå till körpasset</a>
+           </section>`
+        : "";
+
+      const startDriveSection =
+        hasSupervisor && !activeDrive
+          ? `<section class="card">
+               <h2>Nästa körpass</h2>
+               <p>Välj 2–3 moment att träna på idag.</p>
+               <a class="btn btn-primary" href="/journey/${escapeHtml(journeyId)}/drive/new">Vad tränar ni på idag?</a>
              </section>`
           : "";
 
       const driveSection = hasSupervisor
-        ? `${pendingRating}<section class="card">
-             <h2>Nästa körpass</h2>
-             <p>Välj 2–3 moment att träna på idag.</p>
-             <a class="btn btn-primary" href="/journey/${escapeHtml(journeyId)}/drive/new">Vad tränar ni på idag?</a>
-           </section>`
+        ? `${activeDriveSection}${pendingRating}${startDriveSection}`
         : `<section class="card">
              <p class="muted">Bjud in en handledare för att kunna starta ett körpass.</p>
            </section>`;
@@ -288,7 +313,28 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
     const userId = requireSessionUserId(request);
 
     try {
-      await requireJourneyAccess(journeyId, userId);
+      const access = await requireJourneyAccess(journeyId, userId);
+      const activeDrive = await getActiveDrive(journeyId);
+      if (activeDrive) {
+        return reply.redirect(`/journey/${journeyId}/drive/${activeDrive.id}`);
+      }
+
+      const supervisors = await listActiveSupervisors(journeyId);
+      const supervisorPicker =
+        access.role === "student" && supervisors.length > 1
+          ? `<div>
+               <label for="supervisor">Vilken handledare kör med er?</label>
+               <select id="supervisor" name="supervisor_user_id" required class="supervisor-select">
+                 ${supervisors
+                   .map(
+                     (s) =>
+                       `<option value="${escapeHtml(s.userId)}">${escapeHtml(s.displayName ?? "Handledare")}</option>`,
+                   )
+                   .join("")}
+               </select>
+             </div>`
+          : "";
+
       const skills = await listSkillsForTaxonomy();
       const groups = groupSkillsByArea(skills);
 
@@ -316,6 +362,7 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
           `<h1>Vad tränar ni på idag?</h1>
            <p>Välj 2–3 moment.</p>
            <form method="post" action="/journey/${escapeHtml(journeyId)}/drives" class="stack" id="focus-form">
+             ${supervisorPicker}
              ${areaHtml}
              ${primaryButton("Starta körpass")}
            </form>
@@ -341,7 +388,10 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
   app.post("/journey/:journeyId/drives", async (request, reply) => {
     const { journeyId } = request.params as { journeyId: string };
     const userId = requireSessionUserId(request);
-    const body = request.body as { skill_ids?: string | string[] };
+    const body = request.body as {
+      skill_ids?: string | string[];
+      supervisor_user_id?: string;
+    };
 
     const skillIds = Array.isArray(body.skill_ids)
       ? body.skill_ids
@@ -350,7 +400,12 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
         : [];
 
     try {
-      const { drive } = await createDriveWithFocus(journeyId, userId, skillIds);
+      const { drive } = await createDriveWithFocus(
+        journeyId,
+        userId,
+        skillIds,
+        body.supervisor_user_id,
+      );
       return reply.redirect(`/journey/${journeyId}/drive/${drive.id}`);
     } catch (error) {
       const { status, message } = handleError(error);
@@ -375,7 +430,14 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
 
       if (drive.endedAt) {
         const access = await requireJourneyAccess(journeyId, userId);
-        if (access.role === "supervisor") {
+        if (
+          access.role === "supervisor" &&
+          drive.supervisorUserId === userId
+        ) {
+          const alreadyRated = await driveHasSupervisorRating(journeyId, driveId);
+          if (alreadyRated) {
+            return reply.redirect(`/journey/${journeyId}/drive/${driveId}/done`);
+          }
           return reply.redirect(`/journey/${journeyId}/drive/${driveId}/rate`);
         }
         return reply.type("text/html").send(
@@ -420,9 +482,12 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
     const userId = requireSessionUserId(request);
 
     try {
-      await endDrive(journeyId, driveId, userId);
-      const access = await requireJourneyAccess(journeyId, userId);
-      if (access.role === "supervisor") {
+      const drive = await endDrive(journeyId, driveId, userId);
+      if (drive.supervisorUserId === userId) {
+        const alreadyRated = await driveHasSupervisorRating(journeyId, driveId);
+        if (alreadyRated) {
+          return reply.redirect(`/journey/${journeyId}/drive/${driveId}/done`);
+        }
         return reply.redirect(`/journey/${journeyId}/drive/${driveId}/rate`);
       }
       return reply.redirect(`/journey/${journeyId}/drive/${driveId}`);
@@ -447,8 +512,14 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
       if (!drive) {
         return reply.status(404).send("Not found");
       }
+      if (drive.supervisorUserId !== userId) {
+        throw new AppError("Only the drive supervisor can rate this drive", 403);
+      }
       if (!drive.endedAt) {
         return reply.redirect(`/journey/${journeyId}/drive/${driveId}`);
+      }
+      if (await driveHasSupervisorRating(journeyId, driveId)) {
+        return reply.redirect(`/journey/${journeyId}/drive/${driveId}/done`);
       }
 
       const focusSkills = await getDriveFocusSkills(journeyId, driveId, userId);
@@ -502,7 +573,6 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
     };
     const observerUserId = requireSessionUserId(request);
 
-    await requireActiveSupervisor(journeyId, observerUserId);
     const body = request.body as Record<string, string | string[]>;
 
     const skillIds = Array.isArray(body.skill_ids)
@@ -521,6 +591,9 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
       return reply.redirect(`/journey/${journeyId}/drive/${driveId}/done`);
     } catch (error) {
       const { status, message } = handleError(error);
+      if (error instanceof AppError && error.code === "already_rated") {
+        return reply.redirect(`/journey/${journeyId}/drive/${driveId}/done`);
+      }
       return reply.status(status).type("text/html").send(
         layout("Fel", errorBanner(message)),
       );

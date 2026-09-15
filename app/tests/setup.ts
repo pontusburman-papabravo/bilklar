@@ -1,9 +1,8 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, rmSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import EmbeddedPostgres from "embedded-postgres";
 import pg from "pg";
-import { after, before } from "node:test";
 import { seedTaxonomy } from "../src/db/seed-taxonomy.js";
 import { closePool, getPool } from "../src/db/pool.js";
 
@@ -11,8 +10,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const migrationPath = join(__dirname, "../../db/migrations/0001_initial.sql");
 const TEST_DATABASE_URL =
   "postgresql://bilklar:bilklar@127.0.0.1:54330/bilklar_test";
+const PGDATA_DIR = join(__dirname, "../.pgdata-test");
 
 let embedded: EmbeddedPostgres | null = null;
+let databaseReady = false;
 
 async function waitForPostgres(connectionString: string): Promise<void> {
   for (let attempt = 0; attempt < 30; attempt += 1) {
@@ -31,11 +32,15 @@ async function waitForPostgres(connectionString: string): Promise<void> {
 }
 
 export async function setupTestDatabase(): Promise<void> {
+  if (databaseReady) return;
+
   await closePool();
   process.env.DATABASE_URL = TEST_DATABASE_URL;
 
+  rmSync(PGDATA_DIR, { recursive: true, force: true });
+
   embedded = new EmbeddedPostgres({
-    databaseDir: join(__dirname, "../.pgdata-test"),
+    databaseDir: PGDATA_DIR,
     user: "bilklar",
     password: "bilklar",
     port: 54330,
@@ -67,6 +72,7 @@ export async function setupTestDatabase(): Promise<void> {
   await client.end();
 
   await seedTaxonomy(getPool());
+  databaseReady = true;
 }
 
 export async function teardownTestDatabase(): Promise<void> {
@@ -75,16 +81,7 @@ export async function teardownTestDatabase(): Promise<void> {
     await embedded.stop();
     embedded = null;
   }
-}
-
-export function registerDatabaseHooks(): void {
-  before(async () => {
-    await setupTestDatabase();
-  });
-
-  after(async () => {
-    await teardownTestDatabase();
-  });
+  databaseReady = false;
 }
 
 export async function resetDatabaseData(): Promise<void> {

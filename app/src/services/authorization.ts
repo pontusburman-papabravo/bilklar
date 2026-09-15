@@ -37,7 +37,10 @@ export async function getJourneyAccess(
 
   const collabResult = await db.query(
     `SELECT 1 FROM journey_collaborators
-     WHERE journey_id = $1 AND user_id = $2 AND status = 'active'`,
+     WHERE journey_id = $1
+       AND user_id = $2
+       AND role = 'supervisor'
+       AND status = 'active'`,
     [journeyId, userId],
   );
   if (collabResult.rowCount === 0) return null;

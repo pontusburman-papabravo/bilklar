@@ -15,9 +15,7 @@ import { saveDriveObservations } from "../src/services/observations.js";
 import { recommendNextFocus } from "../src/services/recommendations.js";
 import { createGuestUser } from "../src/services/users.js";
 import { ForbiddenError } from "../src/errors.js";
-import { registerDatabaseHooks, resetDatabaseData } from "./setup.js";
-
-registerDatabaseHooks();
+import { resetDatabaseData } from "./setup.js";
 
 describe("vertical slice", () => {
   beforeEach(async () => {
@@ -173,6 +171,12 @@ describe("vertical slice", () => {
       [drive.id],
     );
     assert.equal(focusCount.rows[0].count, 3);
+
+    const trainingFocusCount = await getPool().query(
+      `SELECT count(*)::int AS count FROM training_focus_items WHERE journey_id = $1`,
+      [journey.id],
+    );
+    assert.equal(trainingFocusCount.rows[0].count, 0);
   });
 
   it("allows supervisor to save observations from session actor", async () => {
@@ -241,13 +245,6 @@ describe("vertical slice", () => {
       { skillId: needsHelpSkill.id, assessment: "needs_help" },
       { skillId: withSupportSkill.id, assessment: "with_support" },
     ]);
-
-    await getPool().query(
-      `UPDATE training_focus_items
-       SET status = 'completed', completed_at = now()
-       WHERE journey_id = $1`,
-      [journey.id],
-    );
 
     const recommendations = await recommendNextFocus(journey.id);
     const reasons = recommendations.map((rec) => rec.reason);
@@ -361,6 +358,8 @@ describe("vertical slice", () => {
 
     const recommendations = await recommendNextFocus(journey.id);
     assert.ok(recommendations.length > 0);
+    assert.equal(recommendations[0].reason, "needs_help");
+    assert.equal(recommendations[0].skillId, skillIds[0]);
 
     const obsCount = await getPool().query(
       `SELECT count(*)::int AS count FROM drive_observations WHERE journey_id = $1`,
