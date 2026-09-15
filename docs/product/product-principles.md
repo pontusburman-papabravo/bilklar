@@ -1,0 +1,39 @@
+# Produktprinciper
+
+Canonical v1-principer för Bilklar. Dessa är låsta tills ett ADR explicit ändrar dem.
+
+## Elev och handledare
+
+1. **Eleven äger körkortsresan.** `driving_journey` tillhör eleven. Handledare deltar, administrerar inte.
+2. **Flera handledare är first-class.** Samma elev, flera supervisors — utan att duplicera data eller byta `user_id`.
+3. **Handledaren ska nästan aldrig administrera.** QR/länk ger lågfriktions-handoff. Ingen trafikskoleportal i v1.
+4. **Guest actor får finnas innan full autentisering.** Scan → stable `user_id` → delta → claim senare, utan merge.
+
+## Domän och data
+
+5. **Skill ≠ Context.** Skill = vad eleven utför. Context = under vilka förhållanden.
+6. **Observation ≠ Training Focus ≠ Drive Focus.** Tre separata begrepp i datamodellen — se [data model](../domain/data-model.md).
+7. **Observationer är append-only** för normal produktkod. Korrigering = ny observation med `supersedes_observation_id`.
+8. **Progression är beräknat read model.** Lagras inte som canonical DB-state.
+9. **Recommendation logic ligger i kod**, inte som canonical DB-state.
+
+## Produkt och marknad
+
+10. **B2C-first.** Privat övningskörning är wedge. Ingen extern integration krävs för launch.
+11. **Bilklar fungerar utan trafikskola och externa API:er.**
+12. **Bilklar är inte teoriapp** och **inte AI-trafiklärare**.
+13. **Bilklar visar inte falsk precision** som "87 % uppkörningsklar".
+
+## Teknik
+
+14. **Actor ≠ authentication.** `users` är person/actor. `auth_identities` är hur personen autentiseras.
+15. **PostgreSQL 15+** som canonical databas — se [ADR-007](../decisions/ADR-007-postgresql-15.md).
+
+## Relaterade ADR:er
+
+- [ADR-001: Student-owned journey](../decisions/ADR-001-student-owned-journey.md)
+- [ADR-002: Actor/auth separation](../decisions/ADR-002-actor-auth-separation.md)
+- [ADR-003: Skill/context separation](../decisions/ADR-003-skill-context-separation.md)
+- [ADR-004: Append-only observations](../decisions/ADR-004-append-only-observations.md)
+- [ADR-005: Observation/focus separation](../decisions/ADR-005-observation-focus-separation.md)
+- [ADR-006: B2C-first](../decisions/ADR-006-b2c-first.md)

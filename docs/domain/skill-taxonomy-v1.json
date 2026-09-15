@@ -1,11 +1,11 @@
 {
   "taxonomyVersion": 1,
-  "status": "draft",
-  "lastUpdated": "2026-09-14",
+  "status": "canonical",
+  "lastUpdated": "2026-09-15",
   "locale": "sv-SE",
   "licenseClass": "B",
   "skillCount": 38,
-  "notes": "Canonical input till senare seed av skills och skill_definitions. Inte databasseed och inte Canonical förrän efter separat review. area-status är proposed, skill-status är draft.",
+  "notes": "Canonical input till seed av skills och skill_definitions. transmission_scope på journey avgör om car_control_gear_shifting är applicable. rural_passing är supporting — omkörning är sällsynt i tidig träning.",
   "sources": [
     {
       "id": "tsfs-2011-20",
@@ -60,7 +60,7 @@
       "areaKey": "car_control",
       "title": "Bilkontroll",
       "sortOrder": 1,
-      "status": "proposed",
+      "status": "canonical",
       "skills": [
         {
           "skillKey": "car_control_pre_drive_check",
@@ -70,7 +70,7 @@
           "officialBasis": ["TSFS 2011:20, 2 kap. 2 § p. 3", "TSFS 2012:43, 14–17 §§", "Råd till handledaren 2026-08-01"],
           "sortOrder": 10,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": [],
           "relevantContext": {
             "environment": ["residential", "urban", "rural", "highway"],
@@ -87,7 +87,7 @@
           "officialBasis": ["TSFS 2011:20, 2 kap. 2 § p. 4", "Trafikverket: start från vägkant"],
           "sortOrder": 20,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": ["car_control_pre_drive_check"],
           "relevantContext": {
             "environment": ["residential", "urban"],
@@ -104,7 +104,7 @@
           "officialBasis": ["TSFS 2011:20, 2 kap. 2 § p. 5", "TSFS 2012:43, 18 §"],
           "sortOrder": 30,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": ["car_control_smooth_start_stop"],
           "relevantContext": {
             "environment": ["residential", "urban", "rural", "highway"],
@@ -117,11 +117,11 @@
           "skillKey": "car_control_gear_shifting",
           "title": "Växling",
           "description": "Eleven väljer och byter växel i tid, utan att tappa uppmärksamheten från vägen. Gäller manuell låda.",
-          "whyNeeded": "Standard-B utan villkor 78 prövas med manuell växellåda. Hoppa över på automatresor.",
+          "whyNeeded": "Standard-B utan villkor 78 prövas med manuell växellåda. Vid transmission_scope automatic_only behandlas som not_applicable i progression.",
           "officialBasis": ["TSFS 2011:20, 2 kap. 2 § p. 4", "Trafikverket: villkor 78"],
           "sortOrder": 40,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": ["car_control_smooth_start_stop"],
           "relevantContext": {
             "environment": ["residential", "urban", "rural", "highway"],
@@ -138,7 +138,7 @@
           "officialBasis": ["TSFS 2011:20, 3 kap. 2 § p. 6", "TSFS 2012:43, 19 § p. 3"],
           "sortOrder": 50,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": ["car_control_braking"],
           "relevantContext": {
             "environment": ["residential", "urban", "rural", "highway"],
@@ -153,7 +153,7 @@
       "areaKey": "observation_interaction",
       "title": "Blick & samspel",
       "sortOrder": 2,
-      "status": "proposed",
+      "status": "canonical",
       "skills": [
         {
           "skillKey": "observation_mirror_routine",
@@ -163,7 +163,7 @@
           "officialBasis": ["TSFS 2011:20, 3 kap. 2 § p. 3", "TSFS 2012:43, 19 § p. 2"],
           "sortOrder": 10,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": ["car_control_smooth_start_stop"],
           "relevantContext": {
             "environment": ["urban", "highway"],
@@ -180,7 +180,7 @@
           "officialBasis": ["TSFS 2011:20, 3 kap. 2 § p. 3", "Trafikverket: körfältsbyte"],
           "sortOrder": 20,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": ["observation_mirror_routine"],
           "relevantContext": {
             "environment": ["urban", "highway"],
@@ -197,7 +197,7 @@
           "officialBasis": ["TSFS 2011:20, 3 kap. 2 § p. 2–3", "Trafikverket: cirkulationsplats, körfältsbyte, sväng från landsväg"],
           "sortOrder": 30,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": ["car_control_smooth_start_stop"],
           "relevantContext": {
             "environment": ["residential", "urban", "rural", "highway"],
@@ -214,7 +214,7 @@
           "officialBasis": ["TSFS 2011:20, 3 kap. 2 § p. 3, 7–8", "TSFS 2012:43, 19 § p. 1–2"],
           "sortOrder": 40,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": ["observation_mirror_routine"],
           "relevantContext": {
             "environment": ["residential", "urban", "rural", "highway"],
@@ -229,7 +229,7 @@
       "areaKey": "positioning_lanes",
       "title": "Placering & körfält",
       "sortOrder": 3,
-      "status": "proposed",
+      "status": "canonical",
       "skills": [
         {
           "skillKey": "positioning_road_position",
@@ -239,7 +239,7 @@
           "officialBasis": ["TSFS 2011:20, 3 kap. 2 § p. 6", "TSFS 2012:43, 19 § p. 5"],
           "sortOrder": 10,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": ["car_control_smooth_start_stop"],
           "relevantContext": {
             "environment": ["residential", "urban", "rural", "highway"],
@@ -256,7 +256,7 @@
           "officialBasis": ["TSFS 2012:43, 19 §", "Trafikverket: körning i körfält"],
           "sortOrder": 20,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": ["positioning_road_position", "observation_scanning"],
           "relevantContext": {
             "environment": ["urban", "highway"],
@@ -273,7 +273,7 @@
           "officialBasis": ["Trafikverket: körfältsbyte", "TSFS 2012:43, 19 §"],
           "sortOrder": 30,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": [
             "observation_mirror_routine",
             "observation_blind_spot",
@@ -295,7 +295,7 @@
           "officialBasis": ["TSFS 2011:20, 3 kap. 2 § p. 6", "Trafikverket: gatukorsning, sväng från landsväg"],
           "sortOrder": 40,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": [
             "positioning_road_position",
             "observation_signaling",
@@ -314,7 +314,7 @@
       "areaKey": "intersections_roundabouts",
       "title": "Korsningar & rondeller",
       "sortOrder": 4,
-      "status": "proposed",
+      "status": "canonical",
       "skills": [
         {
           "skillKey": "intersections_right_hand_rule",
@@ -324,7 +324,7 @@
           "officialBasis": ["TSFS 2011:20, 3 kap. 2 § p. 2", "Trafikverket: gatukorsning"],
           "sortOrder": 10,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": ["car_control_speed_adaptation", "observation_scanning"],
           "relevantContext": {
             "environment": ["residential", "urban"],
@@ -341,7 +341,7 @@
           "officialBasis": ["TSFS 2011:20, 3 kap. 2 § p. 2", "TSFS 2012:43, 19 § färd i vägkorsning"],
           "sortOrder": 20,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": ["car_control_smooth_start_stop", "observation_scanning"],
           "relevantContext": {
             "environment": ["urban", "rural"],
@@ -358,7 +358,7 @@
           "officialBasis": ["Trafikverket: signalerande korsning", "TSFS 2012:43, 19 § p. 2"],
           "sortOrder": 30,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": ["car_control_speed_adaptation", "observation_scanning"],
           "relevantContext": {
             "environment": ["urban"],
@@ -375,7 +375,7 @@
           "officialBasis": ["TSFS 2012:43, 19 § cirkulationsplats", "Trafikverket: cirkulationsplats"],
           "sortOrder": 40,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": [
             "intersections_give_way",
             "observation_scanning",
@@ -396,7 +396,7 @@
           "officialBasis": ["Trafikverket: cirkulationsplats (placering)", "TSFS 2012:43, 19 §"],
           "sortOrder": 50,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": ["roundabout_entry", "positioning_road_position"],
           "relevantContext": {
             "environment": ["urban"],
@@ -413,7 +413,7 @@
           "officialBasis": ["Trafikverket: cirkulationsplats (tecken, avsikt)", "TSFS 2012:43, 19 §"],
           "sortOrder": 60,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": ["roundabout_positioning", "observation_signaling"],
           "relevantContext": {
             "environment": ["urban"],
@@ -428,7 +428,7 @@
       "areaKey": "urban_traffic",
       "title": "Stadstrafik",
       "sortOrder": 5,
-      "status": "proposed",
+      "status": "canonical",
       "skills": [
         {
           "skillKey": "urban_vulnerable_road_users",
@@ -438,7 +438,7 @@
           "officialBasis": ["TSFS 2012:43, 19 §", "Trafikverket: oskyddade trafikanter"],
           "sortOrder": 10,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": ["observation_scanning", "car_control_speed_adaptation"],
           "relevantContext": {
             "environment": ["residential", "urban"],
@@ -455,7 +455,7 @@
           "officialBasis": ["TSFS 2012:43, 19 §", "Trafikverket: passerande av stillastående fordon"],
           "sortOrder": 20,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": ["positioning_road_position", "observation_scanning"],
           "relevantContext": {
             "environment": ["urban"],
@@ -472,7 +472,7 @@
           "officialBasis": ["TSFS 2011:20, 3 kap. 1–2 §§", "Trafikverket: körning i tätort"],
           "sortOrder": 30,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": ["positioning_road_position", "car_control_smooth_start_stop"],
           "relevantContext": {
             "environment": ["residential", "urban"],
@@ -487,7 +487,7 @@
       "areaKey": "rural_roads",
       "title": "Landsväg",
       "sortOrder": 6,
-      "status": "proposed",
+      "status": "canonical",
       "skills": [
         {
           "skillKey": "rural_joining_and_leaving",
@@ -497,7 +497,7 @@
           "officialBasis": ["Trafikverket: infart till landsväg, sväng från landsväg", "TSFS 2012:43, 19 §"],
           "sortOrder": 10,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": [
             "car_control_speed_adaptation",
             "observation_signaling",
@@ -519,7 +519,7 @@
           "officialBasis": ["Trafikverket: smal och/eller krokig väg", "TSFS 2011:20, 3 kap. 2 § p. 6–7"],
           "sortOrder": 20,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": ["car_control_speed_adaptation", "positioning_road_position"],
           "relevantContext": {
             "environment": ["rural"],
@@ -536,7 +536,7 @@
           "officialBasis": ["TSFS 2012:43, 19 § möte", "Trafikverket: möte"],
           "sortOrder": 30,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": ["positioning_road_position", "car_control_speed_adaptation"],
           "relevantContext": {
             "environment": ["rural"],
@@ -552,8 +552,8 @@
           "whyNeeded": "Högriskmoment. independent inkluderar att låta bli när det inte är säkert.",
           "officialBasis": ["TSFS 2012:43, 19 § omkörning", "Trafikverket: omkörning"],
           "sortOrder": 40,
-          "mvpPriority": "core",
-          "status": "draft",
+          "mvpPriority": "supporting",
+          "status": "canonical",
           "likelyPrerequisites": [
             "observation_mirror_routine",
             "observation_signaling",
@@ -573,7 +573,7 @@
       "areaKey": "highway",
       "title": "Motorväg & större leder",
       "sortOrder": 7,
-      "status": "proposed",
+      "status": "canonical",
       "skills": [
         {
           "skillKey": "highway_merging",
@@ -583,7 +583,7 @@
           "officialBasis": ["TSFS 2012:43, 19 § infart på motorväg/motortrafikled", "Trafikverket: motorväg"],
           "sortOrder": 10,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": [
             "car_control_speed_adaptation",
             "observation_mirror_routine",
@@ -605,7 +605,7 @@
           "officialBasis": ["TSFS 2012:43, 19 § val av körfält", "Trafikverket: motorväg, motortrafikled"],
           "sortOrder": 20,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": ["positioning_lane_selection", "highway_merging"],
           "relevantContext": {
             "environment": ["highway"],
@@ -622,7 +622,7 @@
           "officialBasis": ["TSFS 2012:43, 19 § avfart från motorväg", "Trafikverket: motorväg"],
           "sortOrder": 30,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": [
             "highway_lane_discipline",
             "observation_signaling",
@@ -641,7 +641,7 @@
       "areaKey": "maneuvering",
       "title": "Manövrering",
       "sortOrder": 8,
-      "status": "proposed",
+      "status": "canonical",
       "skills": [
         {
           "skillKey": "maneuver_reversing",
@@ -651,7 +651,7 @@
           "officialBasis": ["TSFS 2012:43, 18 §", "Trafikverket: backning"],
           "sortOrder": 10,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": ["car_control_smooth_start_stop", "observation_scanning"],
           "relevantContext": {
             "environment": ["residential", "urban"],
@@ -668,7 +668,7 @@
           "officialBasis": ["TSFS 2012:43, 18 §", "Trafikverket: start i lutning"],
           "sortOrder": 20,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": ["car_control_smooth_start_stop", "car_control_gear_shifting"],
           "relevantContext": {
             "environment": ["residential", "urban", "rural"],
@@ -685,7 +685,7 @@
           "officialBasis": ["TSFS 2012:43, 18 § parkering", "Trafikverket: parkering i ficka längs väg"],
           "sortOrder": 30,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": [
             "maneuver_reversing",
             "observation_scanning",
@@ -706,7 +706,7 @@
           "officialBasis": ["TSFS 2012:43, 18 §", "Trafikverket: parkering på parkeringsplats"],
           "sortOrder": 40,
           "mvpPriority": "supporting",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": ["maneuver_reversing"],
           "relevantContext": {
             "environment": ["urban", "residential"],
@@ -723,7 +723,7 @@
           "officialBasis": ["TSFS 2012:43, 18 §", "Trafikverket: vändning"],
           "sortOrder": 50,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": ["maneuver_reversing", "observation_scanning"],
           "relevantContext": {
             "environment": ["residential", "urban", "rural"],
@@ -738,7 +738,7 @@
       "areaKey": "independent_safe_driving",
       "title": "Självständig & säker körning",
       "sortOrder": 9,
-      "status": "proposed",
+      "status": "canonical",
       "skills": [
         {
           "skillKey": "independent_route_planning",
@@ -748,7 +748,7 @@
           "officialBasis": ["TSFS 2012:43, 12 §", "Trafikverket: självständig körning mot mål"],
           "sortOrder": 10,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": [
             "positioning_lane_selection",
             "observation_scanning",
@@ -769,7 +769,7 @@
           "officialBasis": ["TSFS 2011:20, 3 kap. 2 § p. 7–9", "TSFS 2012:43, 11 § och 19 § p. 1"],
           "sortOrder": 20,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": ["observation_scanning", "car_control_speed_adaptation"],
           "relevantContext": {
             "environment": ["residential", "urban", "rural", "highway"],
@@ -786,7 +786,7 @@
           "officialBasis": ["TSFS 2011:20, 3 kap. 2 § p. 4", "TSFS 2012:43, 19 § p. 3"],
           "sortOrder": 30,
           "mvpPriority": "core",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": ["car_control_speed_adaptation", "observation_scanning"],
           "relevantContext": {
             "environment": ["residential", "urban", "rural", "highway"],
@@ -808,7 +808,7 @@
           ],
           "sortOrder": 40,
           "mvpPriority": "supporting",
-          "status": "draft",
+          "status": "canonical",
           "likelyPrerequisites": [
             "car_control_speed_adaptation",
             "car_control_gear_shifting",

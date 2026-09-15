@@ -1,11 +1,11 @@
 # Skill Taxonomy v1 — svenskt B-körkort
 
-Status: Draft
-Last updated: 2026-09-14
+Status: **Canonical**
+Last updated: 2026-09-15
 
-De nio huvudområdena: Proposed.
-Enskilda skills: Draft.
-Taxonomin blir inte Canonical förrän efter separat review.
+De nio huvudområdena: **Canonical**.
+Enskilda skills: **Canonical** (38 st).
+Taxonomy version: 1.
 
 Detta är en produktmodell för praktisk privat övningskörning. Det är inte en juridisk omskrivning av Transportstyrelsens kursplan och inte seed-data för databasen.
 
@@ -86,7 +86,7 @@ Sekundärkällor användes inte som urvalskriterium.
 
 ---
 
-## 5. De nio huvudområdena (Proposed)
+## 5. De nio huvudområdena (Canonical)
 
 De är UX-grupperingar för “Vad tränar vi idag?”, inte Transportstyrelsens fyra kursplanemoment.
 
@@ -159,7 +159,7 @@ Varje skill har `mvpPriority`:
 
 - **Titel:** Växling
 - **Beskrivning:** Eleven väljer och byter växel i tid, utan att tappa uppmärksamheten från vägen. Gäller manuell låda.
-- **Varför:** Standard-B utan villkor 78 prövas med manuell växellåda. Hoppa över skillen på resor som bara kör automat.
+- **Varför:** Standard-B utan villkor 78 prövas med manuell växellåda. Vid `transmission_scope = automatic_only` behandlas som `not_applicable` i progression — skillen tas inte bort.
 - **Officiell grund:** TSFS 2011:20, 2 kap. 2 § p. 4; Trafikverket om villkor 78.
 - **MVP-prioritet:** core
 - **likely_prerequisites:** `car_control_smooth_start_stop`
@@ -391,9 +391,9 @@ Varje skill har `mvpPriority`:
 
 - **Titel:** Omkörning
 - **Beskrivning:** Eleven väljer plats, visar tecken, accelererar och går tillbaka utan att skära in för tidigt. Inkluderar att avstå.
-- **Varför:** Högriskmoment. `independent` inkluderar att låta bli när det inte är säkert.
+- **Varför:** Högriskmoment. `independent` inkluderar att låta bli när det inte är säkert. Sällsynt i tidig träning — supporting så den inte tränger ut kärnloopen.
 - **Officiell grund:** TSFS 2012:43, 19 § omkörning; Trafikverket: omkörning.
-- **MVP-prioritet:** core
+- **MVP-prioritet:** supporting
 - **likely_prerequisites:** `observation_mirror_routine`, `observation_signaling`, `car_control_speed_adaptation`, `rural_meeting_traffic`
 - **relevant_context:** `rural` (ibland `highway`). Traffic `light`/`moderate`. Sikt (`light`/`weather`).
 
@@ -612,18 +612,23 @@ Första kandidatlistan hade 44 nycklar. Efter genomgång mot källor, observerba
 
 ---
 
-## 10. Öppna gränsdragningar
+## 10. Final review (2026-09-15) — Canonical
 
-Dessa ska inte tystas. De väntar på review.
+Granskning utan blocker. Taxonomin är **Canonical** med `taxonomyVersion: 1`.
 
-1. **Tre rondell-skills vs en.** Trafikverket bedömer cirkulationsplats som ett beteende. Vi behåller infart / placering / utfart för att felen är olika. Review får slå ihop `roundabout_entry` + `roundabout_positioning` om tap-to-rate blir för tung.
-2. **Två parkerings-skills.** `maneuver_parallel_parking` är familjernas timmar. `maneuver_parking` är supporting. Kan bli en skill.
-3. **`car_control_gear_shifting`.** Meningslös på automatresor. Inte Context. Produktfråga: dölj skillen när resan är automat, eller behåll och hoppa över.
-4. **`independent_eco_driving`.** Officiellt krav, men handledare prioriterar sällan den efter ett pass. Supporting.
-5. **`car_control_pre_drive_check`.** Bedöms före körning, inte under. Fortfarande observerbar. Alternativ: checklista utanför skill-grafen.
-6. **Järnvägskorsning och vägarbete.** Inga egna skills. Om vissa orter tränar dem ofta kan de läggas till senare utan att bygga om modellen.
-7. **Effektiv bromsning.** Provkrav, men olämplig som privat landsvägsövning. Inte v1-skill.
-8. **Repo vs prompt.** Uppgiften säger att datamodell v1.2 redan är beslutad. I detta repo fanns vid skrivtillfället ingen `docs/`-mapp och ingen DDL. Inget canonical datamodelldokument ändrades.
+| Fråga | Beslut | Motivering |
+| --- | --- | --- |
+| `car_control_gear_shifting` | Behåll | Kompatibel med `automatic_only` via `transmission_scope` på journey → `not_applicable` i progression |
+| `rural_passing` | **Ändrad till supporting** | Omkörning är sällsynt i tidig träning; `rural_meeting_traffic` täcker det vanligare mötet |
+| `maneuver_parallel_parking` vs `maneuver_parking` | Behåll separat | Två ratings ger verkligt produktvärde — familjer övar parallellparkering mest, körprovet kan kräva annan typ |
+| Tre rondell-skills | Behåll alla tre | Handledare bedömer rimligen infart, placering och utfart separat; vanliga fel är olika |
+| `car_control_pre_drive_check` | Behåll som skill | Observerbar före varje pass; checklista utanför skill-grafen skulle splittra tap-to-rate |
+
+### Kvarvarande observationer (ej blocker)
+
+- **`independent_eco_driving`** — supporting. Officiellt krav men sällan prioriterad efter pass.
+- **Järnvägskorsning och vägarbete** — inga egna skills. Kan läggas till senare.
+- **Effektiv bromsning** — provkrav men olämplig som privat övning. Inte v1-skill.
 
 ---
 
@@ -689,19 +694,17 @@ Minsta slutsats för framtida graf: **riktade relationer behövs**. Annars kan r
 
 ---
 
-## 12. Repo-avvikelser mot prompten
+## 12. Relaterade dokument
 
-Prompten bad oss läsa `docs/product/`, `docs/domain/`, `docs/architecture/` och `docs/decisions/` samt respektera datamodell v1.2.
-
-Vid skrivtillfället innehöll repot bara `README.md` med `# bilklar`. Ingen av de mapparna fanns. Inget canonical beslut i repo har därför tyst ändrats.
-
-Produktregler i avsnitt 2 kommer från den tidigare produktprompten (B2C-first, privat övningskörning, Skill ≠ Context, tre domänbegrepp, append-only). De behandlas som låsta även om ADR-filerna saknas här.
+- [Data model](data-model.md) — canonical DDL
+- [Progression model](progression-model.md) — read model, inte DB-state
+- [MVP v1](../product/mvp-v1.md)
+- [Database](../architecture/database.md)
 
 ---
 
-## 13. Nästa steg (inte detta arbete)
+## 13. Nästa steg
 
-- Separat review → först därefter `Status: Canonical`.
-- Seed till `skills` / `skill_definitions` när DDL v1.2 används.
-- Verifiera de tre rondell-skills och de två parkerings-skills mot riktiga handledare.
-- Inte: migration, UI, progression engine, recommendation scoring.
+- Seed `skills` / `skill_definitions` från [skill-taxonomy-v1.json](skill-taxonomy-v1.json)
+- Första end-to-end-flödet (onboarding → drive → observations)
+- Progression engine och recommendation logic i kod
