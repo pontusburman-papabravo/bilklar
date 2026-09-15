@@ -263,11 +263,8 @@ describe("HTTP happy path (two isolated sessions)", () => {
       method: "GET",
       url: "/",
     });
-    assert.ok(
-      supervisorHome.statusCode === 200 || supervisorHome.statusCode === 302,
-      "supervisor home should not error",
-    );
-    assert.ok(supervisorHome.statusCode < 500);
+    assert.equal(supervisorHome.statusCode, 302);
+    assert.equal(supervisorHome.headers.location, `/journey/${journeyId}`);
 
     const supervisorJourney = await injectWithSession(app, supervisorCookies, {
       method: "GET",

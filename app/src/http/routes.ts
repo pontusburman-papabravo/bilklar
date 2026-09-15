@@ -9,7 +9,12 @@ import {
   setSessionCookie,
 } from "../auth/session.js";
 import { createInvitation, acceptInvitation, getInvitationByToken } from "../services/invitations.js";
-import { createJourneyForStudent, getJourneyById, listActiveSupervisors } from "../services/journeys.js";
+import {
+  createJourneyForStudent,
+  getJourneyById,
+  listActiveSupervisors,
+  resolveHomeJourneyId,
+} from "../services/journeys.js";
 import {
   requireActiveSupervisor,
   requireJourneyAccess,
@@ -65,13 +70,9 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
   app.get("/", async (request, reply) => {
     const userId = getSessionUserId(request);
     if (userId) {
-      const { getPool } = await import("../db/pool.js");
-      const journeyResult = await getPool().query(
-        `SELECT id FROM driving_journeys WHERE student_user_id = $1 ORDER BY created_at DESC LIMIT 1`,
-        [userId],
-      );
-      if ((journeyResult.rowCount ?? 0) > 0) {
-        return reply.redirect(`/journey/${journeyResult.rows[0].id}`);
+      const journeyId = await resolveHomeJourneyId(userId);
+      if (journeyId) {
+        return reply.redirect(`/journey/${journeyId}`);
       }
     }
 
