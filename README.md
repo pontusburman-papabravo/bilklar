@@ -48,6 +48,23 @@ docker compose -f db/docker-compose.yml up -d
 ./db/verify-migration.sh
 ```
 
+## App (vertical slice v1)
+
+Minimal webbapp i [`app/`](app/) — elev + handledare från invitation till första körpasset.
+
+```bash
+# 1. Starta PostgreSQL
+docker compose -f db/docker-compose.yml up -d
+./db/verify-migration.sh
+
+# 2. Starta appen
+cd app
+npm install
+npm run dev
+```
+
+Öppna `http://localhost:3000` i två olika webbläsare/sessioner för att testa elev- och handledarflödet.
+
 ## Status
 
-Canonical produkt- och databasgrund. Ingen produkt-UI i denna foundation.
+Canonical produkt- och databasgrund. Första vertical slice: journey → invitation → körpass → observation → rekommendation.

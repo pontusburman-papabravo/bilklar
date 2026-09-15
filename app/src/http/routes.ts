@@ -1,0 +1,569 @@
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import type { FastifyInstance } from "fastify";
+import QRCode from "qrcode";
+import { AppError } from "../errors.js";
+import {
+  getSessionUserId,
+  requireSessionUserId,
+  setSessionCookie,
+} from "../auth/session.js";
+import { createInvitation, acceptInvitation, getInvitationByToken } from "../services/invitations.js";
+import { createJourneyForStudent, getJourneyById, listActiveSupervisors } from "../services/journeys.js";
+import {
+  requireActiveSupervisor,
+  requireJourneyAccess,
+} from "../services/authorization.js";
+import { getPool } from "../db/pool.js";
+import {
+  createDriveWithFocus,
+  endDrive,
+  getDrive,
+  getDriveFocusSkills,
+} from "../services/drives.js";
+import { listSkillsForTaxonomy } from "../services/skills.js";
+import { saveDriveObservations, type AssessmentLevel } from "../services/observations.js";
+import { recommendNextFocus } from "../services/recommendations.js";
+import {
+  escapeHtml,
+  layout,
+  primaryButton,
+  errorBanner,
+} from "./layout.js";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+function handleError(error: unknown): { status: number; message: string } {
+  if (error instanceof AppError) {
+    return { status: error.statusCode, message: error.message };
+  }
+  console.error(error);
+  return { status: 500, message: "Something went wrong" };
+}
+
+function groupSkillsByArea(
+  skills: Awaited<ReturnType<typeof listSkillsForTaxonomy>>,
+): Map<string, { areaTitle: string; skills: typeof skills }> {
+  const groups = new Map<string, { areaTitle: string; skills: typeof skills }>();
+  for (const skill of skills) {
+    const existing = groups.get(skill.areaKey);
+    if (existing) {
+      existing.skills.push(skill);
+    } else {
+      groups.set(skill.areaKey, {
+        areaTitle: skill.areaTitle,
+        skills: [skill],
+      });
+    }
+  }
+  return groups;
+}
+
+export async function registerRoutes(app: FastifyInstance): Promise<void> {
+  app.get("/", async (request, reply) => {
+    const userId = getSessionUserId(request);
+    if (userId) {
+      const { getPool } = await import("../db/pool.js");
+      const journeyResult = await getPool().query(
+        `SELECT id FROM driving_journeys WHERE student_user_id = $1 ORDER BY created_at DESC LIMIT 1`,
+        [userId],
+      );
+      if ((journeyResult.rowCount ?? 0) > 0) {
+        return reply.redirect(`/journey/${journeyResult.rows[0].id}`);
+      }
+    }
+
+    reply.type("text/html").send(
+      layout(
+        "Starta din körkortsresa",
+        `<h1>Vad heter du?</h1>
+         <form method="post" action="/start" class="stack">
+           <div>
+             <label for="name">Namn</label>
+             <input id="name" name="name" type="text" required autocomplete="name" placeholder="Ditt namn">
+           </div>
+           ${primaryButton("Starta min körkortsresa")}
+         </form>`,
+      ),
+    );
+  });
+
+  app.post("/start", async (request, reply) => {
+    const body = request.body as { name?: string };
+    const name = body.name?.trim();
+    if (!name) {
+      return reply
+        .type("text/html")
+        .status(400)
+        .send(
+          layout(
+            "Starta din körkortsresa",
+            `${errorBanner("Ange ditt namn")}
+             <h1>Vad heter du?</h1>
+             <form method="post" action="/start" class="stack">
+               <div>
+                 <label for="name">Namn</label>
+                 <input id="name" name="name" type="text" required autocomplete="name">
+               </div>
+               ${primaryButton("Starta min körkortsresa")}
+             </form>`,
+          ),
+        );
+    }
+
+    const sessionUserId = getSessionUserId(request);
+    const { journey, userId } = await createJourneyForStudent(name, sessionUserId);
+    setSessionCookie(reply, userId);
+    return reply.redirect(`/journey/${journey.id}`);
+  });
+
+  app.get("/journey/:journeyId", async (request, reply) => {
+    const { journeyId } = request.params as { journeyId: string };
+    const userId = requireSessionUserId(request);
+
+    try {
+      const access = await requireJourneyAccess(journeyId, userId);
+      const journey = await getJourneyById(journeyId);
+      if (!journey) {
+        return reply.status(404).send("Not found");
+      }
+
+      const supervisors = await listActiveSupervisors(journeyId);
+      const hasSupervisor = supervisors.length > 0;
+
+      const inviteSection = access.role === "student"
+        ? `<section class="card">
+             <h2>Bjud in handledare</h2>
+             <p>Dela länken eller QR-koden med din handledare.</p>
+             <form method="post" action="/journey/${escapeHtml(journeyId)}/invitations">
+               ${primaryButton("Skapa inbjudan")}
+             </form>
+           </section>`
+        : "";
+
+      const activeDrive = await getPool().query(
+        `SELECT id, ended_at FROM drives
+         WHERE journey_id = $1
+         ORDER BY started_at DESC
+         LIMIT 1`,
+        [journeyId],
+      );
+      const latestDrive = activeDrive.rows[0];
+      const pendingRating =
+        latestDrive?.ended_at &&
+        access.role === "supervisor"
+          ? `<section class="card">
+               <h2>Bedöm senaste körpasset</h2>
+               <a class="btn btn-primary" href="/journey/${escapeHtml(journeyId)}/drive/${escapeHtml(latestDrive.id)}/rate">Bedöm moment</a>
+             </section>`
+          : "";
+
+      const driveSection = hasSupervisor
+        ? `${pendingRating}<section class="card">
+             <h2>Nästa körpass</h2>
+             <p>Välj 2–3 moment att träna på idag.</p>
+             <a class="btn btn-primary" href="/journey/${escapeHtml(journeyId)}/drive/new">Vad tränar ni på idag?</a>
+           </section>`
+        : `<section class="card">
+             <p class="muted">Bjud in en handledare för att kunna starta ett körpass.</p>
+           </section>`;
+
+      const supervisorNames = supervisors
+        .map((s) => escapeHtml(s.displayName ?? "Handledare"))
+        .join(", ");
+
+      reply.type("text/html").send(
+        layout(
+          journey.studentName ?? "Körkortsresa",
+          `<h1>${escapeHtml(journey.studentName ?? "Körkortsresa")}</h1>
+           <p class="muted">Din körkortsresa</p>
+           ${hasSupervisor ? `<p>Handledare: ${supervisorNames}</p>` : ""}
+           ${inviteSection}
+           ${driveSection}`,
+        ),
+      );
+    } catch (error) {
+      const { status, message } = handleError(error);
+      return reply.status(status).type("text/html").send(
+        layout("Fel", errorBanner(message)),
+      );
+    }
+  });
+
+  app.post("/journey/:journeyId/invitations", async (request, reply) => {
+    const { journeyId } = request.params as { journeyId: string };
+    const userId = requireSessionUserId(request);
+
+    try {
+      const invitation = await createInvitation(journeyId, userId);
+      const qrDataUrl = await QRCode.toDataURL(invitation.inviteUrl, {
+        margin: 1,
+        width: 256,
+      });
+
+      reply.type("text/html").send(
+        layout(
+          "Inbjudan",
+          `<h1>Bjud in handledare</h1>
+           <p>Dela med <strong>${escapeHtml(invitation.studentName)}</strong>s handledare.</p>
+           <div class="invite-url">${escapeHtml(invitation.inviteUrl)}</div>
+           <div class="qr-wrap"><img src="${qrDataUrl}" alt="QR-kod för inbjudan"></div>
+           <a class="btn btn-secondary" href="/journey/${escapeHtml(journeyId)}">Tillbaka till resan</a>`,
+        ),
+      );
+    } catch (error) {
+      const { status, message } = handleError(error);
+      return reply.status(status).type("text/html").send(
+        layout("Fel", errorBanner(message)),
+      );
+    }
+  });
+
+  app.get("/invite/:token", async (request, reply) => {
+    const { token } = request.params as { token: string };
+    const invitation = await getInvitationByToken(token);
+
+    if (!invitation) {
+      return reply.status(404).type("text/html").send(
+        layout("Inbjudan", errorBanner("Inbjudan hittades inte")),
+      );
+    }
+
+    if (invitation.status !== "pending") {
+      if (invitation.status === "accepted") {
+        return reply.redirect(`/journey/${invitation.journeyId}`);
+      }
+      return reply.status(410).type("text/html").send(
+        layout("Inbjudan", errorBanner("Inbjudan är inte längre giltig")),
+      );
+    }
+
+    if (new Date(invitation.expiresAt) <= new Date()) {
+      return reply.status(410).type("text/html").send(
+        layout("Inbjudan", errorBanner("Inbjudan har gått ut")),
+      );
+    }
+
+    reply.type("text/html").send(
+      layout(
+        "Anslut som handledare",
+        `<h1>Du ska övningsköra med ${escapeHtml(invitation.studentName)}</h1>
+         <form method="post" action="/invite/${escapeHtml(token)}/accept" class="stack">
+           <div>
+             <label for="name">Vad heter du?</label>
+             <input id="name" name="name" type="text" required autocomplete="name" placeholder="Ditt namn">
+           </div>
+           ${primaryButton("Anslut")}
+         </form>`,
+      ),
+    );
+  });
+
+  app.post("/invite/:token/accept", async (request, reply) => {
+    const { token } = request.params as { token: string };
+    const body = request.body as { name?: string };
+    const name = body.name?.trim();
+
+    if (!name) {
+      return reply.status(400).type("text/html").send(
+        layout("Anslut", errorBanner("Ange ditt namn")),
+      );
+    }
+
+    try {
+      const sessionUserId = getSessionUserId(request);
+      const result = await acceptInvitation(token, name, sessionUserId);
+      setSessionCookie(reply, result.userId);
+      return reply.redirect(`/journey/${result.journeyId}`);
+    } catch (error) {
+      const { status, message } = handleError(error);
+      return reply.status(status).type("text/html").send(
+        layout("Anslut", errorBanner(message)),
+      );
+    }
+  });
+
+  app.get("/journey/:journeyId/drive/new", async (request, reply) => {
+    const { journeyId } = request.params as { journeyId: string };
+    const userId = requireSessionUserId(request);
+
+    try {
+      await requireJourneyAccess(journeyId, userId);
+      const skills = await listSkillsForTaxonomy();
+      const groups = groupSkillsByArea(skills);
+
+      const areaHtml = [...groups.values()]
+        .map(
+          (group) => `<section class="skill-area">
+            <h3>${escapeHtml(group.areaTitle)}</h3>
+            <div class="skill-grid">
+              ${group.skills
+                .map(
+                  (skill) => `<label class="skill-option">
+                    <input type="checkbox" name="skill_ids" value="${escapeHtml(skill.skillId)}">
+                    <span>${escapeHtml(skill.title)}</span>
+                  </label>`,
+                )
+                .join("")}
+            </div>
+          </section>`,
+        )
+        .join("");
+
+      reply.type("text/html").send(
+        layout(
+          "Välj fokus",
+          `<h1>Vad tränar ni på idag?</h1>
+           <p>Välj 2–3 moment.</p>
+           <form method="post" action="/journey/${escapeHtml(journeyId)}/drives" class="stack" id="focus-form">
+             ${areaHtml}
+             ${primaryButton("Starta körpass")}
+           </form>
+           <script>
+             document.getElementById('focus-form').addEventListener('submit', function(e) {
+               const checked = this.querySelectorAll('input[name="skill_ids"]:checked');
+               if (checked.length < 2 || checked.length > 3) {
+                 e.preventDefault();
+                 alert('Välj 2–3 moment.');
+               }
+             });
+           </script>`,
+        ),
+      );
+    } catch (error) {
+      const { status, message } = handleError(error);
+      return reply.status(status).type("text/html").send(
+        layout("Fel", errorBanner(message)),
+      );
+    }
+  });
+
+  app.post("/journey/:journeyId/drives", async (request, reply) => {
+    const { journeyId } = request.params as { journeyId: string };
+    const userId = requireSessionUserId(request);
+    const body = request.body as { skill_ids?: string | string[] };
+
+    const skillIds = Array.isArray(body.skill_ids)
+      ? body.skill_ids
+      : body.skill_ids
+        ? [body.skill_ids]
+        : [];
+
+    try {
+      const { drive } = await createDriveWithFocus(journeyId, userId, skillIds);
+      return reply.redirect(`/journey/${journeyId}/drive/${drive.id}`);
+    } catch (error) {
+      const { status, message } = handleError(error);
+      return reply.status(status).type("text/html").send(
+        layout("Fel", errorBanner(message)),
+      );
+    }
+  });
+
+  app.get("/journey/:journeyId/drive/:driveId", async (request, reply) => {
+    const { journeyId, driveId } = request.params as {
+      journeyId: string;
+      driveId: string;
+    };
+    const userId = requireSessionUserId(request);
+
+    try {
+      const drive = await getDrive(journeyId, driveId, userId);
+      if (!drive) {
+        return reply.status(404).send("Not found");
+      }
+
+      if (drive.endedAt) {
+        const access = await requireJourneyAccess(journeyId, userId);
+        if (access.role === "supervisor") {
+          return reply.redirect(`/journey/${journeyId}/drive/${driveId}/rate`);
+        }
+        return reply.type("text/html").send(
+          layout(
+            "Körpass avslutat",
+            `<h1>Körpasset är klart</h1>
+             <p>Handledaren kan nu bedöma valda moment.</p>
+             <a class="btn btn-secondary" href="/journey/${escapeHtml(journeyId)}">Tillbaka till resan</a>`,
+          ),
+        );
+      }
+
+      const focusSkills = await getDriveFocusSkills(journeyId, driveId, userId);
+      const focusList = focusSkills
+        .map((skill) => `<li>${escapeHtml(skill.title)}</li>`)
+        .join("");
+
+      reply.type("text/html").send(
+        layout(
+          "Körpass",
+          `<h1>Körpass pågår</h1>
+           <p>Ni tränar på:</p>
+           <ul class="focus-list">${focusList}</ul>
+           <form method="post" action="/journey/${escapeHtml(journeyId)}/drive/${escapeHtml(driveId)}/end">
+             ${primaryButton("Körpasset klart")}
+           </form>`,
+        ),
+      );
+    } catch (error) {
+      const { status, message } = handleError(error);
+      return reply.status(status).type("text/html").send(
+        layout("Fel", errorBanner(message)),
+      );
+    }
+  });
+
+  app.post("/journey/:journeyId/drive/:driveId/end", async (request, reply) => {
+    const { journeyId, driveId } = request.params as {
+      journeyId: string;
+      driveId: string;
+    };
+    const userId = requireSessionUserId(request);
+
+    try {
+      await endDrive(journeyId, driveId, userId);
+      const access = await requireJourneyAccess(journeyId, userId);
+      if (access.role === "supervisor") {
+        return reply.redirect(`/journey/${journeyId}/drive/${driveId}/rate`);
+      }
+      return reply.redirect(`/journey/${journeyId}/drive/${driveId}`);
+    } catch (error) {
+      const { status, message } = handleError(error);
+      return reply.status(status).type("text/html").send(
+        layout("Fel", errorBanner(message)),
+      );
+    }
+  });
+
+  app.get("/journey/:journeyId/drive/:driveId/rate", async (request, reply) => {
+    const { journeyId, driveId } = request.params as {
+      journeyId: string;
+      driveId: string;
+    };
+    const userId = requireSessionUserId(request);
+
+    try {
+      await requireActiveSupervisor(journeyId, userId);
+      const drive = await getDrive(journeyId, driveId, userId);
+      if (!drive) {
+        return reply.status(404).send("Not found");
+      }
+      if (!drive.endedAt) {
+        return reply.redirect(`/journey/${journeyId}/drive/${driveId}`);
+      }
+
+      const focusSkills = await getDriveFocusSkills(journeyId, driveId, userId);
+
+      const ratingItems = focusSkills
+        .map(
+          (skill) => `<div class="rating-item">
+            <h3>${escapeHtml(skill.title)}</h3>
+            <div class="rating-buttons">
+              <label>
+                <input type="radio" name="assessment_${escapeHtml(skill.skillId)}" value="needs_help" required>
+                <span>Behöver hjälp</span>
+              </label>
+              <label>
+                <input type="radio" name="assessment_${escapeHtml(skill.skillId)}" value="with_support" required>
+                <span>Med stöd</span>
+              </label>
+              <label>
+                <input type="radio" name="assessment_${escapeHtml(skill.skillId)}" value="independent" required>
+                <span>Självständig</span>
+              </label>
+            </div>
+            <input type="hidden" name="skill_ids" value="${escapeHtml(skill.skillId)}">
+          </div>`,
+        )
+        .join("");
+
+      reply.type("text/html").send(
+        layout(
+          "Bedöm körpasset",
+          `<h1>Hur gick det?</h1>
+           <p>Handledaren bedömer valda moment.</p>
+           <form method="post" action="/journey/${escapeHtml(journeyId)}/drive/${escapeHtml(driveId)}/rate" class="rating-list">
+             ${ratingItems}
+             ${primaryButton("Spara bedömning")}
+           </form>`,
+        ),
+      );
+    } catch (error) {
+      const { status, message } = handleError(error);
+      return reply.status(status).type("text/html").send(
+        layout("Fel", errorBanner(message)),
+      );
+    }
+  });
+
+  app.post("/journey/:journeyId/drive/:driveId/rate", async (request, reply) => {
+    const { journeyId, driveId } = request.params as {
+      journeyId: string;
+      driveId: string;
+    };
+    const observerUserId = requireSessionUserId(request);
+
+    await requireActiveSupervisor(journeyId, observerUserId);
+    const body = request.body as Record<string, string | string[]>;
+
+    const skillIds = Array.isArray(body.skill_ids)
+      ? body.skill_ids
+      : body.skill_ids
+        ? [body.skill_ids]
+        : [];
+
+    const observations = skillIds.map((skillId) => {
+      const assessment = body[`assessment_${skillId}`] as AssessmentLevel;
+      return { skillId, assessment };
+    });
+
+    try {
+      await saveDriveObservations(journeyId, driveId, observerUserId, observations);
+      return reply.redirect(`/journey/${journeyId}/drive/${driveId}/done`);
+    } catch (error) {
+      const { status, message } = handleError(error);
+      return reply.status(status).type("text/html").send(
+        layout("Fel", errorBanner(message)),
+      );
+    }
+  });
+
+  app.get("/journey/:journeyId/drive/:driveId/done", async (request, reply) => {
+    const { journeyId, driveId } = request.params as {
+      journeyId: string;
+      driveId: string;
+    };
+    const userId = requireSessionUserId(request);
+
+    try {
+      await requireJourneyAccess(journeyId, userId);
+      const recommendations = await recommendNextFocus(journeyId);
+
+      const recList = recommendations.length > 0
+        ? `<ul class="recommendation-list">
+             ${recommendations
+               .map(
+                 (rec) => `<li>
+                   <span class="recommendation-title">${escapeHtml(rec.title)}</span>
+                   <span class="recommendation-message">${escapeHtml(rec.message)}</span>
+                 </li>`,
+               )
+               .join("")}
+           </ul>`
+        : `<p class="muted">Inga rekommendationer ännu.</p>`;
+
+      reply.type("text/html").send(
+        layout(
+          "Nästa gång",
+          `<h1>Nästa gång</h1>
+           ${recList}
+           <a class="btn btn-primary" href="/journey/${escapeHtml(journeyId)}">Tillbaka till resan</a>`,
+        ),
+      );
+    } catch (error) {
+      const { status, message } = handleError(error);
+      return reply.status(status).type("text/html").send(
+        layout("Fel", errorBanner(message)),
+      );
+    }
+  });
+}
