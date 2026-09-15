@@ -1,1467 +1,3058 @@
 {
-  "progressionModelVersion": 1,
   "status": "draft",
+  "notRuntime": true,
   "lastUpdated": "2026-09-15",
   "taxonomyVersion": 1,
   "locale": "sv-SE",
   "licenseClass": "B",
-  "notRuntime": true,
-  "sourceDocument": "docs/domain/progression-research-v1.md",
-  "stages": [
-    {
-      "key": "foundation",
-      "title": "Grund",
-      "description": "Fordonskännedom och grundmanövrering i nästan trafikfri miljö"
-    },
-    {
-      "key": "controlled_traffic",
-      "title": "Lugn trafik",
-      "description": "Bostadsområde och lätt trafik med grundläggande observation"
-    },
-    {
-      "key": "mixed_traffic",
-      "title": "Blandad trafik",
-      "description": "Korsningar, signaler, stad, måttlig komplexitet"
-    },
-    {
-      "key": "complex_traffic",
-      "title": "Komplex trafik",
-      "description": "Rondell, landsväg, motorväg, svårare förhållanden"
-    },
-    {
-      "key": "independent_readiness",
-      "title": "Självständighetsnära",
-      "description": "Självständig körning mot mål och examensnära helhet"
-    }
-  ],
-  "contextDifficulty": {
-    "model": "ordinal_per_dimension",
-    "combinationRule": "context_tier = max(dimension_levels); increase at most one dimension between passes after independent",
-    "dimensions": [
-      {
-        "dimension": "traffic",
-        "sequence": [
-          "light",
-          "moderate",
-          "heavy"
-        ]
-      },
-      {
-        "dimension": "environment",
-        "sequence": [
-          "residential",
-          "urban",
-          "rural",
-          "highway"
-        ]
-      },
-      {
-        "dimension": "light",
-        "sequence": [
-          "daylight",
-          "dusk_dawn",
-          "night"
-        ]
-      },
-      {
-        "dimension": "weather",
-        "sequence": [
-          "dry",
-          "rain",
-          "snow_ice"
-        ]
-      }
-    ]
+  "artifact": "progression-model-draft-v1",
+  "description": "Combined index of four research artifacts. NOT read by runtime.",
+  "artifacts": {
+    "officialBasis": "skill-official-basis-v1.json",
+    "prerequisites": "skill-prerequisites-v1.json",
+    "contextProgression": "skill-context-progression-v1.json",
+    "firstDriveRules": "first-drive-recommendation-rules-v1.json"
   },
-  "observationProgressionRules": {
-    "needs_help": "Repeat same skill in same or easier context",
-    "with_support": "Repeat same skill in same context",
-    "independent": "Increase one context dimension for same skill, or introduce adjacent skill at same/easier context"
-  },
-  "firstDriveStartingPoints": [
-    {
-      "skillKey": "car_control_pre_drive_check",
-      "priority": 1,
-      "sourceType": "OFFICIAL REQUIREMENT"
-    },
-    {
-      "skillKey": "car_control_smooth_start_stop",
-      "priority": 2,
-      "sourceType": "OFFICIAL REQUIREMENT"
-    },
-    {
-      "skillKey": "car_control_braking",
-      "priority": 3,
-      "sourceType": "OFFICIAL REQUIREMENT"
-    },
-    {
-      "skillKey": "positioning_road_position",
-      "priority": 4,
-      "sourceType": "PEDAGOGICAL PRACTICE"
-    },
-    {
-      "skillKey": "observation_signaling",
-      "priority": 5,
-      "optional": true,
-      "sourceType": "PEDAGOGICAL PRACTICE"
-    }
-  ],
-  "taxonomyPrerequisiteDeviations": [
-    {
-      "skillKey": "maneuver_hill_start",
-      "issue": "gear_shifting hard prerequisite should be conditional on manual transmission"
-    },
-    {
-      "skillKey": "independent_eco_driving",
-      "issue": "route_planning as sole hard gate is late; speed_adaptation sufficient for early eco habits"
-    },
-    {
-      "skillKey": "intersections_give_way",
-      "issue": "taxonomy omits soft prerequisite on braking"
-    },
-    {
-      "skillKey": "car_control_speed_adaptation",
-      "issue": "taxonomy omits soft prerequisite on road positioning"
-    }
-  ],
   "skills": [
     {
       "skillKey": "car_control_pre_drive_check",
-      "areaKey": "car_control",
       "title": "Säkerhetskontroll",
-      "mvpPriority": "core",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2011-20",
+          "reference": "TSFS 2011:20, 2 kap. 2 § p. 3",
+          "sourceTitle": "TSFS 2011:20 Kursplan, behörighet B",
+          "sourceUrl": "https://www.transportstyrelsen.se/tsfs/TSFS%202011_20.pdf",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 14–17 §§",
+          "sourceTitle": "TSFS 2012:43 Förarprov, behörighet B",
+          "sourceUrl": "https://lagen.nu/tsfs/2012:43",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "ts-rad-2026",
+          "reference": "Råd till handledaren 2026-08-01",
+          "sourceTitle": "Råd till handledaren 2026-08-01",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
       "introductionStage": "foundation",
       "prerequisites": [],
-      "contextProgression": {
-        "typicalStart": {
+      "recommendedStartingContexts": {
+        "environment": [
+          "residential"
+        ],
+        "traffic": [
+          "light"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
           "environment": "residential",
           "traffic": "light",
           "light": "daylight",
           "weather": "dry"
         },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather"
-        ]
+        {
+          "environment": "urban",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "rural",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
       },
-      "independenceBeforeContextIncrease": "independent"
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid säkerhetskontroll. Eleven gör en enkel kontroll av bilen och körställning innan ni kör: ljus, däck, vätskor, speglar, stol, bälte.",
+        "with_support": "Med stöd: eleven klarar säkerhetskontroll när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar säkerhetskontroll själv i aktuellt context utan att handledaren behöver korrigera."
+      }
     },
     {
       "skillKey": "car_control_smooth_start_stop",
-      "areaKey": "car_control",
       "title": "Start och stannande",
-      "mvpPriority": "core",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2011-20",
+          "reference": "TSFS 2011:20, 2 kap. 2 § p. 4",
+          "sourceTitle": "TSFS 2011:20 Kursplan, behörighet B",
+          "sourceUrl": "https://www.transportstyrelsen.se/tsfs/TSFS%202011_20.pdf",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "trv-korprov",
+          "reference": "Trafikverket: start från vägkant",
+          "sourceTitle": "Trafikverket: start från vägkant",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
       "introductionStage": "foundation",
       "prerequisites": [
         {
           "skillKey": "car_control_pre_drive_check",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Säkerhetskontroll är officiell rutin före varje pass; start/stopp kan övas parallellt på tom yta."
         }
       ],
-      "contextProgression": {
-        "typicalStart": {
+      "recommendedStartingContexts": {
+        "environment": [
+          "residential"
+        ],
+        "traffic": [
+          "light"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
           "environment": "residential",
           "traffic": "light",
           "light": "daylight",
           "weather": "dry"
         },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
+        {
+          "environment": "residential",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
       },
-      "independenceBeforeContextIncrease": "independent"
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid start och stannande. Eleven får i gång bilen och stannar den mjukt, utan ryck, rullning eller onödiga motorstopp.",
+        "with_support": "Med stöd: eleven klarar start och stannande när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar start och stannande själv i aktuellt context utan att handledaren behöver korrigera."
+      }
     },
     {
       "skillKey": "car_control_braking",
-      "areaKey": "car_control",
       "title": "Bromsning",
-      "mvpPriority": "core",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2011-20",
+          "reference": "TSFS 2011:20, 2 kap. 2 § p. 5",
+          "sourceTitle": "TSFS 2011:20 Kursplan, behörighet B",
+          "sourceUrl": "https://www.transportstyrelsen.se/tsfs/TSFS%202011_20.pdf",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 18 §",
+          "sourceTitle": "TSFS 2012:43 Förarprov, behörighet B",
+          "sourceUrl": "https://lagen.nu/tsfs/2012:43",
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
       "introductionStage": "foundation",
       "prerequisites": [
         {
           "skillKey": "car_control_smooth_start_stop",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Grundläggande fartkontroll före finare bromsteknik."
         }
       ],
-      "contextProgression": {
-        "typicalStart": {
+      "recommendedStartingContexts": {
+        "environment": [
+          "residential"
+        ],
+        "traffic": [
+          "light"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
           "environment": "residential",
           "traffic": "light",
           "light": "daylight",
           "weather": "dry"
         },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
-      },
-      "independenceBeforeContextIncrease": "independent"
-    },
-    {
-      "skillKey": "car_control_gear_shifting",
-      "areaKey": "car_control",
-      "title": "Växling",
-      "mvpPriority": "core",
-      "introductionStage": "foundation",
-      "prerequisites": [
         {
-          "skillKey": "car_control_smooth_start_stop",
-          "strength": "hard",
-          "note": "Manual transmission only; not_applicable when automatic_only"
-        }
-      ],
-      "contextProgression": {
-        "typicalStart": {
-          "environment": "residential",
-          "traffic": "light",
-          "light": "daylight",
-          "weather": "dry"
-        },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
-      },
-      "independenceBeforeContextIncrease": "independent",
-      "notes": "Not applicable when journey.transmission_scope = automatic_only"
-    },
-    {
-      "skillKey": "car_control_speed_adaptation",
-      "areaKey": "car_control",
-      "title": "Hastighetsanpassning",
-      "mvpPriority": "core",
-      "introductionStage": "controlled_traffic",
-      "prerequisites": [
-        {
-          "skillKey": "car_control_braking",
-          "strength": "hard"
-        },
-        {
-          "skillKey": "positioning_road_position",
-          "strength": "soft"
-        }
-      ],
-      "contextProgression": {
-        "typicalStart": {
-          "environment": "residential",
-          "traffic": "light",
-          "light": "daylight",
-          "weather": "dry"
-        },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
-      },
-      "independenceBeforeContextIncrease": "independent"
-    },
-    {
-      "skillKey": "observation_mirror_routine",
-      "areaKey": "observation_interaction",
-      "title": "Spegelrutin",
-      "mvpPriority": "core",
-      "introductionStage": "controlled_traffic",
-      "prerequisites": [
-        {
-          "skillKey": "car_control_smooth_start_stop",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        }
-      ],
-      "contextProgression": {
-        "typicalStart": {
-          "environment": "residential",
-          "traffic": "light",
-          "light": "daylight",
-          "weather": "dry"
-        },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
-      },
-      "independenceBeforeContextIncrease": "independent"
-    },
-    {
-      "skillKey": "observation_blind_spot",
-      "areaKey": "observation_interaction",
-      "title": "Döda vinkeln",
-      "mvpPriority": "core",
-      "introductionStage": "mixed_traffic",
-      "prerequisites": [
-        {
-          "skillKey": "observation_mirror_routine",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        }
-      ],
-      "contextProgression": {
-        "typicalStart": {
           "environment": "urban",
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry"
         },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
-      },
-      "independenceBeforeContextIncrease": "independent"
-    },
-    {
-      "skillKey": "observation_signaling",
-      "areaKey": "observation_interaction",
-      "title": "Tecken och blinkers",
-      "mvpPriority": "core",
-      "introductionStage": "controlled_traffic",
-      "prerequisites": [
         {
-          "skillKey": "car_control_smooth_start_stop",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        }
-      ],
-      "contextProgression": {
-        "typicalStart": {
-          "environment": "residential",
-          "traffic": "light",
-          "light": "daylight",
-          "weather": "dry"
-        },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
-      },
-      "independenceBeforeContextIncrease": "independent"
-    },
-    {
-      "skillKey": "observation_scanning",
-      "areaKey": "observation_interaction",
-      "title": "Avsökning",
-      "mvpPriority": "core",
-      "introductionStage": "controlled_traffic",
-      "prerequisites": [
-        {
-          "skillKey": "observation_mirror_routine",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        }
-      ],
-      "contextProgression": {
-        "typicalStart": {
-          "environment": "residential",
-          "traffic": "light",
-          "light": "daylight",
-          "weather": "dry"
-        },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
-      },
-      "independenceBeforeContextIncrease": "independent"
-    },
-    {
-      "skillKey": "positioning_road_position",
-      "areaKey": "positioning_lanes",
-      "title": "Placering på vägen",
-      "mvpPriority": "core",
-      "introductionStage": "controlled_traffic",
-      "prerequisites": [
-        {
-          "skillKey": "car_control_smooth_start_stop",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        }
-      ],
-      "contextProgression": {
-        "typicalStart": {
-          "environment": "residential",
-          "traffic": "light",
-          "light": "daylight",
-          "weather": "dry"
-        },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
-      },
-      "independenceBeforeContextIncrease": "independent"
-    },
-    {
-      "skillKey": "positioning_lane_selection",
-      "areaKey": "positioning_lanes",
-      "title": "Val av körfält",
-      "mvpPriority": "core",
-      "introductionStage": "mixed_traffic",
-      "prerequisites": [
-        {
-          "skillKey": "positioning_road_position",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        },
-        {
-          "skillKey": "observation_scanning",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        }
-      ],
-      "contextProgression": {
-        "typicalStart": {
-          "environment": "urban",
-          "traffic": "moderate",
-          "light": "daylight",
-          "weather": "dry"
-        },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
-      },
-      "independenceBeforeContextIncrease": "independent"
-    },
-    {
-      "skillKey": "positioning_lane_change",
-      "areaKey": "positioning_lanes",
-      "title": "Körfältsbyte",
-      "mvpPriority": "core",
-      "introductionStage": "mixed_traffic",
-      "prerequisites": [
-        {
-          "skillKey": "observation_mirror_routine",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        },
-        {
-          "skillKey": "observation_blind_spot",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        },
-        {
-          "skillKey": "observation_signaling",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        },
-        {
-          "skillKey": "positioning_road_position",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        }
-      ],
-      "contextProgression": {
-        "typicalStart": {
-          "environment": "urban",
-          "traffic": "moderate",
-          "light": "daylight",
-          "weather": "dry"
-        },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
-      },
-      "independenceBeforeContextIncrease": "independent"
-    },
-    {
-      "skillKey": "positioning_turning",
-      "areaKey": "positioning_lanes",
-      "title": "Sväng",
-      "mvpPriority": "core",
-      "introductionStage": "mixed_traffic",
-      "prerequisites": [
-        {
-          "skillKey": "positioning_road_position",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        },
-        {
-          "skillKey": "observation_signaling",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        },
-        {
-          "skillKey": "car_control_speed_adaptation",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        }
-      ],
-      "contextProgression": {
-        "typicalStart": {
-          "environment": "urban",
-          "traffic": "moderate",
-          "light": "daylight",
-          "weather": "dry"
-        },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
-      },
-      "independenceBeforeContextIncrease": "independent"
-    },
-    {
-      "skillKey": "intersections_right_hand_rule",
-      "areaKey": "intersections_roundabouts",
-      "title": "Högerregeln",
-      "mvpPriority": "core",
-      "introductionStage": "controlled_traffic",
-      "prerequisites": [
-        {
-          "skillKey": "car_control_speed_adaptation",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        },
-        {
-          "skillKey": "observation_scanning",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        }
-      ],
-      "contextProgression": {
-        "typicalStart": {
-          "environment": "residential",
-          "traffic": "light",
-          "light": "daylight",
-          "weather": "dry"
-        },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
-      },
-      "independenceBeforeContextIncrease": "independent"
-    },
-    {
-      "skillKey": "intersections_give_way",
-      "areaKey": "intersections_roundabouts",
-      "title": "Väjningsplikt och stopp",
-      "mvpPriority": "core",
-      "introductionStage": "mixed_traffic",
-      "prerequisites": [
-        {
-          "skillKey": "car_control_smooth_start_stop",
-          "strength": "hard"
-        },
-        {
-          "skillKey": "observation_scanning",
-          "strength": "hard"
-        },
-        {
-          "skillKey": "car_control_braking",
-          "strength": "soft"
-        }
-      ],
-      "contextProgression": {
-        "typicalStart": {
-          "environment": "urban",
-          "traffic": "moderate",
-          "light": "daylight",
-          "weather": "dry"
-        },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
-      },
-      "independenceBeforeContextIncrease": "independent"
-    },
-    {
-      "skillKey": "intersections_traffic_lights",
-      "areaKey": "intersections_roundabouts",
-      "title": "Trafikljus",
-      "mvpPriority": "core",
-      "introductionStage": "mixed_traffic",
-      "prerequisites": [
-        {
-          "skillKey": "car_control_speed_adaptation",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        },
-        {
-          "skillKey": "observation_scanning",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        }
-      ],
-      "contextProgression": {
-        "typicalStart": {
-          "environment": "urban",
-          "traffic": "moderate",
-          "light": "daylight",
-          "weather": "dry"
-        },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
-      },
-      "independenceBeforeContextIncrease": "independent"
-    },
-    {
-      "skillKey": "roundabout_entry",
-      "areaKey": "intersections_roundabouts",
-      "title": "Infart i rondell",
-      "mvpPriority": "core",
-      "introductionStage": "complex_traffic",
-      "prerequisites": [
-        {
-          "skillKey": "intersections_give_way",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        },
-        {
-          "skillKey": "observation_scanning",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        },
-        {
-          "skillKey": "car_control_speed_adaptation",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        }
-      ],
-      "contextProgression": {
-        "typicalStart": {
           "environment": "rural",
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry"
         },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
+        {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "rain"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
+      },
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid bromsning. Eleven doserar bromsen så att farten sjunker i tid, mjukt i vanlig körning och bestämt när det behövs.",
+        "with_support": "Med stöd: eleven klarar bromsning när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar bromsning själv i aktuellt context utan att handledaren behöver korrigera."
+      }
+    },
+    {
+      "skillKey": "car_control_gear_shifting",
+      "title": "Växling",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2011-20",
+          "reference": "TSFS 2011:20, 2 kap. 2 § p. 4",
+          "sourceTitle": "TSFS 2011:20 Kursplan, behörighet B",
+          "sourceUrl": "https://www.transportstyrelsen.se/tsfs/TSFS%202011_20.pdf",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "trv-korprov",
+          "reference": "Trafikverket: villkor 78",
+          "sourceTitle": "Trafikverket: villkor 78",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
+      "introductionStage": "foundation",
+      "prerequisites": [
+        {
+          "skillKey": "car_control_smooth_start_stop",
+          "strength": "hard",
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "TSFS 2012:43 §18 — rutinmässig manövrering inkluderar växling vid manuell bil."
+        }
+      ],
+      "recommendedStartingContexts": {
+        "environment": [
+          "residential"
+        ],
+        "traffic": [
+          "light"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
         ]
       },
-      "independenceBeforeContextIncrease": "independent"
+      "contextProgression": [
+        {
+          "environment": "residential",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "rural",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "highway",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
+      },
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid växling. Eleven väljer och byter växel i tid, utan att tappa uppmärksamheten från vägen.",
+        "with_support": "Med stöd: eleven klarar växling när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar växling själv i aktuellt context utan att handledaren behöver korrigera."
+      }
+    },
+    {
+      "skillKey": "car_control_speed_adaptation",
+      "title": "Hastighetsanpassning",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2011-20",
+          "reference": "TSFS 2011:20, 3 kap. 2 § p. 6",
+          "sourceTitle": "TSFS 2011:20 Kursplan, behörighet B",
+          "sourceUrl": "https://www.transportstyrelsen.se/tsfs/TSFS%202011_20.pdf",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 19 § p. 3",
+          "sourceTitle": "TSFS 2012:43 Förarprov, behörighet B",
+          "sourceUrl": "https://lagen.nu/tsfs/2012:43",
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
+      "introductionStage": "controlled_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "car_control_braking",
+          "strength": "hard",
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "TSFS 2011:20 kap. 3 — anpassa hastighet till omständigheter."
+        },
+        {
+          "skillKey": "positioning_road_position",
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Placering och hastighet övas ofta tillsammans i bostadsområde."
+        }
+      ],
+      "recommendedStartingContexts": {
+        "environment": [
+          "residential"
+        ],
+        "traffic": [
+          "light"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
+          "environment": "residential",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "rural",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "heavy",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "rural",
+          "traffic": "moderate",
+          "light": "dusk_dawn",
+          "weather": "rain"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
+      },
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid hastighetsanpassning. Eleven håller en fart som passar skylt, sikt, väglag och trafik — inte bara den skyltade maxfarten.",
+        "with_support": "Med stöd: eleven klarar hastighetsanpassning när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar hastighetsanpassning själv i aktuellt context utan att handledaren behöver korrigera."
+      }
+    },
+    {
+      "skillKey": "observation_mirror_routine",
+      "title": "Spegelrutin",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2011-20",
+          "reference": "TSFS 2011:20, 3 kap. 2 § p. 3",
+          "sourceTitle": "TSFS 2011:20 Kursplan, behörighet B",
+          "sourceUrl": "https://www.transportstyrelsen.se/tsfs/TSFS%202011_20.pdf",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 19 § p. 2",
+          "sourceTitle": "TSFS 2012:43 Förarprov, behörighet B",
+          "sourceUrl": "https://lagen.nu/tsfs/2012:43",
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
+      "introductionStage": "controlled_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "car_control_smooth_start_stop",
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Spegelrutin kräver grundläggande fordonskontroll."
+        }
+      ],
+      "recommendedStartingContexts": {
+        "environment": [
+          "residential"
+        ],
+        "traffic": [
+          "light"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
+          "environment": "residential",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "highway",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
+      },
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid spegelrutin. Eleven tittar i speglarna före fartsänkning, sväng, körfältsbyte och när något händer bakom.",
+        "with_support": "Med stöd: eleven klarar spegelrutin när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar spegelrutin själv i aktuellt context utan att handledaren behöver korrigera."
+      }
+    },
+    {
+      "skillKey": "observation_blind_spot",
+      "title": "Döda vinkeln",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2011-20",
+          "reference": "TSFS 2011:20, 3 kap. 2 § p. 3",
+          "sourceTitle": "TSFS 2011:20 Kursplan, behörighet B",
+          "sourceUrl": "https://www.transportstyrelsen.se/tsfs/TSFS%202011_20.pdf",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "trv-korprov",
+          "reference": "Trafikverket: körfältsbyte",
+          "sourceTitle": "Trafikverket: körfältsbyte",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
+      "introductionStage": "mixed_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "observation_mirror_routine",
+          "strength": "hard",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Döda vinkeln kompletterar spegelrutin, inte ersätter den."
+        }
+      ],
+      "recommendedStartingContexts": {
+        "environment": [
+          "urban"
+        ],
+        "traffic": [
+          "moderate"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "highway",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "heavy",
+          "light": "daylight",
+          "weather": "dry"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
+      },
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid döda vinkeln. Eleven tar en kontrollblick över axeln innan körfältsbyte, start från kant och sväng där det behövs.",
+        "with_support": "Med stöd: eleven klarar döda vinkeln när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar döda vinkeln själv i aktuellt context utan att handledaren behöver korrigera."
+      }
+    },
+    {
+      "skillKey": "observation_signaling",
+      "title": "Tecken och blinkers",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2011-20",
+          "reference": "TSFS 2011:20, 3 kap. 2 § p. 2–3",
+          "sourceTitle": "TSFS 2011:20 Kursplan, behörighet B",
+          "sourceUrl": "https://www.transportstyrelsen.se/tsfs/TSFS%202011_20.pdf",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "trv-korprov",
+          "reference": "Trafikverket: cirkulationsplats, körfältsbyte, sväng från landsväg",
+          "sourceTitle": "Trafikverket: cirkulationsplats, körfältsbyte, sväng från landsväg",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
+      "introductionStage": "controlled_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "car_control_smooth_start_stop",
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Blinkers kan övas tidigt i lugn miljö."
+        }
+      ],
+      "recommendedStartingContexts": {
+        "environment": [
+          "residential"
+        ],
+        "traffic": [
+          "light"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
+          "environment": "residential",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "rural",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
+      },
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid tecken och blinkers. Eleven visar avsikt i tid — blinkers, och ibland tecken med hand — och släcker när momentet är klart.",
+        "with_support": "Med stöd: eleven klarar tecken och blinkers när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar tecken och blinkers själv i aktuellt context utan att handledaren behöver korrigera."
+      }
+    },
+    {
+      "skillKey": "observation_scanning",
+      "title": "Avsökning",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2011-20",
+          "reference": "TSFS 2011:20, 3 kap. 2 § p. 3, 7–8",
+          "sourceTitle": "TSFS 2011:20 Kursplan, behörighet B",
+          "sourceUrl": "https://www.transportstyrelsen.se/tsfs/TSFS%202011_20.pdf",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 19 § p. 1–2",
+          "sourceTitle": "TSFS 2012:43 Förarprov, behörighet B",
+          "sourceUrl": "https://lagen.nu/tsfs/2012:43",
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
+      "introductionStage": "controlled_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "observation_mirror_routine",
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Avsökning bygger på etablerad blickvana."
+        }
+      ],
+      "recommendedStartingContexts": {
+        "environment": [
+          "residential"
+        ],
+        "traffic": [
+          "light"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
+          "environment": "residential",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "rural",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "heavy",
+          "light": "dusk_dawn",
+          "weather": "dry"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
+      },
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid avsökning. Eleven letar långt fram, åt sidorna och efter det som kan hända — inte bara på bilen framför.",
+        "with_support": "Med stöd: eleven klarar avsökning när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar avsökning själv i aktuellt context utan att handledaren behöver korrigera."
+      }
+    },
+    {
+      "skillKey": "positioning_road_position",
+      "title": "Placering på vägen",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2011-20",
+          "reference": "TSFS 2011:20, 3 kap. 2 § p. 6",
+          "sourceTitle": "TSFS 2011:20 Kursplan, behörighet B",
+          "sourceUrl": "https://www.transportstyrelsen.se/tsfs/TSFS%202011_20.pdf",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 19 § p. 5",
+          "sourceTitle": "TSFS 2012:43 Förarprov, behörighet B",
+          "sourceUrl": "https://lagen.nu/tsfs/2012:43",
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
+      "introductionStage": "controlled_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "car_control_smooth_start_stop",
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Placering övas när eleven kan starta/stanna kontrollerat."
+        }
+      ],
+      "recommendedStartingContexts": {
+        "environment": [
+          "residential"
+        ],
+        "traffic": [
+          "light"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
+          "environment": "residential",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "heavy",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "rural",
+          "traffic": "moderate",
+          "light": "dusk_dawn",
+          "weather": "rain"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
+      },
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid placering på vägen. Eleven ligger rätt i körfältet — inte för nära kant, mittlinje, parkerade bilar eller mötande.",
+        "with_support": "Med stöd: eleven klarar placering på vägen när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar placering på vägen själv i aktuellt context utan att handledaren behöver korrigera."
+      }
+    },
+    {
+      "skillKey": "positioning_lane_selection",
+      "title": "Val av körfält",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 19 §",
+          "sourceTitle": "TSFS 2012:43 Förarprov, behörighet B",
+          "sourceUrl": "https://lagen.nu/tsfs/2012:43",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "trv-korprov",
+          "reference": "Trafikverket: körning i körfält",
+          "sourceTitle": "Trafikverket: körning i körfält",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
+      "introductionStage": "mixed_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "positioning_road_position",
+          "strength": "hard",
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "TSFS 2012:43 §19 — val av körfält."
+        },
+        {
+          "skillKey": "observation_scanning",
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Körfältsval kräver avsökning av skyltning och trafik."
+        }
+      ],
+      "recommendedStartingContexts": {
+        "environment": [
+          "urban"
+        ],
+        "traffic": [
+          "moderate"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "heavy",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "highway",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
+      },
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid val av körfält. Eleven väljer körfält efter vart hen ska, inte efter att alla andra ligger här.",
+        "with_support": "Med stöd: eleven klarar val av körfält när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar val av körfält själv i aktuellt context utan att handledaren behöver korrigera."
+      }
+    },
+    {
+      "skillKey": "positioning_lane_change",
+      "title": "Körfältsbyte",
+      "officialBasis": [
+        {
+          "sourceId": "trv-korprov",
+          "reference": "Trafikverket: körfältsbyte",
+          "sourceTitle": "Trafikverket: körfältsbyte",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 19 §",
+          "sourceTitle": "TSFS 2012:43 Förarprov, behörighet B",
+          "sourceUrl": "https://lagen.nu/tsfs/2012:43",
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
+      "introductionStage": "mixed_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "observation_mirror_routine",
+          "strength": "hard",
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "Trafikverket provpunkt körfältsbyte — spegel obligatorisk."
+        },
+        {
+          "skillKey": "observation_blind_spot",
+          "strength": "hard",
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "Kontrollblick före körfältsbyte."
+        },
+        {
+          "skillKey": "observation_signaling",
+          "strength": "hard",
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "Tecken före körfältsbyte."
+        },
+        {
+          "skillKey": "positioning_road_position",
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Grundplacering före sidoförflyttning."
+        }
+      ],
+      "recommendedStartingContexts": {
+        "environment": [
+          "urban"
+        ],
+        "traffic": [
+          "light"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
+          "environment": "urban",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "highway",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "highway",
+          "traffic": "heavy",
+          "light": "daylight",
+          "weather": "dry"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
+      },
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid körfältsbyte. Eleven planerar bytet, speglar, blinkar, tar döda vinkeln och byter med avstånd till andra.",
+        "with_support": "Med stöd: eleven klarar körfältsbyte när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar körfältsbyte själv i aktuellt context utan att handledaren behöver korrigera."
+      }
+    },
+    {
+      "skillKey": "positioning_turning",
+      "title": "Sväng",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2011-20",
+          "reference": "TSFS 2011:20, 3 kap. 2 § p. 6",
+          "sourceTitle": "TSFS 2011:20 Kursplan, behörighet B",
+          "sourceUrl": "https://www.transportstyrelsen.se/tsfs/TSFS%202011_20.pdf",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "trv-korprov",
+          "reference": "Trafikverket: gatukorsning, sväng från landsväg",
+          "sourceTitle": "Trafikverket: gatukorsning, sväng från landsväg",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
+      "introductionStage": "mixed_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "positioning_road_position",
+          "strength": "hard",
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "TSFS 2012:43 — placering i sväng."
+        },
+        {
+          "skillKey": "observation_signaling",
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Blinkers före sväng."
+        },
+        {
+          "skillKey": "car_control_speed_adaptation",
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Fart innan och i sväng."
+        }
+      ],
+      "recommendedStartingContexts": {
+        "environment": [
+          "residential"
+        ],
+        "traffic": [
+          "light"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
+          "environment": "residential",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "rural",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
+      },
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid sväng. Eleven närmar sig, placerar sig och spårar genom svängen utan att skära eller svänga för vitt.",
+        "with_support": "Med stöd: eleven klarar sväng när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar sväng själv i aktuellt context utan att handledaren behöver korrigera."
+      }
+    },
+    {
+      "skillKey": "intersections_right_hand_rule",
+      "title": "Högerregeln",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2011-20",
+          "reference": "TSFS 2011:20, 3 kap. 2 § p. 2",
+          "sourceTitle": "TSFS 2011:20 Kursplan, behörighet B",
+          "sourceUrl": "https://www.transportstyrelsen.se/tsfs/TSFS%202011_20.pdf",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "trv-korprov",
+          "reference": "Trafikverket: gatukorsning",
+          "sourceTitle": "Trafikverket: gatukorsning",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
+      "introductionStage": "controlled_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "car_control_speed_adaptation",
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Högerregel kräver kontrollerad fart i korsning."
+        },
+        {
+          "skillKey": "observation_scanning",
+          "strength": "soft",
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "TSFS 2011:20 — uppmärksamhet och avsökning i korsning."
+        }
+      ],
+      "recommendedStartingContexts": {
+        "environment": [
+          "residential"
+        ],
+        "traffic": [
+          "light"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
+          "environment": "residential",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "residential",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
+      },
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid högerregeln. Eleven känner igen korsningar utan väjningsmärke och lämnar företräde åt höger när det krävs.",
+        "with_support": "Med stöd: eleven klarar högerregeln när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar högerregeln själv i aktuellt context utan att handledaren behöver korrigera."
+      }
+    },
+    {
+      "skillKey": "intersections_give_way",
+      "title": "Väjningsplikt och stopp",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2011-20",
+          "reference": "TSFS 2011:20, 3 kap. 2 § p. 2",
+          "sourceTitle": "TSFS 2011:20 Kursplan, behörighet B",
+          "sourceUrl": "https://www.transportstyrelsen.se/tsfs/TSFS%202011_20.pdf",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 19 § färd i vägkorsning",
+          "sourceTitle": "TSFS 2012:43 Förarprov, behörighet B",
+          "sourceUrl": "https://lagen.nu/tsfs/2012:43",
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
+      "introductionStage": "mixed_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "car_control_smooth_start_stop",
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Stopp/start vid väjningsplikt."
+        },
+        {
+          "skillKey": "car_control_braking",
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Kontrollerad inbromsning mot väjningslinje."
+        },
+        {
+          "skillKey": "observation_scanning",
+          "strength": "hard",
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "TSFS 2012:43 §19 — färd i vägkorsning."
+        }
+      ],
+      "recommendedStartingContexts": {
+        "environment": [
+          "residential"
+        ],
+        "traffic": [
+          "light"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
+          "environment": "residential",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "heavy",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "dusk_dawn",
+          "weather": "rain"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
+      },
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid väjningsplikt och stopp. Eleven stannar eller lämnar företräde när märken, linjer eller sikt kräver det, och kör ut först när luckan räcker.",
+        "with_support": "Med stöd: eleven klarar väjningsplikt och stopp när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar väjningsplikt och stopp själv i aktuellt context utan att handledaren behöver korrigera."
+      }
+    },
+    {
+      "skillKey": "intersections_traffic_lights",
+      "title": "Trafikljus",
+      "officialBasis": [
+        {
+          "sourceId": "trv-korprov",
+          "reference": "Trafikverket: signalerande korsning",
+          "sourceTitle": "Trafikverket: signalerande korsning",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 19 § p. 2",
+          "sourceTitle": "TSFS 2012:43 Förarprov, behörighet B",
+          "sourceUrl": "https://lagen.nu/tsfs/2012:43",
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
+      "introductionStage": "mixed_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "car_control_speed_adaptation",
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Anpassa fart mot signal."
+        },
+        {
+          "skillKey": "observation_scanning",
+          "strength": "soft",
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "Uppmärksamhet på signal och korsande trafik."
+        }
+      ],
+      "recommendedStartingContexts": {
+        "environment": [
+          "urban"
+        ],
+        "traffic": [
+          "light"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
+          "environment": "urban",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "heavy",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "heavy",
+          "light": "night",
+          "weather": "dry"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
+      },
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid trafikljus. Eleven anpassar farten mot ljuset, är beredd på skifte och hamnar inte i korsningen på rött.",
+        "with_support": "Med stöd: eleven klarar trafikljus när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar trafikljus själv i aktuellt context utan att handledaren behöver korrigera."
+      }
+    },
+    {
+      "skillKey": "roundabout_entry",
+      "title": "Infart i rondell",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 19 § cirkulationsplats",
+          "sourceTitle": "TSFS 2012:43 Förarprov, behörighet B",
+          "sourceUrl": "https://lagen.nu/tsfs/2012:43",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "trv-korprov",
+          "reference": "Trafikverket: cirkulationsplats",
+          "sourceTitle": "Trafikverket: cirkulationsplats",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
+      "introductionStage": "complex_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "intersections_give_way",
+          "strength": "hard",
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "TSFS 2012:43 §19 — lämna företräde i cirkulationsplats."
+        },
+        {
+          "skillKey": "car_control_speed_adaptation",
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Sänka fart före infart."
+        }
+      ],
+      "recommendedStartingContexts": {
+        "environment": [
+          "urban"
+        ],
+        "traffic": [
+          "light"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
+          "environment": "urban",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "heavy",
+          "light": "daylight",
+          "weather": "dry"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
+      },
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid infart i rondell. Eleven sänker farten, lämnar företräde åt trafiken i cirkulationen och tar en lucka utan att stanna i onödan.",
+        "with_support": "Med stöd: eleven klarar infart i rondell när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar infart i rondell själv i aktuellt context utan att handledaren behöver korrigera."
+      }
     },
     {
       "skillKey": "roundabout_positioning",
-      "areaKey": "intersections_roundabouts",
       "title": "Placering i rondell",
-      "mvpPriority": "core",
+      "officialBasis": [
+        {
+          "sourceId": "trv-korprov",
+          "reference": "Trafikverket: cirkulationsplats (placering)",
+          "sourceTitle": "Trafikverket: cirkulationsplats (placering)",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 19 §",
+          "sourceTitle": "TSFS 2012:43 Förarprov, behörighet B",
+          "sourceUrl": "https://lagen.nu/tsfs/2012:43",
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
       "introductionStage": "complex_traffic",
       "prerequisites": [
         {
           "skillKey": "roundabout_entry",
           "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Placering i cirkulation efter säker infart."
         },
         {
           "skillKey": "positioning_road_position",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Spårning i körfält."
         }
       ],
-      "contextProgression": {
-        "typicalStart": {
-          "environment": "rural",
+      "recommendedStartingContexts": {
+        "environment": [
+          "urban"
+        ],
+        "traffic": [
+          "moderate"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
+          "environment": "urban",
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry"
         },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
+        {
+          "environment": "urban",
+          "traffic": "heavy",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "heavy",
+          "light": "dusk_dawn",
+          "weather": "rain"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
       },
-      "independenceBeforeContextIncrease": "independent"
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid placering i rondell. Eleven väljer rätt läge i cirkulationen, särskilt i flerfältsrondell, och håller spåret utan att skära.",
+        "with_support": "Med stöd: eleven klarar placering i rondell när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar placering i rondell själv i aktuellt context utan att handledaren behöver korrigera."
+      }
     },
     {
       "skillKey": "roundabout_exit",
-      "areaKey": "intersections_roundabouts",
       "title": "Utfart ur rondell",
-      "mvpPriority": "core",
+      "officialBasis": [
+        {
+          "sourceId": "trv-korprov",
+          "reference": "Trafikverket: cirkulationsplats (tecken, avsikt)",
+          "sourceTitle": "Trafikverket: cirkulationsplats (tecken, avsikt)",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 19 §",
+          "sourceTitle": "TSFS 2012:43 Förarprov, behörighet B",
+          "sourceUrl": "https://lagen.nu/tsfs/2012:43",
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
       "introductionStage": "complex_traffic",
       "prerequisites": [
         {
           "skillKey": "roundabout_positioning",
           "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Utfart bygger på korrekt läge i rondellen."
         },
         {
           "skillKey": "observation_signaling",
           "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "Trafikverket — tecken vid utfart ur cirkulationsplats."
         }
       ],
-      "contextProgression": {
-        "typicalStart": {
-          "environment": "rural",
+      "recommendedStartingContexts": {
+        "environment": [
+          "urban"
+        ],
+        "traffic": [
+          "moderate"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
+          "environment": "urban",
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry"
         },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
+        {
+          "environment": "urban",
+          "traffic": "heavy",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "heavy",
+          "light": "dusk_dawn",
+          "weather": "dry"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
       },
-      "independenceBeforeContextIncrease": "independent"
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid utfart ur rondell. Eleven visar tecken i tid, byter till ytterläge om det behövs och lämnar rondellen utan att störa andra.",
+        "with_support": "Med stöd: eleven klarar utfart ur rondell när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar utfart ur rondell själv i aktuellt context utan att handledaren behöver korrigera."
+      }
     },
     {
       "skillKey": "urban_vulnerable_road_users",
-      "areaKey": "urban_traffic",
       "title": "Oskyddade trafikanter",
-      "mvpPriority": "core",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 19 §",
+          "sourceTitle": "TSFS 2012:43 Förarprov, behörighet B",
+          "sourceUrl": "https://lagen.nu/tsfs/2012:43",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "trv-korprov",
+          "reference": "Trafikverket: oskyddade trafikanter",
+          "sourceTitle": "Trafikverket: oskyddade trafikanter",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
       "introductionStage": "mixed_traffic",
       "prerequisites": [
         {
           "skillKey": "observation_scanning",
           "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "TSFS 2012:43 §19 — oskyddade trafikanter."
         },
         {
           "skillKey": "car_control_speed_adaptation",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Fartanpassning vid gående/cyklister."
         }
       ],
-      "contextProgression": {
-        "typicalStart": {
-          "environment": "urban",
-          "traffic": "moderate",
-          "light": "daylight",
-          "weather": "dry"
-        },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
+      "recommendedStartingContexts": {
+        "environment": [
+          "residential"
+        ],
+        "traffic": [
+          "light"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
         ]
       },
-      "independenceBeforeContextIncrease": "independent"
-    },
-    {
-      "skillKey": "urban_passing_stationary",
-      "areaKey": "urban_traffic",
-      "title": "Passera stillastående fordon",
-      "mvpPriority": "core",
-      "introductionStage": "mixed_traffic",
-      "prerequisites": [
+      "contextProgression": [
         {
-          "skillKey": "positioning_road_position",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        },
-        {
-          "skillKey": "observation_scanning",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        }
-      ],
-      "contextProgression": {
-        "typicalStart": {
-          "environment": "urban",
-          "traffic": "moderate",
-          "light": "daylight",
-          "weather": "dry"
-        },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
-      },
-      "independenceBeforeContextIncrease": "independent"
-    },
-    {
-      "skillKey": "urban_tight_spaces",
-      "areaKey": "urban_traffic",
-      "title": "Trånga gator",
-      "mvpPriority": "core",
-      "introductionStage": "mixed_traffic",
-      "prerequisites": [
-        {
-          "skillKey": "positioning_road_position",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        },
-        {
-          "skillKey": "car_control_smooth_start_stop",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        }
-      ],
-      "contextProgression": {
-        "typicalStart": {
-          "environment": "urban",
-          "traffic": "moderate",
-          "light": "daylight",
-          "weather": "dry"
-        },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
-      },
-      "independenceBeforeContextIncrease": "independent"
-    },
-    {
-      "skillKey": "rural_joining_and_leaving",
-      "areaKey": "rural_roads",
-      "title": "Infart och avfart på landsväg",
-      "mvpPriority": "core",
-      "introductionStage": "complex_traffic",
-      "prerequisites": [
-        {
-          "skillKey": "car_control_speed_adaptation",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        },
-        {
-          "skillKey": "observation_signaling",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        },
-        {
-          "skillKey": "intersections_give_way",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        },
-        {
-          "skillKey": "positioning_turning",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        }
-      ],
-      "contextProgression": {
-        "typicalStart": {
-          "environment": "rural",
-          "traffic": "moderate",
-          "light": "daylight",
-          "weather": "dry"
-        },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
-      },
-      "independenceBeforeContextIncrease": "independent"
-    },
-    {
-      "skillKey": "rural_curves",
-      "areaKey": "rural_roads",
-      "title": "Kurvor på landsväg",
-      "mvpPriority": "core",
-      "introductionStage": "complex_traffic",
-      "prerequisites": [
-        {
-          "skillKey": "car_control_speed_adaptation",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        },
-        {
-          "skillKey": "positioning_road_position",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        }
-      ],
-      "contextProgression": {
-        "typicalStart": {
-          "environment": "rural",
-          "traffic": "moderate",
-          "light": "daylight",
-          "weather": "dry"
-        },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
-      },
-      "independenceBeforeContextIncrease": "independent"
-    },
-    {
-      "skillKey": "rural_meeting_traffic",
-      "areaKey": "rural_roads",
-      "title": "Möte",
-      "mvpPriority": "core",
-      "introductionStage": "complex_traffic",
-      "prerequisites": [
-        {
-          "skillKey": "positioning_road_position",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        },
-        {
-          "skillKey": "car_control_speed_adaptation",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        }
-      ],
-      "contextProgression": {
-        "typicalStart": {
-          "environment": "rural",
-          "traffic": "moderate",
-          "light": "daylight",
-          "weather": "dry"
-        },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
-      },
-      "independenceBeforeContextIncrease": "independent"
-    },
-    {
-      "skillKey": "rural_passing",
-      "areaKey": "rural_roads",
-      "title": "Omkörning",
-      "mvpPriority": "supporting",
-      "introductionStage": "complex_traffic",
-      "prerequisites": [
-        {
-          "skillKey": "observation_mirror_routine",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        },
-        {
-          "skillKey": "observation_signaling",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        },
-        {
-          "skillKey": "car_control_speed_adaptation",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        },
-        {
-          "skillKey": "rural_meeting_traffic",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        }
-      ],
-      "contextProgression": {
-        "typicalStart": {
-          "environment": "rural",
-          "traffic": "moderate",
-          "light": "daylight",
-          "weather": "dry"
-        },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
-      },
-      "independenceBeforeContextIncrease": "independent",
-      "notes": "Supporting skill; late introduction aligned with TSFS 2012:43 omkörning"
-    },
-    {
-      "skillKey": "highway_merging",
-      "areaKey": "highway",
-      "title": "Påfart",
-      "mvpPriority": "core",
-      "introductionStage": "complex_traffic",
-      "prerequisites": [
-        {
-          "skillKey": "car_control_speed_adaptation",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        },
-        {
-          "skillKey": "observation_mirror_routine",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        },
-        {
-          "skillKey": "observation_blind_spot",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        },
-        {
-          "skillKey": "positioning_lane_change",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        }
-      ],
-      "contextProgression": {
-        "typicalStart": {
-          "environment": "rural",
-          "traffic": "moderate",
-          "light": "daylight",
-          "weather": "dry"
-        },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
-      },
-      "independenceBeforeContextIncrease": "independent"
-    },
-    {
-      "skillKey": "highway_lane_discipline",
-      "areaKey": "highway",
-      "title": "Körfält på motorväg",
-      "mvpPriority": "core",
-      "introductionStage": "complex_traffic",
-      "prerequisites": [
-        {
-          "skillKey": "positioning_lane_selection",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        },
-        {
-          "skillKey": "highway_merging",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        }
-      ],
-      "contextProgression": {
-        "typicalStart": {
-          "environment": "rural",
-          "traffic": "moderate",
-          "light": "daylight",
-          "weather": "dry"
-        },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
-      },
-      "independenceBeforeContextIncrease": "independent"
-    },
-    {
-      "skillKey": "highway_exiting",
-      "areaKey": "highway",
-      "title": "Avfart",
-      "mvpPriority": "core",
-      "introductionStage": "complex_traffic",
-      "prerequisites": [
-        {
-          "skillKey": "highway_lane_discipline",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        },
-        {
-          "skillKey": "observation_signaling",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        },
-        {
-          "skillKey": "car_control_speed_adaptation",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        }
-      ],
-      "contextProgression": {
-        "typicalStart": {
-          "environment": "rural",
-          "traffic": "moderate",
-          "light": "daylight",
-          "weather": "dry"
-        },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
-      },
-      "independenceBeforeContextIncrease": "independent"
-    },
-    {
-      "skillKey": "maneuver_reversing",
-      "areaKey": "maneuvering",
-      "title": "Backning",
-      "mvpPriority": "core",
-      "introductionStage": "foundation",
-      "prerequisites": [
-        {
-          "skillKey": "car_control_smooth_start_stop",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        },
-        {
-          "skillKey": "observation_scanning",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        }
-      ],
-      "contextProgression": {
-        "typicalStart": {
           "environment": "residential",
           "traffic": "light",
           "light": "daylight",
           "weather": "dry"
         },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
+        {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "heavy",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "dusk_dawn",
+          "weather": "dry"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
+      },
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid oskyddade trafikanter. Eleven upptäcker gående, cyklister och barn i tid och anpassar fart, lucka och ögonkontakt.",
+        "with_support": "Med stöd: eleven klarar oskyddade trafikanter när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar oskyddade trafikanter själv i aktuellt context utan att handledaren behöver korrigera."
+      }
+    },
+    {
+      "skillKey": "urban_passing_stationary",
+      "title": "Passera stillastående fordon",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 19 §",
+          "sourceTitle": "TSFS 2012:43 Förarprov, behörighet B",
+          "sourceUrl": "https://lagen.nu/tsfs/2012:43",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "trv-korprov",
+          "reference": "Trafikverket: passerande av stillastående fordon",
+          "sourceTitle": "Trafikverket: passerande av stillastående fordon",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
+      "introductionStage": "mixed_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "positioning_road_position",
+          "strength": "soft",
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "TSFS 2012:43 — passerande stillastående fordon."
+        },
+        {
+          "skillKey": "observation_scanning",
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Upptäcka dörrar, fotgängare mellan bilar."
+        }
+      ],
+      "recommendedStartingContexts": {
+        "environment": [
+          "urban"
+        ],
+        "traffic": [
+          "moderate"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
         ]
       },
-      "independenceBeforeContextIncrease": "independent"
+      "contextProgression": [
+        {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "heavy",
+          "light": "daylight",
+          "weather": "dry"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
+      },
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid passera stillastående fordon. Eleven sänker farten och lämnar lucka när hen passerar parkerade bilar, buss i hållplats eller andra stillastående hinder.",
+        "with_support": "Med stöd: eleven klarar passera stillastående fordon när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar passera stillastående fordon själv i aktuellt context utan att handledaren behöver korrigera."
+      }
+    },
+    {
+      "skillKey": "urban_tight_spaces",
+      "title": "Trånga gator",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2011-20",
+          "reference": "TSFS 2011:20, 3 kap. 1–2 §§",
+          "sourceTitle": "TSFS 2011:20 Kursplan, behörighet B",
+          "sourceUrl": "https://www.transportstyrelsen.se/tsfs/TSFS%202011_20.pdf",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "trv-korprov",
+          "reference": "Trafikverket: körning i tätort",
+          "sourceTitle": "Trafikverket: körning i tätort",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
+      "introductionStage": "mixed_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "positioning_road_position",
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Grundplacering i smala gator."
+        },
+        {
+          "skillKey": "car_control_smooth_start_stop",
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Långsam kontroll vid möte i trång gata."
+        }
+      ],
+      "recommendedStartingContexts": {
+        "environment": [
+          "residential"
+        ],
+        "traffic": [
+          "light"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
+          "environment": "residential",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "residential",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
+      },
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid trånga gator. Eleven tar sig fram där det är smalt — bilar på båda sidor, mötande i villagata — utan att skrapa eller frysa.",
+        "with_support": "Med stöd: eleven klarar trånga gator när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar trånga gator själv i aktuellt context utan att handledaren behöver korrigera."
+      }
+    },
+    {
+      "skillKey": "rural_joining_and_leaving",
+      "title": "Infart och avfart på landsväg",
+      "officialBasis": [
+        {
+          "sourceId": "trv-korprov",
+          "reference": "Trafikverket: infart till landsväg, sväng från landsväg",
+          "sourceTitle": "Trafikverket: infart till landsväg, sväng från landsväg",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 19 §",
+          "sourceTitle": "TSFS 2012:43 Förarprov, behörighet B",
+          "sourceUrl": "https://lagen.nu/tsfs/2012:43",
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
+      "introductionStage": "complex_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "car_control_speed_adaptation",
+          "strength": "hard",
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "Trafikverket — infart/sväng från landsväg."
+        },
+        {
+          "skillKey": "intersections_give_way",
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Väjning vid infart."
+        },
+        {
+          "skillKey": "positioning_turning",
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Svängteknik vid avfart."
+        }
+      ],
+      "recommendedStartingContexts": {
+        "environment": [
+          "rural"
+        ],
+        "traffic": [
+          "light"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
+          "environment": "rural",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "rural",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "rural",
+          "traffic": "heavy",
+          "light": "daylight",
+          "weather": "dry"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
+      },
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid infart och avfart på landsväg. Eleven kommer ut på, och svänger av från, en mer högtrafikerad landsväg med rätt fart, placering och tecken.",
+        "with_support": "Med stöd: eleven klarar infart och avfart på landsväg när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar infart och avfart på landsväg själv i aktuellt context utan att handledaren behöver korrigera."
+      }
+    },
+    {
+      "skillKey": "rural_curves",
+      "title": "Kurvor på landsväg",
+      "officialBasis": [
+        {
+          "sourceId": "trv-korprov",
+          "reference": "Trafikverket: smal och/eller krokig väg",
+          "sourceTitle": "Trafikverket: smal och/eller krokig väg",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "tsfs-2011-20",
+          "reference": "TSFS 2011:20, 3 kap. 2 § p. 6–7",
+          "sourceTitle": "TSFS 2011:20 Kursplan, behörighet B",
+          "sourceUrl": "https://www.transportstyrelsen.se/tsfs/TSFS%202011_20.pdf",
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
+      "introductionStage": "complex_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "car_control_speed_adaptation",
+          "strength": "hard",
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "TSFS 2011:20 — anpassa fart i kurva."
+        },
+        {
+          "skillKey": "positioning_road_position",
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Placering i kurva."
+        }
+      ],
+      "recommendedStartingContexts": {
+        "environment": [
+          "rural"
+        ],
+        "traffic": [
+          "light"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
+          "environment": "rural",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "rural",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "rural",
+          "traffic": "moderate",
+          "light": "dusk_dawn",
+          "weather": "rain"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
+      },
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid kurvor på landsväg. Eleven läser kurvan, sänker före, placerar sig och gasar ut utan att skära eller bromsa mitt i.",
+        "with_support": "Med stöd: eleven klarar kurvor på landsväg när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar kurvor på landsväg själv i aktuellt context utan att handledaren behöver korrigera."
+      }
+    },
+    {
+      "skillKey": "rural_meeting_traffic",
+      "title": "Möte",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 19 § möte",
+          "sourceTitle": "TSFS 2012:43 Förarprov, behörighet B",
+          "sourceUrl": "https://lagen.nu/tsfs/2012:43",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "trv-korprov",
+          "reference": "Trafikverket: möte",
+          "sourceTitle": "Trafikverket: möte",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
+      "introductionStage": "complex_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "positioning_road_position",
+          "strength": "soft",
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "TSFS 2012:43 §19 — möte."
+        },
+        {
+          "skillKey": "car_control_speed_adaptation",
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Fart och lucka vid möte."
+        }
+      ],
+      "recommendedStartingContexts": {
+        "environment": [
+          "rural"
+        ],
+        "traffic": [
+          "light"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
+          "environment": "rural",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "rural",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "rural",
+          "traffic": "moderate",
+          "light": "dusk_dawn",
+          "weather": "dry"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
+      },
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid möte. Eleven möter andra fordon med rätt lucka, fart och placering, även på smal väg.",
+        "with_support": "Med stöd: eleven klarar möte när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar möte själv i aktuellt context utan att handledaren behöver korrigera."
+      }
+    },
+    {
+      "skillKey": "rural_passing",
+      "title": "Omkörning",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 19 § omkörning",
+          "sourceTitle": "TSFS 2012:43 Förarprov, behörighet B",
+          "sourceUrl": "https://lagen.nu/tsfs/2012:43",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "trv-korprov",
+          "reference": "Trafikverket: omkörning",
+          "sourceTitle": "Trafikverket: omkörning",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
+      "introductionStage": "complex_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "rural_meeting_traffic",
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Mötesbeteende före omkörning."
+        },
+        {
+          "skillKey": "observation_mirror_routine",
+          "strength": "hard",
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "TSFS 2012:43 §19 — omkörning."
+        },
+        {
+          "skillKey": "car_control_speed_adaptation",
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Acceleration och återgång."
+        }
+      ],
+      "recommendedStartingContexts": {
+        "environment": [
+          "rural"
+        ],
+        "traffic": [
+          "light"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
+          "environment": "rural",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "rural",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
+      },
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid omkörning. Eleven väljer plats, visar tecken, accelererar och går tillbaka utan att skära in för tidigt.",
+        "with_support": "Med stöd: eleven klarar omkörning när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar omkörning själv i aktuellt context utan att handledaren behöver korrigera."
+      }
+    },
+    {
+      "skillKey": "highway_merging",
+      "title": "Påfart",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 19 § infart på motorväg/motortrafikled",
+          "sourceTitle": "TSFS 2012:43 Förarprov, behörighet B",
+          "sourceUrl": "https://lagen.nu/tsfs/2012:43",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "trv-korprov",
+          "reference": "Trafikverket: motorväg",
+          "sourceTitle": "Trafikverket: motorväg",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
+      "introductionStage": "complex_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "positioning_lane_change",
+          "strength": "hard",
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "TSFS 2012:43 — infart motorväg."
+        },
+        {
+          "skillKey": "car_control_speed_adaptation",
+          "strength": "hard",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Accelerationsfält kräver fartmatchning."
+        }
+      ],
+      "recommendedStartingContexts": {
+        "environment": [
+          "highway"
+        ],
+        "traffic": [
+          "light"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
+          "environment": "highway",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "highway",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "highway",
+          "traffic": "heavy",
+          "light": "daylight",
+          "weather": "dry"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
+      },
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid påfart. Eleven använder accelerationsfältet, speglar, blinkar och smälter in i luckan utan att stanna på rampen.",
+        "with_support": "Med stöd: eleven klarar påfart när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar påfart själv i aktuellt context utan att handledaren behöver korrigera."
+      }
+    },
+    {
+      "skillKey": "highway_lane_discipline",
+      "title": "Körfält på motorväg",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 19 § val av körfält",
+          "sourceTitle": "TSFS 2012:43 Förarprov, behörighet B",
+          "sourceUrl": "https://lagen.nu/tsfs/2012:43",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "trv-korprov",
+          "reference": "Trafikverket: motorväg, motortrafikled",
+          "sourceTitle": "Trafikverket: motorväg, motortrafikled",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
+      "introductionStage": "complex_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "positioning_lane_selection",
+          "strength": "soft",
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "TSFS 2012:43 — körfält på motorväg."
+        },
+        {
+          "skillKey": "highway_merging",
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Erfarenhet från påfart."
+        }
+      ],
+      "recommendedStartingContexts": {
+        "environment": [
+          "highway"
+        ],
+        "traffic": [
+          "moderate"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
+          "environment": "highway",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "highway",
+          "traffic": "heavy",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "highway",
+          "traffic": "heavy",
+          "light": "rain",
+          "weather": "dry"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
+      },
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid körfält på motorväg. Eleven håller höger när det går, använder vänster till omkörning och håller jämn placering i hög fart.",
+        "with_support": "Med stöd: eleven klarar körfält på motorväg när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar körfält på motorväg själv i aktuellt context utan att handledaren behöver korrigera."
+      }
+    },
+    {
+      "skillKey": "highway_exiting",
+      "title": "Avfart",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 19 § avfart från motorväg",
+          "sourceTitle": "TSFS 2012:43 Förarprov, behörighet B",
+          "sourceUrl": "https://lagen.nu/tsfs/2012:43",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "trv-korprov",
+          "reference": "Trafikverket: motorväg",
+          "sourceTitle": "Trafikverket: motorväg",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
+      "introductionStage": "complex_traffic",
+      "prerequisites": [
+        {
+          "skillKey": "highway_lane_discipline",
+          "strength": "soft",
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "TSFS 2012:43 — avfart motorväg."
+        },
+        {
+          "skillKey": "observation_signaling",
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Tidig planering och tecken."
+        }
+      ],
+      "recommendedStartingContexts": {
+        "environment": [
+          "highway"
+        ],
+        "traffic": [
+          "moderate"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
+          "environment": "highway",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "highway",
+          "traffic": "heavy",
+          "light": "daylight",
+          "weather": "dry"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
+      },
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid avfart. Eleven planerar avfarten i tid, byter fält, blinkar och sänker farten på decelerationsfältet — inte ute i körfältet.",
+        "with_support": "Med stöd: eleven klarar avfart när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar avfart själv i aktuellt context utan att handledaren behöver korrigera."
+      }
+    },
+    {
+      "skillKey": "maneuver_reversing",
+      "title": "Backning",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 18 §",
+          "sourceTitle": "TSFS 2012:43 Förarprov, behörighet B",
+          "sourceUrl": "https://lagen.nu/tsfs/2012:43",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "trv-korprov",
+          "reference": "Trafikverket: backning",
+          "sourceTitle": "Trafikverket: backning",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
+      "introductionStage": "foundation",
+      "prerequisites": [
+        {
+          "skillKey": "car_control_smooth_start_stop",
+          "strength": "soft",
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "TSFS 2012:43 §18 — backning ingår i särskild manövrering."
+        },
+        {
+          "skillKey": "observation_scanning",
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Uppsikt bakåt."
+        }
+      ],
+      "recommendedStartingContexts": {
+        "environment": [
+          "residential"
+        ],
+        "traffic": [
+          "light"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
+          "environment": "residential",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
+      },
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid backning. Eleven backar rakt och i sväng med uppsikt, långsamt och utan att gissa sig fram.",
+        "with_support": "Med stöd: eleven klarar backning när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar backning själv i aktuellt context utan att handledaren behöver korrigera."
+      }
     },
     {
       "skillKey": "maneuver_hill_start",
-      "areaKey": "maneuvering",
       "title": "Start i lutning",
-      "mvpPriority": "core",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 18 §",
+          "sourceTitle": "TSFS 2012:43 Förarprov, behörighet B",
+          "sourceUrl": "https://lagen.nu/tsfs/2012:43",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "trv-korprov",
+          "reference": "Trafikverket: start i lutning",
+          "sourceTitle": "Trafikverket: start i lutning",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
       "introductionStage": "mixed_traffic",
       "prerequisites": [
         {
           "skillKey": "car_control_smooth_start_stop",
-          "strength": "hard"
+          "strength": "hard",
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "TSFS 2012:43 §18 — start i lutning."
         },
         {
           "skillKey": "car_control_gear_shifting",
           "strength": "hard",
-          "note": "Manual only; otherwise soft dependency"
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "Manuell bil — växling i lutning. Ej hard vid automatic_only."
         }
       ],
-      "contextProgression": {
-        "typicalStart": {
-          "environment": "urban",
-          "traffic": "moderate",
+      "recommendedStartingContexts": {
+        "environment": [
+          "residential"
+        ],
+        "traffic": [
+          "light"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
+          "environment": "residential",
+          "traffic": "light",
           "light": "daylight",
           "weather": "dry"
         },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
+        {
+          "environment": "urban",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "rural",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
       },
-      "independenceBeforeContextIncrease": "independent"
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid start i lutning. Eleven startar i motlut och medlut utan att rulla okontrollerat bakåt eller framåt.",
+        "with_support": "Med stöd: eleven klarar start i lutning när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar start i lutning själv i aktuellt context utan att handledaren behöver korrigera."
+      }
     },
     {
       "skillKey": "maneuver_parallel_parking",
-      "areaKey": "maneuvering",
       "title": "Parallellparkering",
-      "mvpPriority": "core",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 18 § parkering",
+          "sourceTitle": "TSFS 2012:43 Förarprov, behörighet B",
+          "sourceUrl": "https://lagen.nu/tsfs/2012:43",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "trv-korprov",
+          "reference": "Trafikverket: parkering i ficka längs väg",
+          "sourceTitle": "Trafikverket: parkering i ficka längs väg",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
       "introductionStage": "mixed_traffic",
       "prerequisites": [
         {
           "skillKey": "maneuver_reversing",
           "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "TSFS 2012:43 §18 — parkering i ficka."
         },
         {
           "skillKey": "observation_scanning",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
-        },
-        {
-          "skillKey": "positioning_road_position",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Uppsikt mot trafik under parkering."
         }
       ],
-      "contextProgression": {
-        "typicalStart": {
+      "recommendedStartingContexts": {
+        "environment": [
+          "residential"
+        ],
+        "traffic": [
+          "light"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
+          "environment": "residential",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
           "environment": "urban",
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry"
-        },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
       },
-      "independenceBeforeContextIncrease": "independent"
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid parallellparkering. Eleven parkerar längs gatan, vanligen genom att backa in, med kontroll på hörn och trafik.",
+        "with_support": "Med stöd: eleven klarar parallellparkering när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar parallellparkering själv i aktuellt context utan att handledaren behöver korrigera."
+      }
     },
     {
       "skillKey": "maneuver_parking",
-      "areaKey": "maneuvering",
       "title": "Övrig parkering",
-      "mvpPriority": "supporting",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 18 §",
+          "sourceTitle": "TSFS 2012:43 Förarprov, behörighet B",
+          "sourceUrl": "https://lagen.nu/tsfs/2012:43",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "trv-korprov",
+          "reference": "Trafikverket: parkering på parkeringsplats",
+          "sourceTitle": "Trafikverket: parkering på parkeringsplats",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
       "introductionStage": "mixed_traffic",
       "prerequisites": [
         {
           "skillKey": "maneuver_reversing",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+          "strength": "soft",
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "TSFS 2012:43 §18 — parkering."
         }
       ],
-      "contextProgression": {
-        "typicalStart": {
-          "environment": "urban",
-          "traffic": "moderate",
+      "recommendedStartingContexts": {
+        "environment": [
+          "residential"
+        ],
+        "traffic": [
+          "light"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
+          "environment": "residential",
+          "traffic": "light",
           "light": "daylight",
           "weather": "dry"
         },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
+        {
+          "environment": "urban",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
       },
-      "independenceBeforeContextIncrease": "independent"
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid övrig parkering. Eleven parkerar på tomt, vinkelplats eller annan ficka som inte är klassisk parallellparkering.",
+        "with_support": "Med stöd: eleven klarar övrig parkering när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar övrig parkering själv i aktuellt context utan att handledaren behöver korrigera."
+      }
     },
     {
       "skillKey": "maneuver_turning_around",
-      "areaKey": "maneuvering",
       "title": "Vändning",
-      "mvpPriority": "core",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 18 §",
+          "sourceTitle": "TSFS 2012:43 Förarprov, behörighet B",
+          "sourceUrl": "https://lagen.nu/tsfs/2012:43",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "trv-korprov",
+          "reference": "Trafikverket: vändning",
+          "sourceTitle": "Trafikverket: vändning",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
       "introductionStage": "mixed_traffic",
       "prerequisites": [
         {
           "skillKey": "maneuver_reversing",
           "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "TSFS 2012:43 §18 — vändning."
         },
         {
           "skillKey": "observation_scanning",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Säker plats och uppsikt."
         }
       ],
-      "contextProgression": {
-        "typicalStart": {
-          "environment": "urban",
-          "traffic": "moderate",
+      "recommendedStartingContexts": {
+        "environment": [
+          "residential"
+        ],
+        "traffic": [
+          "light"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
+          "environment": "residential",
+          "traffic": "light",
           "light": "daylight",
           "weather": "dry"
         },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
+        {
+          "environment": "rural",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
       },
-      "independenceBeforeContextIncrease": "independent"
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid vändning. Eleven väljer en säker plats och vänder — trepunkt, slinga eller motsvarande — med uppsikt.",
+        "with_support": "Med stöd: eleven klarar vändning när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar vändning själv i aktuellt context utan att handledaren behöver korrigera."
+      }
     },
     {
       "skillKey": "independent_route_planning",
-      "areaKey": "independent_safe_driving",
       "title": "Köra mot mål",
-      "mvpPriority": "core",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 12 §",
+          "sourceTitle": "TSFS 2012:43 Förarprov, behörighet B",
+          "sourceUrl": "https://lagen.nu/tsfs/2012:43",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "trv-korprov",
+          "reference": "Trafikverket: självständig körning mot mål",
+          "sourceTitle": "Trafikverket: självständig körning mot mål",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
       "introductionStage": "independent_readiness",
       "prerequisites": [
         {
           "skillKey": "positioning_lane_selection",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+          "strength": "soft",
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "TSFS 2012:43 §12 — självständig körning mot mål."
         },
         {
           "skillKey": "observation_scanning",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Navigera kräver avsökning."
         },
         {
           "skillKey": "independent_risk_awareness",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Självständig körning kräver riskmedvetenhet."
         }
       ],
-      "contextProgression": {
-        "typicalStart": {
+      "recommendedStartingContexts": {
+        "environment": [
+          "urban"
+        ],
+        "traffic": [
+          "moderate"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
           "environment": "urban",
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry"
         },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
+        {
+          "environment": "urban",
+          "traffic": "heavy",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "rural",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
       },
-      "independenceBeforeContextIncrease": "independent"
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid köra mot mål. Eleven hittar fram mot ett mål själv — känt mål eller skyltat — och rättar till om hen kör fel.",
+        "with_support": "Med stöd: eleven klarar köra mot mål när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar köra mot mål själv i aktuellt context utan att handledaren behöver korrigera."
+      }
     },
     {
       "skillKey": "independent_risk_awareness",
-      "areaKey": "independent_safe_driving",
       "title": "Riskmedvetenhet",
-      "mvpPriority": "core",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2011-20",
+          "reference": "TSFS 2011:20, 3 kap. 2 § p. 7–9",
+          "sourceTitle": "TSFS 2011:20 Kursplan, behörighet B",
+          "sourceUrl": "https://www.transportstyrelsen.se/tsfs/TSFS%202011_20.pdf",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 11 § och 19 § p. 1",
+          "sourceTitle": "TSFS 2012:43 Förarprov, behörighet B",
+          "sourceUrl": "https://lagen.nu/tsfs/2012:43",
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
       "introductionStage": "mixed_traffic",
       "prerequisites": [
         {
           "skillKey": "observation_scanning",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+          "strength": "soft",
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "TSFS 2012:43 §11, §19 p.1 — förutse risker."
         },
         {
           "skillKey": "car_control_speed_adaptation",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Riskmedvetenhet kopplas till fart."
         }
       ],
-      "contextProgression": {
-        "typicalStart": {
+      "recommendedStartingContexts": {
+        "environment": [
+          "residential"
+        ],
+        "traffic": [
+          "light"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
+          "environment": "residential",
+          "traffic": "light",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
           "environment": "urban",
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry"
         },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
+        {
+          "environment": "rural",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "highway",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "urban",
+          "traffic": "heavy",
+          "light": "night",
+          "weather": "rain"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
       },
-      "independenceBeforeContextIncrease": "independent"
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid riskmedvetenhet. Eleven ser risker i tid och agerar tidigt — sänker, väntar, byter plan — utan att handledaren behöver peka.",
+        "with_support": "Med stöd: eleven klarar riskmedvetenhet när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar riskmedvetenhet själv i aktuellt context utan att handledaren behöver korrigera."
+      }
     },
     {
       "skillKey": "independent_safety_margins",
-      "areaKey": "independent_safe_driving",
       "title": "Säkerhetsmarginaler",
-      "mvpPriority": "core",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2011-20",
+          "reference": "TSFS 2011:20, 3 kap. 2 § p. 4",
+          "sourceTitle": "TSFS 2011:20 Kursplan, behörighet B",
+          "sourceUrl": "https://www.transportstyrelsen.se/tsfs/TSFS%202011_20.pdf",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 19 § p. 3",
+          "sourceTitle": "TSFS 2012:43 Förarprov, behörighet B",
+          "sourceUrl": "https://lagen.nu/tsfs/2012:43",
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
       "introductionStage": "mixed_traffic",
       "prerequisites": [
         {
           "skillKey": "car_control_speed_adaptation",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+          "strength": "soft",
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "TSFS 2011:20 kap. 3 — säkerhetsmarginaler."
         },
         {
           "skillKey": "observation_scanning",
-          "strength": "hard",
-          "note": "From taxonomy likelyPrerequisites; treated as hard unless overridden in research"
+          "strength": "soft",
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Avstånd kräver uppmärksamhet framåt."
         }
       ],
-      "contextProgression": {
-        "typicalStart": {
+      "recommendedStartingContexts": {
+        "environment": [
+          "urban"
+        ],
+        "traffic": [
+          "moderate"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
           "environment": "urban",
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry"
         },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
+        {
+          "environment": "rural",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "highway",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "highway",
+          "traffic": "heavy",
+          "light": "daylight",
+          "weather": "dry"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
       },
-      "independenceBeforeContextIncrease": "independent"
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid säkerhetsmarginaler. Eleven håller avstånd framåt, åt sidorna och i tid — inte stötvis, inte tätt inpå.",
+        "with_support": "Med stöd: eleven klarar säkerhetsmarginaler när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar säkerhetsmarginaler själv i aktuellt context utan att handledaren behöver korrigera."
+      }
     },
     {
       "skillKey": "independent_eco_driving",
-      "areaKey": "independent_safe_driving",
       "title": "Sparsam körning",
-      "mvpPriority": "supporting",
+      "officialBasis": [
+        {
+          "sourceId": "tsfs-2011-20",
+          "reference": "TSFS 2011:20, 3 kap. 2 § p. 5",
+          "sourceTitle": "TSFS 2011:20 Kursplan, behörighet B",
+          "sourceUrl": "https://www.transportstyrelsen.se/tsfs/TSFS%202011_20.pdf",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "tsfs-2012-43",
+          "reference": "TSFS 2012:43, 19 § p. 4",
+          "sourceTitle": "TSFS 2012:43 Förarprov, behörighet B",
+          "sourceUrl": "https://lagen.nu/tsfs/2012:43",
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "ts-planera",
+          "reference": "Planera övningskörningen",
+          "sourceTitle": "Planera övningskörningen",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        },
+        {
+          "sourceId": "ts-rad-2026",
+          "reference": "Råd till handledaren 2026-08-01",
+          "sourceTitle": "Råd till handledaren 2026-08-01",
+          "sourceUrl": null,
+          "dataType": "OFFICIAL REQUIREMENT"
+        }
+      ],
       "introductionStage": "independent_readiness",
       "prerequisites": [
         {
           "skillKey": "car_control_speed_adaptation",
-          "strength": "hard"
+          "strength": "hard",
+          "dataType": "OFFICIAL REQUIREMENT",
+          "rationale": "TSFS 2011:20, TSFS 2012:43 §19 p.4 — sparsam körning."
         },
         {
           "skillKey": "independent_route_planning",
           "strength": "soft",
-          "note": "Full eco in varied traffic benefits from route planning experience"
+          "dataType": "PEDAGOGICAL PRACTICE",
+          "rationale": "Planerad körning i blandad miljö."
         }
       ],
-      "contextProgression": {
-        "typicalStart": {
+      "recommendedStartingContexts": {
+        "environment": [
+          "urban"
+        ],
+        "traffic": [
+          "moderate"
+        ],
+        "light": [
+          "daylight"
+        ],
+        "weather": [
+          "dry"
+        ]
+      },
+      "contextProgression": [
+        {
           "environment": "urban",
           "traffic": "moderate",
           "light": "daylight",
           "weather": "dry"
         },
-        "increaseWhenIndependent": "Raise at most one context dimension per successful independent observation",
-        "relevantDimensions": [
-          "environment",
-          "light",
-          "weather",
-          "traffic"
-        ]
+        {
+          "environment": "rural",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        },
+        {
+          "environment": "highway",
+          "traffic": "moderate",
+          "light": "daylight",
+          "weather": "dry"
+        }
+      ],
+      "progressionGuidance": {
+        "needs_help": "repeat_same_or_easier",
+        "with_support": "repeat_similar",
+        "independent": "increase_context_or_move_forward"
       },
-      "independenceBeforeContextIncrease": "independent"
+      "assessmentCriteria": {
+        "needs_help": "Behöver hjälp: handledaren måste ofta ingripa, påminna eller korrigera vid sparsam körning. Eleven planerar så att hen kan rulla, undvika onödiga stopp och hålla jämn fart utan att jaga växlar.",
+        "with_support": "Med stöd: eleven klarar sparsam körning när handledaren påminner eller guidar vid behov, men behöver inte ta över.",
+        "independent": "Självständig: eleven hanterar sparsam körning själv i aktuellt context utan att handledaren behöver korrigera."
+      }
     }
   ]
 }

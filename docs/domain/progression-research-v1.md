@@ -2,10 +2,32 @@
 
 **Status:** research draft  
 **Last updated:** 2026-09-15  
-**Taxonomy version:** 1 (canonical, unchanged)  
-**Companion data:** [`progression-model-draft-v1.json`](progression-model-draft-v1.json) (`status: draft`, not read by runtime)
+**Taxonomy version:** 1 (canonical, unchanged)
 
 Detta dokument förbereder nästa produktfas medan vertical slice v1 användartestas. Det ändrar inget produktbeteende, ingen runtime-kod, ingen recommendation v0 och ingen canonical taxonomy.
+
+### Fyra research-artefakter (`status: draft`, `notRuntime: true`)
+
+| Artefakt | Fil | Innehåll |
+| --- | --- | --- |
+| 1. Official basis | [`skill-official-basis-v1.json`](skill-official-basis-v1.json) | skillKey → TSFS/Trafikverket/TS-råd |
+| 2. Prerequisites | [`skill-prerequisites-v1.json`](skill-prerequisites-v1.json) | hard/soft-graf, introductionStage, pedagogiska kedjor |
+| 3. Context progression | [`skill-context-progression-v1.json`](skill-context-progression-v1.json) | starting contexts, context-steg, bedömningskriterier per skill |
+| 4. First drive & rules | [`first-drive-recommendation-rules-v1.json`](first-drive-recommendation-rules-v1.json) | första pass, observation→nästa steg, recommendation evidence |
+
+Kombinerat index (ej runtime): [`progression-model-draft-v1.json`](progression-model-draft-v1.json)
+
+Generator (ej runtime): `scripts/generate-progression-artifacts.mjs`
+
+### Tre datatyper — alltid skilda
+
+| Typ | Tillförlitlighet | Var det finns |
+| --- | --- | --- |
+| **OFFICIAL REQUIREMENT** | Hög | `officialBasis`, vissa hard prerequisites |
+| **PEDAGOGICAL PRACTICE** | Medel | `introductionStage`, pedagogiska kedjor, first-drive lista |
+| **PRODUCT HYPOTHESIS** | Vår modell | context ladders, progressionGuidance, assessmentCriteria, recommendation rules |
+
+Varje fält i JSON som inte är officiellt märkt `dataType: "OFFICIAL REQUIREMENT"` är antingen pedagogisk struktur eller produkthypotes.
 
 ---
 
@@ -183,7 +205,55 @@ independent på skill S i context C
 
 ## 6. Granskning av 38 canonical skills
 
-Full maskinläsbar data: [`progression-model-draft-v1.json`](progression-model-draft-v1.json).
+Per-skill data i de fyra artefakterna ovan. Exempel på kombinerat schema:
+
+```json
+{
+  "skillKey": "positioning_road_position",
+  "officialBasis": [{ "sourceId": "tsfs-2012-43", "dataType": "OFFICIAL REQUIREMENT" }],
+  "introductionStage": "controlled_traffic",
+  "prerequisites": [{ "skillKey": "car_control_smooth_start_stop", "strength": "soft" }],
+  "recommendedStartingContexts": {
+    "environment": ["residential"],
+    "traffic": ["light"]
+  },
+  "contextProgression": [
+    { "environment": "residential", "traffic": "light" },
+    { "environment": "urban", "traffic": "moderate" },
+    { "environment": "urban", "traffic": "heavy" }
+  ],
+  "progressionGuidance": {
+    "needs_help": "repeat_same_or_easier",
+    "with_support": "repeat_similar",
+    "independent": "increase_context_or_move_forward"
+  }
+}
+```
+
+### Bedömningskriterier (handledarperspektiv)
+
+**PRODUCT HYPOTHESIS** — i [`skill-context-progression-v1.json`](skill-context-progression-v1.json) per skill. Syfte: göra tap-to-rate begripligare, inte ersätta förarprövarens helhetsbedömning.
+
+Exempel *Placering på vägen*:
+
+- **Behöver hjälp:** handledaren måste ofta korrigera placeringen.
+- **Med stöd:** eleven klarar med påminnelser.
+- **Självständig:** eleven väljer och korrigerar placering utan hjälp.
+
+### Recommendation evidence (framtida produkt)
+
+**PRODUCT HYPOTHESIS** — se [`first-drive-recommendation-rules-v1.json`](first-drive-recommendation-rules-v1.json):
+
+```text
+Placering på vägen
+senaste observation: independent
+context: residential + light traffic
+
+→ inte "klar för alltid"
+→ nästa steg: samma skill i urban + moderate traffic
+```
+
+Det vi **inte** modellerar: readiness-%, lektionsantal, universell ordning, exakt repetitionsantal.
 
 Sammanfattning per område:
 
