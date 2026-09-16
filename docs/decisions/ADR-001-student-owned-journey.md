@@ -5,7 +5,7 @@
 
 ## Context
 
-Bilklar är en B2C-app för privat övningskörning. Eleven är den som driver körkortsresan. Handledare deltar men ska nästan aldrig administrera.
+Körpasset är en B2C-app för privat övningskörning. Eleven är den som driver körkortsresan. Handledare deltar men ska nästan aldrig administrera.
 
 ## Decision
 

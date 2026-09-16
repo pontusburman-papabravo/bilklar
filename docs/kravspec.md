@@ -1,12 +1,14 @@
-# Bilklar — Kravspecifikation v1
+# Körpasset — Kravspecifikation v1
 
 **Status:** Canonical  
 **Datum:** 2026-09-16  
-**Produkt:** Bilklar  
+**Produkt:** Körpasset  
+**Domän:** korpasset.se  
+**Tagline:** Övningskör med en plan.  
 **Omfattning:** Privat övningskörning, svenskt B-körkort  
 **Källa:** Samlad vy av den kanoniska dokumentationen i detta repo
 
-Detta dokument är den **publika, samlade kravspecifikationen** för Bilklar v1. De enskilda källfilerna under `docs/` förblir canonical för produkt- och arkitekturarbete. Den här filen finns för att kunna delas som **en enda länk**.
+Detta dokument är den **publika, samlade kravspecifikationen** för Körpasset v1. De enskilda källfilerna under `docs/` förblir canonical för produkt- och arkitekturarbete. Den här filen finns för att kunna delas som **en enda länk**.
 
 ---
 
@@ -24,12 +26,18 @@ Detta dokument är den **publika, samlade kravspecifikationen** för Bilklar v1.
 10. [Integritetskrav](#10-integritetskrav)
 11. [Tekniska beslut](#11-tekniska-beslut)
 12. [Källhänvisningar](#12-källhänvisningar)
+13. [Beta-UX](#13-beta-ux)
+14. [Definition of Beta Ready](#14-definition-of-beta-ready)
+15. [korpasset.se](#15-korpassetse)
+16. [Beta Validation och kommersiell gate](#16-beta-validation-och-kommersiell-gate)
 
 ---
 
 ## 1. Vision och syfte
 
-Bilklar är en **B2C-app för svensk privat övningskörning** som håller ihop elevens träning mellan en eller flera handledare.
+Körpasset är en **B2C-app för svensk privat övningskörning** som håller ihop elevens träning mellan en eller flera handledare.
+
+Tagline: **Övningskör med en plan.**
 
 ### 1.1 Kärnfrågor
 
@@ -37,7 +45,9 @@ Varje körpass och varje planeringssession ska kunna svara på:
 
 > **Vad ska vi träna på idag?**
 
-> **Hur gick det, och vad bör vi träna på nästa gång?**
+> **Hur gick det?**
+
+> **Vad bör vi träna på nästa gång?**
 
 ### 1.2 Långsiktig vision
 
@@ -45,7 +55,7 @@ Eleven äger ett **Driving Passport** — en elevcentrerad, portabel körkortsre
 
 v1 är strikt begränsad till **privat övningskörning** utan trafikskola, externa API:er eller teori.
 
-### 1.3 Vad Bilklar inte är
+### 1.3 Vad Körpasset inte är
 
 - Inte en teoriapp
 - Inte en AI-trafiklärare
@@ -139,14 +149,74 @@ Canonical v1-principer. Dessa är låsta tills ett ADR explicit ändrar dem.
 ### Produkt och marknad
 
 10. **B2C-first.** Privat övningskörning är wedge. Ingen extern integration krävs för launch.
-11. **Bilklar fungerar utan trafikskola och externa API:er.**
-12. **Bilklar är inte teoriapp** och **inte AI-trafiklärare**.
-13. **Bilklar visar inte falsk precision** som "87 % uppkörningsklar".
+11. **Körpasset fungerar utan trafikskola och externa API:er.**
+12. **Körpasset är inte teoriapp** och **inte AI-trafiklärare**.
+13. **Körpasset visar inte falsk precision** som "87 % uppkörningsklar".
 
 ### Teknik
 
 14. **Actor ≠ authentication.** `users` är person/actor. `auth_identities` är hur personen autentiseras.
 15. **PostgreSQL 15+** som canonical databas.
+
+### Varumärke och positionering
+
+16. **Produktnamnet är Körpasset.**
+    Huvuddomänen är `korpasset.se`.
+17. **Kärnlöftet är "Övningskör med en plan."**
+    Produkten ska hjälpa elev och handledare att svara på:
+    - Vad ska vi träna på idag?
+    - Hur gick det?
+    - Vad bör vi träna på nästa gång?
+18. **Körpasset äger den praktiska träningsloopen — inte teorin.**
+    Produkten ska inte positioneras som teoriapp, provsimulator eller ersättning för trafikskola/riskutbildning.
+19. **Flera handledare är ett centralt värdeerbjudande.**
+    Elevens träning ska hålla ihop även när olika handledare kör med eleven vid olika tillfällen.
+20. **Ingen falsk myndighetsassociation.**
+    Körpasset är en fristående tjänst och får inte framställas som utvecklad av, ansluten till eller godkänd av Transportstyrelsen eller Trafikverket.
+21. **Officiella källor får beskrivas korrekt.**
+    Körpasset är utvecklad med utgångspunkt i svenska regler och officiell vägledning för privat övningskörning, inklusive relevanta dokument från Transportstyrelsen och Trafikverket.
+22. **Ingen falsk readiness-precision.**
+    Produkten får inte visa procentsatser eller formuleringar som:
+    - "87 % redo för uppkörning"
+    - "100 % körklar"
+    - "Godkänd"
+    - "Moment avklarat för alltid"
+
+### Pass-metaforen
+
+Produktnamnet Körpasset får användas aktivt i UX-språket:
+
+- Nästa körpass
+- Dagens fokus
+- Starta körpass
+- Senaste körpasset
+- Så gick körpasset
+- Nästa gång
+
+En framtida visuell pass-/stämpelmetafor får användas för faktiska händelser och milstolpar, exempelvis:
+
+- Första körpasset
+- 10 genomförda körpass
+- Första körningen i mörker
+- Första motorvägskörningen
+
+Sådana milstolpar får inte beskrivas som officiella godkännanden eller bevis på uppkörningsberedskap.
+
+Gamification/stämplar ingår **inte i beta-MVP** om de inte redan finns.
+
+### Flera handledare
+
+Körpasset ska hålla ihop elevens träningshistorik oberoende av vilken handledare som kör.
+
+Exempel på produktvärde:
+
+> Pappa vet vad mamma övade på sist.
+
+Observationer och rekommendationer tillhör elevens `driving_journey`, inte en enskild handledare.
+
+Ingen handledare ska behöva manuellt överföra träningshistorik till nästa handledare.
+
+Fritextanteckningar mellan handledare och ny `notes`-modell ingår **inte** i beta. Gemensamma observations och Training Focus räcker.
 
 ---
 
@@ -558,6 +628,34 @@ Prioritetsordning, max 3 resultat, utan dubbletter:
 
 `car_control_gear_shifting` hoppas över vid `transmission_scope = automatic_only`.
 
+### 9.3 Progression i UI
+
+Progression ska beskriva **evidens och utveckling**, inte certifiering eller uppkörningsberedskap.
+
+Per skill används i v1:
+
+- Inte tränat ännu
+- Behöver hjälp
+- Med påminnelse
+- Utan hjälp
+
+Översikter får dessutom visa sakliga mått såsom:
+
+- antal tränade moment,
+- antal körpass där området tränats,
+- senaste observation,
+- senaste träningsdatum,
+- vilka miljöer/context som det finns evidens från.
+
+Exempel:
+
+> Korsningar & rondeller  
+> 5 av 6 moment tränade  
+> 3 moment senast utan hjälp  
+> Tränat i 4 körpass
+
+Ett helt område ska inte reduceras till en påstådd sannolikhet eller officiell "godkänd"-status.
+
 ---
 
 ## 10. Integritetskrav
@@ -614,7 +712,7 @@ Databasen får använda `ON DELETE CASCADE` där detta är förenligt med datamo
 
 #### Handledare raderar konto
 
-När en handledare begär kontoradering ska Bilklar:
+När en handledare begär kontoradering ska Körpasset:
 
 - radera eller avaktivera samtliga `auth_identities`,
 - återkalla aktiva sessioner, tokens och andra autentiseringsmöjligheter,
@@ -629,7 +727,7 @@ Historiska observationer får inte försvinna enbart därför att den handledare
 
 Ett bevarat `user_id` som fortfarande kan kopplas till historik i en specifik `driving_journey` ska behandlas som **pseudonymiserad personuppgift**, inte som anonym data.
 
-Pseudonymisering innebär därför inte obegränsad lagring. Kvarvarande data omfattas fortsatt av Bilklars gallrings- och datalagringspolicy och ska raderas eller omprövas när ändamålet eller den rättsliga grunden för fortsatt behandling upphör.
+Pseudonymisering innebär därför inte obegränsad lagring. Kvarvarande data omfattas fortsatt av Körpassets gallrings- och datalagringspolicy och ska raderas eller omprövas när ändamålet eller den rättsliga grunden för fortsatt behandling upphör.
 
 Om data senare görs faktiskt anonym ska anonymiseringen vara sådan att personen inte längre rimligen kan identifieras eller återkopplas till informationen.
 
@@ -700,3 +798,369 @@ Lästa 2026-09-14. Primärkällor, inte trafikskolebloggar eller körkortsappar.
 | [Riskutbildning för personbil](https://www.transportstyrelsen.se/sv/vagtrafik/korkort/ta-korkort/riskutbildning/riskutbildning-bil/) | Avgränsning: inte v1-skills |
 
 Riskutbildning (alkohol/trötthet och halka/hastighet i särförhållanden) är obligatorisk **extern** utbildning och ingår inte som v1-skills.
+
+---
+
+## 13. Beta-UX
+
+Canonical målbild för beta. Allt behöver inte vara byggt i vertical slice; sektionerna låser produktkrav inför Beta Readiness.
+
+### Elev
+
+Elevens primära upplevelse ska vara:
+
+```text
+Min resa / Min utveckling
+        ↓
+Nästa körpass
+        ↓
+Senaste körpasset
+        ↓
+Utveckling per träningsområde
+        ↓
+Mina handledare / bjud in handledare
+```
+
+Elevens vy ska prioritera:
+
+- långsiktig utveckling,
+- nästa rekommenderade träning,
+- gemensam historik från flera handledare,
+- invitation/QR för handledare.
+
+### Handledare
+
+Handledarens primära upplevelse ska prioritera:
+
+```text
+Välj elev (om >1)
+        ↓
+Dagens fokus
+        ↓
+Starta körpass
+        ↓
+Kör
+        ↓
+Tap-to-rate
+        ↓
+Klart
+```
+
+Handledaren ska ha **minsta möjliga administration**.
+
+FR-6 gäller fortsatt:
+
+- endast 2–3 Drive Focus-skills bedöms,
+- tre val: Behöver hjälp / Med påminnelse / Utan hjälp,
+- hela bedömningen ska kunna göras på cirka 15–20 sekunder.
+
+---
+
+## 14. Definition of Beta Ready
+
+Körpasset är beta-ready när en ny elev och en ny handledare, utan hjälp från utvecklingsteamet, kan:
+
+1. öppna/installera Körpasset,
+2. skapa elevens körkortsresa,
+3. ansluta en handledare via QR/länk,
+4. välja 2–3 moment för nästa körpass,
+5. starta och avsluta körpasset,
+6. låta den tilldelade handledaren bedöma momenten på cirka 15–20 sekunder,
+7. se recap,
+8. förstå vad som rekommenderas inför nästa körpass,
+9. fortsätta samma elevresa med en annan handledare.
+
+Beta-ready kräver också:
+
+- fungerande produktionsmiljö,
+- integritetspolicy,
+- användarvillkor,
+- kontakt/feedbackväg,
+- grundläggande error/crash-observability,
+- iOS-distribution via TestFlight,
+- Android-distribution via Google Play test track.
+
+Betalning ingår inte som blockerare för första beta. Se [Beta Validation och kommersiell gate](#16-beta-validation-och-kommersiell-gate).
+
+---
+
+## 15. korpasset.se
+
+Hemsida för nästa Beta Readiness-fas. **Byggs inte i denna delta.** Informationshierarki:
+
+```text
+Körpasset
+Övningskör med en plan.
+
+Välj vad ni ska träna på.
+Kör.
+Följ upp på några sekunder.
+
+[ Bli betatestare ]
+
+→ Hur det fungerar: 3 steg
+→ Flera handledare
+→ Utveckling utan falska procentsiffror
+→ Inte ännu en teoriapp
+→ Officiella källor/metodik
+→ Disclaimer
+→ Beta CTA
+→ Privacy / Terms / Contact
+```
+
+Canonical multi-handledar-copy:
+
+> Pappa vet vad mamma övade på sist.
+>
+> När flera hjälper till med övningskörningen blir det lätt spretigt.
+> Körpasset håller ihop träningen kring eleven, så nästa körpass kan fortsätta där det förra slutade – oavsett vem som sitter bredvid.
+
+Canonical myndighetscopy:
+
+> Körpasset är utvecklad med utgångspunkt i svenska regler och officiell vägledning för privat övningskörning från Transportstyrelsen och Trafikverket.
+>
+> Körpasset är en fristående tjänst och är inte utvecklad av, ansluten till eller godkänd av Transportstyrelsen eller Trafikverket.
+
+---
+
+## 16. Beta Validation och kommersiell gate
+
+### Syfte
+
+Första externa betan ska validera att Körpassets kärnloop fungerar i verklig privat övningskörning innan betalning introduceras.
+
+Beta ska därför optimeras för **användning, återkomst och lärande**, inte intäkt.
+
+### Beta cohort
+
+Första valideringsmålet är:
+
+> **25 aktiva elevresor (`driving_journeys`)**
+
+En elevresa är den relevanta beta-enheten, inte antal installerade appar eller registrerade users.
+
+En elevresa kan innehålla:
+
+- en elev,
+- en eller flera handledare,
+- flera users/devices.
+
+### Definition av aktiv beta-elevresa
+
+En `driving_journey` räknas som **aktiv beta-elevresa** först när hela kärnloopen genomförts minst en gång:
+
+```text
+journey_created
+→ supervisor_connected
+→ drive_focus_saved
+→ drive_started
+→ drive_completed
+→ rating_completed
+→ recap_viewed
+```
+
+En registrering utan genomfört körpass räknas alltså inte som en validerad aktiv beta-elevresa.
+
+### Beta pricing
+
+Körpasset är **gratis under den första valideringsbetan**.
+
+Ingen betalvägg eller prenumeration ska blockera kärnloopen innan Beta Validation Gate har uppnåtts.
+
+Kommunikation till betatestare:
+
+> Körpasset är gratis under betaperioden.
+> Du får tidig tillgång och hjälper oss förbättra tjänsten inför lansering.
+
+Körpasset ska i denna fas:
+
+- inte lova livstidsfri användning,
+- inte lova ett permanent framtida pris,
+- inte kräva betaluppgifter,
+- inte optimera onboarding mot köp.
+
+De första betatestarna får senare erbjudas en separat founder/beta-förmån, men detta är ett framtida kommersiellt beslut och inte del av beta-MVP.
+
+### Beta Validation Gate
+
+Betan betraktas som initialt produktvaliderad när följande kriterier är uppfyllda.
+
+#### 1. Volym
+
+Minst:
+
+> **25 aktiva elevresor**
+
+ska ha genomfört minst ett komplett körpass genom Körpassets kärnloop.
+
+#### 2. First Drive Completion
+
+Minst:
+
+> **20 av de första 25 aktiva elevresorna**
+
+ska kunna genomföra kärnloopen utan manuell hjälp från Körpassets utvecklingsteam.
+
+Det innebär:
+
+```text
+create journey
+→ connect supervisor
+→ choose 2–3 Drive Focus skills
+→ complete drive
+→ supervisor rating
+→ recap
+```
+
+Supportfrågor är tillåtna, men processen får inte vara beroende av att teamet manuellt korrigerar data eller leder användaren genom flödet.
+
+#### 3. Second Drive Rate
+
+Det primära valideringsmåttet är:
+
+> **Second Drive Rate**
+
+Definition:
+
+```text
+antal aktiva elevresor som genomför ett andra rated drive
+inom 14 dagar efter första completed drive
+/
+antal aktiva elevresor med första completed rated drive
+```
+
+Initial beta-gate:
+
+> **Minst 12 av de första 25 aktiva elevresorna ska genomföra ett andra körpass inom 14 dagar.**
+
+Detta är viktigare än:
+
+- downloads,
+- skapade konton,
+- sessions,
+- page views.
+
+Ett andra körpass är stark evidens för att Körpasset blivit användbart i familjens faktiska övningskörning.
+
+#### 4. Multi-supervisor validation
+
+Eftersom flera handledare är ett centralt produktvärde ska betan innehålla verklig användning där:
+
+- samma elev har fler än en handledare,
+- olika handledare kan fortsätta samma elevresa,
+- tidigare observations och rekommendationer är tillgängliga utan manuell överföring.
+
+Det finns inget hårt procentkrav i första cohorten, men multi-supervisor-flödet ska ha används av flera verkliga beta-elevresor före kommersiell launch.
+
+#### 5. Tap-to-rate
+
+Handledarens bedömning efter körpass ska fortsatt uppfylla FR-6:
+
+- endast 2–3 Drive Focus-skills,
+- tre assessment levels,
+- cirka 15–20 sekunders total bedömningstid.
+
+Beta-feedback som visar att handledaren behöver navigera, söka eller administrera efter körningen ska behandlas som produktfriktion.
+
+### Beta instrumentation
+
+Följande produkt-events ska kunna mätas per `driving_journey`:
+
+```text
+journey_created
+supervisor_connected
+drive_focus_saved
+drive_started
+drive_completed
+rating_completed
+recap_viewed
+second_drive_completed
+```
+
+Där det är relevant ska eventet även innehålla:
+
+- anonym/pseudonym journey identifier,
+- timestamp,
+- antal Drive Focus skills,
+- actor role,
+- om journeyn har en eller flera aktiva supervisors.
+
+Analytics ska inte lagra onödiga direkta personidentifierare.
+
+### Canonical beta funnel
+
+```text
+Journey created
+      ↓
+Supervisor connected
+      ↓
+Drive Focus saved
+      ↓
+Drive started
+      ↓
+Drive completed
+      ↓
+Rating completed
+      ↓
+Recap viewed
+      ↓
+Second rated drive within 14 days
+```
+
+### Beta feedback
+
+Betatestare ska ha en tydlig feedbackväg.
+
+Feedback ska särskilt kunna kategoriseras kring:
+
+- onboarding,
+- invitation/QR,
+- val av Drive Focus,
+- start/avslut av körpass,
+- tap-to-rate,
+- recap,
+- rekommendationer,
+- flera handledare,
+- tekniska problem.
+
+Betafasen ska prioritera återkommande blockerande friktion framför nya features.
+
+### Commercialization Gate
+
+Betalning får börja planeras när Beta Validation Gate är uppnådd och de största P0/P1-friktionerna från betan är åtgärdade.
+
+Första betalande fasen ska normalt komma **efter** den initiala 25-resorsbetan.
+
+Rekommenderad sekvens:
+
+```text
+Beta Ready
+      ↓
+25 aktiva elevresor
+      ↓
+Beta Validation Gate
+      ↓
+Åtgärda största friktionerna
+      ↓
+Bredda mot cirka 50–100 elevresor
+      ↓
+Introducera betalning för nya användare
+```
+
+Exakta priser, trial-perioder och eventuell beta/founder-förmån specificeras separat inför kommersiell launch.
+
+Betalning är **inte ett krav för Beta Ready eller första Beta Validation**.
+
+### Prioriteringsregel under beta
+
+Före Beta Validation Gate ska utvecklingsprioritet vara:
+
+1. Blockerare i kärnloopen.
+2. Friktion som minskar First Drive Completion.
+3. Friktion som minskar Second Drive Rate.
+4. Problem i multi-supervisor-flödet.
+5. Stabilitet, support och observability.
+6. Först därefter nya funktioner.
+
+Funktioner som badges, stämplar, avancerad gamification, betalning, teori, AI eller GPS får inte prioriteras framför problem som påverkar kärnloopen eller återkomst till andra körpasset.
+

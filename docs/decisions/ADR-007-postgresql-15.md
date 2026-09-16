@@ -5,7 +5,7 @@
 
 ## Context
 
-Bilklar behöver journey-isolerade composite foreign keys med kolumnspecifik `ON DELETE SET NULL`. Exempel: om ett drive raderas (GDPR) ska `training_focus_items.source_drive_id` nullifieras men `journey_id` behållas.
+Körpasset behöver journey-isolerade composite foreign keys med kolumnspecifik `ON DELETE SET NULL`. Exempel: om ett drive raderas (GDPR) ska `training_focus_items.source_drive_id` nullifieras men `journey_id` behållas.
 
 ## Decision
 

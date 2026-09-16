@@ -1,6 +1,8 @@
 # Vision
 
-Bilklar är en **B2C-app för svensk privat övningskörning** som håller ihop elevens träning mellan en eller flera handledare.
+Körpasset är en **B2C-app för svensk privat övningskörning** som håller ihop elevens träning mellan en eller flera handledare.
+
+Tagline: **Övningskör med en plan.**
 
 ## Kärnfrågor
 
@@ -8,7 +10,9 @@ Varje körpass och varje planeringssession ska kunna svara på:
 
 > **Vad ska vi träna på idag?**
 
-> **Hur gick det, och vad bör vi träna på nästa gång?**
+> **Hur gick det?**
+
+> **Vad bör vi träna på nästa gång?**
 
 ## Långsiktig vision
 
@@ -16,7 +20,7 @@ Eleven äger ett **Driving Passport** — en elevcentrerad, portabel körkortsre
 
 v1 är strikt begränsad till **privat övningskörning** utan trafikskola, externa API:er eller teori.
 
-## Vad Bilklar inte är
+## Vad Körpasset inte är
 
 - Inte en teoriapp
 - Inte en AI-trafiklärare

@@ -1,13 +1,18 @@
-# Bilklar
+# Körpasset
 
-B2C-app för svensk privat övningskörning som håller ihop elevens träning mellan en eller flera handledare.
+**Övningskör med en plan.**
+
+Körpasset är en B2C-app för svensk privat övningskörning som håller ihop elevens träning mellan en eller flera handledare.
 
 Kärnfrågor:
 
 - **Vad ska vi träna på idag?**
-- **Hur gick det, och vad bör vi träna på nästa gång?**
+- **Hur gick det?**
+- **Vad bör vi träna på nästa gång?**
 
-Långsiktig vision: elevägt **Driving Passport**. v1 är strikt privat övningskörning.
+Webb: https://korpasset.se
+
+v1 är strikt fokuserad på den praktiska privata övningskörningen.
 
 ## Dokumentation
 
@@ -69,4 +74,4 @@ npm run dev
 
 ## Status
 
-Canonical produkt- och databasgrund. Första vertical slice: journey → invitation → körpass → observation → rekommendation.
+Canonical produkt- och databasgrund. Första vertical slice: journey → invitation → körpass → observation → rekommendation. Nästa fas: **Beta Readiness för iOS + Android + korpasset.se**.
