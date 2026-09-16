@@ -20,6 +20,8 @@ export interface InvitationPreview {
   studentName: string;
   status: string;
   expiresAt: Date;
+  acceptedByUserId: string | null;
+  studentUserId: string;
 }
 
 function hashToken(token: string): string {
@@ -78,7 +80,8 @@ export async function getInvitationByToken(
   const db = client ?? getPool();
   const tokenHash = hashToken(token);
   const result = await db.query(
-    `SELECT i.id, i.journey_id, i.status, i.expires_at, u.display_name AS student_name
+    `SELECT i.id, i.journey_id, i.status, i.expires_at, i.accepted_by_user_id,
+            j.student_user_id, u.display_name AS student_name
      FROM journey_invitations i
      JOIN driving_journeys j ON j.id = i.journey_id
      JOIN users u ON u.id = j.student_user_id
@@ -93,6 +96,8 @@ export async function getInvitationByToken(
     studentName: row.student_name ?? "Eleven",
     status: row.status,
     expiresAt: row.expires_at,
+    acceptedByUserId: row.accepted_by_user_id,
+    studentUserId: row.student_user_id,
   };
 }
 
@@ -124,27 +129,13 @@ export async function acceptInvitation(
     }
 
     const invite = inviteResult.rows[0];
-
-    let userId = await getReusableSessionUserId(sessionUserId, client);
-    if (!userId) {
-      const user = await createGuestUser(displayName, client);
-      userId = user.id;
-    } else {
-      await client.query(
-        `UPDATE users SET display_name = $2, updated_at = now() WHERE id = $1`,
-        [userId, displayName.trim()],
-      );
-    }
-
-    if (invite.student_user_id === userId) {
-      throw new ForbiddenError("Student cannot join own journey as supervisor");
-    }
+    const reusableUserId = await getReusableSessionUserId(sessionUserId, client);
 
     if (invite.status === "accepted") {
-      if (invite.accepted_by_user_id === userId) {
+      if (reusableUserId && invite.accepted_by_user_id === reusableUserId) {
         return {
           journeyId: invite.journey_id,
-          userId,
+          userId: reusableUserId,
           alreadyAccepted: true,
         };
       }
@@ -157,6 +148,21 @@ export async function acceptInvitation(
 
     if (new Date(invite.expires_at) <= new Date()) {
       throw new AppError("Invitation has expired", 410, "expired");
+    }
+
+    let userId = reusableUserId;
+    if (!userId) {
+      const user = await createGuestUser(displayName, client);
+      userId = user.id;
+    } else {
+      await client.query(
+        `UPDATE users SET display_name = $2, updated_at = now() WHERE id = $1`,
+        [userId, displayName.trim()],
+      );
+    }
+
+    if (invite.student_user_id === userId) {
+      throw new ForbiddenError("Student cannot join own journey as supervisor");
     }
 
     const acceptResult = await client.query(
