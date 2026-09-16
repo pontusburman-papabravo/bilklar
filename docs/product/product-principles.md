@@ -1,6 +1,6 @@
 # Produktprinciper
 
-Canonical v1-principer för Bilklar. Dessa är låsta tills ett ADR explicit ändrar dem.
+Canonical v1-principer för Körpasset. Dessa är låsta tills ett ADR explicit ändrar dem.
 
 ## Elev och handledare
 
@@ -20,14 +20,26 @@ Canonical v1-principer för Bilklar. Dessa är låsta tills ett ADR explicit än
 ## Produkt och marknad
 
 10. **B2C-first.** Privat övningskörning är wedge. Ingen extern integration krävs för launch.
-11. **Bilklar fungerar utan trafikskola och externa API:er.**
-12. **Bilklar är inte teoriapp** och **inte AI-trafiklärare**.
-13. **Bilklar visar inte falsk precision** som "87 % uppkörningsklar".
+11. **Körpasset fungerar utan trafikskola och externa API:er.**
+12. **Körpasset är inte teoriapp** och **inte AI-trafiklärare**.
+13. **Körpasset visar inte falsk precision** som "87 % uppkörningsklar".
 
 ## Teknik
 
 14. **Actor ≠ authentication.** `users` är person/actor. `auth_identities` är hur personen autentiseras.
 15. **PostgreSQL 15+** som canonical databas — se [ADR-007](../decisions/ADR-007-postgresql-15.md).
+
+## Varumärke och positionering
+
+16. **Produktnamnet är Körpasset.** Huvuddomänen är `korpasset.se`.
+17. **Kärnlöftet är "Övningskör med en plan."**
+18. **Körpasset äger den praktiska träningsloopen — inte teorin.**
+19. **Flera handledare är ett centralt värdeerbjudande.**
+20. **Ingen falsk myndighetsassociation.**
+21. **Officiella källor får beskrivas korrekt.**
+22. **Ingen falsk readiness-precision.**
+
+Fullständig utläggning: [kravspec](../kravspec.md).
 
 ## Relaterade ADR:er
 

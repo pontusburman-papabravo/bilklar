@@ -5,7 +5,7 @@
 
 ## Context
 
-Bilklar startar som privat övningskörning mellan elev och handledare (ofta förälder). Trafikskolor och externa system är framtida möjligheter, inte v1-krav.
+Körpasset startar som privat övningskörning mellan elev och handledare (ofta förälder). Trafikskolor och externa system är framtida möjligheter, inte v1-krav.
 
 ## Decision
 

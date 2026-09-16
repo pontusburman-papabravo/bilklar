@@ -1,6 +1,6 @@
 # Data model
 
-Canonical datamodell för Bilklar v1. Implementerad i [`db/migrations/0001_initial.sql`](../../db/migrations/0001_initial.sql).
+Canonical datamodell för Körpasset v1. Implementerad i [`db/migrations/0001_initial.sql`](../../db/migrations/0001_initial.sql).
 
 ## Översikt
 

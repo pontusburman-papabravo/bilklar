@@ -44,6 +44,17 @@ export async function getUserById(
   };
 }
 
+/** Session cookies survive tombstoning; never reuse a deleted actor. */
+export async function getReusableSessionUserId(
+  userId: string | null | undefined,
+  client?: pg.PoolClient,
+): Promise<string | null> {
+  if (!userId) return null;
+  const user = await getUserById(userId, client);
+  if (!user || user.accountState === "deleted") return null;
+  return user.id;
+}
+
 export async function updateDisplayName(
   userId: string,
   displayName: string,

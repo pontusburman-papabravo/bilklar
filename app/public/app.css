@@ -104,6 +104,13 @@ select.supervisor-select {
   margin-bottom: 1rem;
 }
 
+a.journey-choice {
+  display: block;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 600;
+}
+
 .banner {
   border-radius: 0.75rem;
   padding: 0.875rem 1rem;

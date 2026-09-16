@@ -13,7 +13,7 @@ export function layout(title: string, body: string): string {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${escapeHtml(title)}</title>
+  <title>${escapeHtml(title)} · Körpasset</title>
   <link rel="stylesheet" href="/app.css">
 </head>
 <body>

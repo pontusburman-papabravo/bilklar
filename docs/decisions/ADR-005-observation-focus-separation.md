@@ -5,7 +5,7 @@
 
 ## Context
 
-Bilklar ska svara på två frågor: vad ska vi träna på, och hur gick det? Dessa är olika begrepp som inte får blandas i datamodellen.
+Körpasset ska svara på två frågor: vad ska vi träna på, och hur gick det? Dessa är olika begrepp som inte får blandas i datamodellen.
 
 ## Decision
 

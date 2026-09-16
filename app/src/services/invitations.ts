@@ -3,7 +3,7 @@ import type pg from "pg";
 import { AppError, ForbiddenError, NotFoundError } from "../errors.js";
 import { getPool, withTransaction } from "../db/pool.js";
 import { config } from "../config.js";
-import { createGuestUser } from "./users.js";
+import { createGuestUser, getReusableSessionUserId } from "./users.js";
 
 export interface InvitationDetails {
   id: string;
@@ -125,7 +125,7 @@ export async function acceptInvitation(
 
     const invite = inviteResult.rows[0];
 
-    let userId = sessionUserId;
+    let userId = await getReusableSessionUserId(sessionUserId, client);
     if (!userId) {
       const user = await createGuestUser(displayName, client);
       userId = user.id;

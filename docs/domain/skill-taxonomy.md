@@ -13,7 +13,7 @@ Detta är en produktmodell för praktisk privat övningskörning. Det är inte e
 
 ## 1. Syfte
 
-Bilklar v1 ska efter ett körpass kunna svara på:
+Körpasset v1 ska efter ett körpass kunna svara på:
 
 > Hur självständigt klarade eleven detta?
 
@@ -531,7 +531,7 @@ Varje skill har `mvpPriority`:
 
 Målet är inte 100 % coverage. Målet är att veta vad vi modellerar.
 
-| Officiellt målområde | Bilklar coverage | Kommentar |
+| Officiellt målområde | Körpasset coverage | Kommentar |
 | --- | --- | --- |
 | 1 kap. fyra moment + teori/färdighet/självvärdering | Delvis | Vi modellerar praktisk färdighet. Teori och självvärdering är inte skills. |
 | 2 kap. rutinmässig manövrering | Bilkontroll + Manövrering | Täcks praktiskt. |
