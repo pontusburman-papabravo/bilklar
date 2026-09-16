@@ -51,6 +51,7 @@ export function setSessionCookie(reply: FastifyReply, userId: string): void {
     path: "/",
     httpOnly: true,
     sameSite: "lax",
+    secure: config.cookieSecure,
     signed: false,
     maxAge: 60 * 60 * 24 * 365,
   });

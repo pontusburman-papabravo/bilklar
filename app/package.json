@@ -7,6 +7,7 @@
     "dev": "tsx watch src/index.ts",
     "start": "node dist/index.js",
     "build": "tsc",
+    "migrate": "tsx src/db/migrate.ts",
     "seed": "tsx src/db/seed-taxonomy.ts",
     "test": "tsx --import ./tests/register-hooks.ts --test --test-concurrency=1 tests/**/*.test.ts"
   },

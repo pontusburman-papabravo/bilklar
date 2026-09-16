@@ -1,5 +1,14 @@
+const DEV_SESSION_SECRET = "dev-session-secret-change-in-production";
+const DEV_DATABASE_URL =
+  "postgresql://bilklar:bilklar@localhost:54329/bilklar_test";
+const DEV_APP_BASE_URL = "http://localhost:3000";
+
 function env(name: string, fallback: string): string {
   return process.env[name] ?? fallback;
+}
+
+export function isProduction(): boolean {
+  return process.env.NODE_ENV === "production";
 }
 
 export const config = {
@@ -7,17 +16,61 @@ export const config = {
     return Number(env("PORT", "3000"));
   },
   get databaseUrl() {
-    return env(
-      "DATABASE_URL",
-      "postgresql://bilklar:bilklar@localhost:54329/bilklar_test",
-    );
+    return env("DATABASE_URL", DEV_DATABASE_URL);
   },
   get sessionSecret() {
-    return env("SESSION_SECRET", "dev-session-secret-change-in-production");
+    return env("SESSION_SECRET", DEV_SESSION_SECRET);
   },
   sessionCookieName: "bilklar_session",
   invitationExpiryDays: 7,
   get appBaseUrl() {
-    return env("APP_BASE_URL", "http://localhost:3000");
+    return env("APP_BASE_URL", DEV_APP_BASE_URL);
   },
+  get cookieSecure() {
+    if (process.env.COOKIE_SECURE === "true") return true;
+    if (process.env.COOKIE_SECURE === "false") return false;
+    return config.appBaseUrl.startsWith("https://");
+  },
+  get logLevel() {
+    return env("LOG_LEVEL", isProduction() ? "info" : "silent");
+  },
+  get migrationsDir() {
+    return process.env.MIGRATIONS_DIR ?? "";
+  },
+};
+
+export function assertProductionConfig(): void {
+  if (!isProduction()) return;
+
+  const missing: string[] = [];
+  for (const name of ["DATABASE_URL", "SESSION_SECRET", "APP_BASE_URL"] as const) {
+    if (!process.env[name]) missing.push(name);
+  }
+  if (missing.length > 0) {
+    throw new Error(
+      `Production requires ${missing.join(", ")} to be set (no repo defaults)`,
+    );
+  }
+
+  if (process.env.SESSION_SECRET === DEV_SESSION_SECRET) {
+    throw new Error("SESSION_SECRET must not use the development default");
+  }
+
+  if (process.env.SESSION_SECRET && process.env.SESSION_SECRET.length < 32) {
+    throw new Error("SESSION_SECRET must be at least 32 characters");
+  }
+
+  const baseUrl = process.env.APP_BASE_URL ?? "";
+  const allowHttp = process.env.ALLOW_HTTP === "true";
+  if (!baseUrl.startsWith("https://") && !allowHttp) {
+    throw new Error(
+      "APP_BASE_URL must be https in production (ALLOW_HTTP=true is only for local prod-like runs)",
+    );
+  }
+}
+
+export const productionDefaults = {
+  DEV_SESSION_SECRET,
+  DEV_DATABASE_URL,
+  DEV_APP_BASE_URL,
 };
