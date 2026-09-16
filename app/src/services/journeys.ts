@@ -1,6 +1,6 @@
 import type pg from "pg";
 import { getPool, withTransaction } from "../db/pool.js";
-import { createGuestUser } from "./users.js";
+import { createGuestUser, getReusableSessionUserId } from "./users.js";
 
 export interface DrivingJourney {
   id: string;
@@ -16,13 +16,14 @@ export async function createJourneyForStudent(
   existingUserId?: string | null,
 ): Promise<{ journey: DrivingJourney; userId: string }> {
   return withTransaction(async (client) => {
+    const reusableUserId = await getReusableSessionUserId(existingUserId, client);
     const userId =
-      existingUserId ?? (await createGuestUser(displayName, client)).id;
+      reusableUserId ?? (await createGuestUser(displayName, client)).id;
 
-    if (existingUserId) {
+    if (reusableUserId) {
       await client.query(
         `UPDATE users SET display_name = $2, updated_at = now() WHERE id = $1`,
-        [existingUserId, displayName.trim()],
+        [reusableUserId, displayName.trim()],
       );
     }
 

@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { beforeEach, describe, it } from "node:test";
+import { createSessionToken } from "../src/auth/session.js";
 import { getPool } from "../src/db/pool.js";
 import { getJourneyAccess } from "../src/services/authorization.js";
 import {
@@ -11,6 +12,8 @@ import {
   listActiveSupervisors,
 } from "../src/services/journeys.js";
 import { createJourneyForStudent } from "../src/services/journeys.js";
+import { createTestApp } from "./helpers.js";
+import { formBody, injectWithSession } from "./http-helpers.js";
 import { resetDatabaseData } from "./setup.js";
 
 async function seedRatedDrive() {
@@ -173,5 +176,100 @@ describe("account lifecycle / tombstoning invariants", () => {
       [seeded.observationId],
     );
     assert.equal(observation.rows[0].observer_user_id, seeded.supervisorId);
+  });
+
+  it("POST /start with a leftover deleted-user cookie does not resurrect the actor", async () => {
+    const seeded = await seedRatedDrive();
+    await getPool().query(
+      `UPDATE journey_collaborators
+       SET status = 'removed', updated_at = now()
+       WHERE user_id = $1 AND status = 'active'`,
+      [seeded.supervisorId],
+    );
+    await getPool().query(
+      `UPDATE users
+       SET account_state = 'deleted', display_name = NULL, updated_at = now()
+       WHERE id = $1`,
+      [seeded.supervisorId],
+    );
+
+    const app = await createTestApp();
+    const response = await injectWithSession(
+      app,
+      { bilklar_session: createSessionToken(seeded.supervisorId) },
+      {
+        method: "POST",
+        url: "/start",
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+        payload: formBody({ name: "Ny elev" }),
+      },
+    );
+
+    assert.equal(response.statusCode, 302);
+    const location = response.headers.location;
+    assert.equal(typeof location, "string");
+    const journeyId = (location as string).match(/^\/journey\/([^/]+)$/)?.[1];
+    assert.ok(journeyId);
+
+    const tombstoned = await getPool().query(
+      `SELECT account_state, display_name FROM users WHERE id = $1`,
+      [seeded.supervisorId],
+    );
+    assert.equal(tombstoned.rows[0].account_state, "deleted");
+    assert.equal(tombstoned.rows[0].display_name, null);
+
+    const newJourney = await getPool().query(
+      `SELECT student_user_id FROM driving_journeys WHERE id = $1`,
+      [journeyId],
+    );
+    assert.notEqual(newJourney.rows[0].student_user_id, seeded.supervisorId);
+
+    const newStudent = await getPool().query(
+      `SELECT display_name, account_state FROM users WHERE id = $1`,
+      [newJourney.rows[0].student_user_id],
+    );
+    assert.equal(newStudent.rows[0].display_name, "Ny elev");
+    assert.equal(newStudent.rows[0].account_state, "guest");
+
+    const originalJourney = await getPool().query(
+      `SELECT student_user_id, status FROM driving_journeys WHERE id = $1`,
+      [seeded.journeyId],
+    );
+    assert.equal(originalJourney.rows[0].student_user_id, seeded.studentId);
+    assert.equal(originalJourney.rows[0].status, "active");
+
+    await app.close();
+  });
+
+  it("acceptInvitation with a leftover deleted-user cookie creates a new guest", async () => {
+    const seeded = await seedRatedDrive();
+    await getPool().query(
+      `UPDATE users SET account_state = 'deleted', display_name = NULL WHERE id = $1`,
+      [seeded.supervisorId],
+    );
+
+    const other = await createJourneyForStudent("Clara");
+    const invitation = await createInvitation(other.journey.id, other.userId);
+    const accepted = await acceptInvitation(
+      invitation.token,
+      "Ny handledare",
+      seeded.supervisorId,
+    );
+
+    assert.notEqual(accepted.userId, seeded.supervisorId);
+
+    const tombstoned = await getPool().query(
+      `SELECT account_state, display_name FROM users WHERE id = $1`,
+      [seeded.supervisorId],
+    );
+    assert.equal(tombstoned.rows[0].account_state, "deleted");
+    assert.equal(tombstoned.rows[0].display_name, null);
+
+    const newUser = await getPool().query(
+      `SELECT display_name, account_state FROM users WHERE id = $1`,
+      [accepted.userId],
+    );
+    assert.equal(newUser.rows[0].display_name, "Ny handledare");
+    assert.equal(newUser.rows[0].account_state, "guest");
   });
 });
