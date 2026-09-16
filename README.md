@@ -11,6 +11,8 @@ Långsiktig vision: elevägt **Driving Passport**. v1 är strikt privat övnings
 
 ## Dokumentation
 
+**Publik kravspecifikation (hela v1):** [docs/kravspec.md](docs/kravspec.md)
+
 ### Produkt
 
 - [Vision](docs/product/vision.md)
