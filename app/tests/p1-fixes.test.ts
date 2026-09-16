@@ -9,7 +9,7 @@ import {
 } from "../src/services/invitations.js";
 import {
   createDriveWithFocus,
-  driveHasSupervisorRating,
+  isDriveFocusFullyObserved,
   endDrive,
   getActiveDrive,
 } from "../src/services/drives.js";
@@ -231,7 +231,7 @@ describe("P1 fixes", () => {
       [drive.id],
     );
     assert.equal(count.rows[0].count, 2);
-    assert.equal(await driveHasSupervisorRating(journey.id, drive.id), true);
+    assert.equal(await isDriveFocusFullyObserved(journey.id, drive.id), true);
   });
 
   it("P1.4 complete valid rating saves all observations atomically", async () => {

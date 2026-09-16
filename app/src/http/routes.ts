@@ -22,16 +22,20 @@ import {
 import { getPool } from "../db/pool.js";
 import {
   createDriveWithFocus,
-  driveHasSupervisorRating,
   endDrive,
   getActiveDrive,
   getDrive,
   getDriveFocusSkills,
+  isDriveFocusFullyObserved,
 } from "../services/drives.js";
 import { listSkillsForTaxonomy } from "../services/skills.js";
 import {
   ASSESSMENT_DISPLAY,
+  addLiveObservation,
+  completeMissingDriveObservations,
   getDriveObservationRecap,
+  getLatestDriveObservationsBySkill,
+  getMissingDriveFocusSkillIds,
   saveDriveObservations,
   type AssessmentLevel,
 } from "../services/observations.js";
@@ -68,6 +72,61 @@ function renderRatingOption(skillId: string, level: AssessmentLevel): string {
       <span class="rating-option__micro">${escapeHtml(display.microcopy)}</span>
     </span>
   </label>`;
+}
+
+function renderLiveAssessmentButton(level: AssessmentLevel): string {
+  const display = ASSESSMENT_DISPLAY[level];
+  return `<button
+    type="submit"
+    name="assessment"
+    value="${level}"
+    class="btn btn-secondary live-observe__choice live-observe__choice--${level}"
+  >${escapeHtml(display.label)}</button>`;
+}
+
+function renderSupervisorLiveFocusRow(
+  journeyId: string,
+  driveId: string,
+  skill: { skillId: string; title: string },
+  latestAssessment: AssessmentLevel | null,
+): string {
+  const noteLabel = latestAssessment ? "Notera igen" : "Notera";
+  const statusHtml = latestAssessment
+    ? `<p class="live-observe__status">
+         <span class="live-observe__signal" aria-hidden="true">${ASSESSMENT_DISPLAY[latestAssessment].signal}</span>
+         <span>${escapeHtml(ASSESSMENT_DISPLAY[latestAssessment].label)}</span>
+       </p>`
+    : "";
+
+  return `<li class="live-observe__item">
+    <div class="live-observe__header">
+      <h2 class="live-observe__title">${escapeHtml(skill.title)}</h2>
+      ${statusHtml}
+    </div>
+    <details class="live-observe__details">
+      <summary class="btn btn-secondary live-observe__summary">${escapeHtml(noteLabel)}</summary>
+      <form method="post" action="/journey/${escapeHtml(journeyId)}/drive/${escapeHtml(driveId)}/observe" class="live-observe__form">
+        <input type="hidden" name="skill_id" value="${escapeHtml(skill.skillId)}">
+        <div class="live-observe__choices">
+          ${RATING_LEVELS.map((level) => renderLiveAssessmentButton(level)).join("")}
+        </div>
+      </form>
+    </details>
+  </li>`;
+}
+
+function renderReadOnlyObservedSkill(
+  title: string,
+  assessment: AssessmentLevel,
+): string {
+  const display = ASSESSMENT_DISPLAY[assessment];
+  return `<div class="rating-item rating-item--observed">
+    <h3>${escapeHtml(title)}</h3>
+    <p class="rating-observed">
+      <span class="drive-recap-signal" aria-hidden="true">${display.signal}</span>
+      <span>${escapeHtml(display.label)}</span>
+    </p>
+  </div>`;
 }
 
 function groupSkillsByArea(
@@ -182,11 +241,11 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
         access.role === "supervisor" &&
         latestEndedDrive.supervisor_user_id === userId
       ) {
-        const alreadyRated = await driveHasSupervisorRating(
+        const fullyObserved = await isDriveFocusFullyObserved(
           journeyId,
           latestEndedDrive.id,
         );
-        if (!alreadyRated) {
+        if (!fullyObserved) {
           pendingRating = `<section class="card">
                <h2>Bedöm senaste körpasset</h2>
                <a class="btn btn-primary" href="/journey/${escapeHtml(journeyId)}/drive/${escapeHtml(latestEndedDrive.id)}/rate">Bedöm moment</a>
@@ -483,8 +542,8 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
           access.role === "supervisor" &&
           drive.supervisorUserId === userId
         ) {
-          const alreadyRated = await driveHasSupervisorRating(journeyId, driveId);
-          if (alreadyRated) {
+          const fullyObserved = await isDriveFocusFullyObserved(journeyId, driveId);
+          if (fullyObserved) {
             return reply.redirect(`/journey/${journeyId}/drive/${driveId}/done`);
           }
           return reply.redirect(`/journey/${journeyId}/drive/${driveId}/rate`);
@@ -501,9 +560,8 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
 
       const access = await requireJourneyAccess(journeyId, userId);
       const focusSkills = await getDriveFocusSkills(journeyId, driveId, userId);
-      const focusList = focusSkills
-        .map((skill) => `<li>${escapeHtml(skill.title)}</li>`)
-        .join("");
+      const isSupervisorOnDrive =
+        access.role === "supervisor" && drive.supervisorUserId === userId;
 
       const canEnd =
         access.role === "student" || drive.supervisorUserId === userId;
@@ -512,6 +570,38 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
              ${primaryButton("Körpasset klart")}
            </form>`
         : "";
+
+      if (isSupervisorOnDrive) {
+        const latestBySkill = await getLatestDriveObservationsBySkill(journeyId, driveId);
+        const latestMap = new Map(
+          latestBySkill.map((obs) => [obs.skillId, obs.assessment]),
+        );
+        const focusList = focusSkills
+          .map((skill) =>
+            renderSupervisorLiveFocusRow(
+              journeyId,
+              driveId,
+              skill,
+              latestMap.get(skill.skillId) ?? null,
+            ),
+          )
+          .join("");
+
+        reply.type("text/html").send(
+          layout(
+            "Körpass",
+            `<h1>Körpass pågår</h1>
+             <p class="live-observe__safety">Notera bara när det är säkert.</p>
+             <ul class="live-observe__list">${focusList}</ul>
+             ${endSection}`,
+          ),
+        );
+        return;
+      }
+
+      const focusList = focusSkills
+        .map((skill) => `<li>${escapeHtml(skill.title)}</li>`)
+        .join("");
 
       reply.type("text/html").send(
         layout(
@@ -540,12 +630,34 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
     try {
       const drive = await endDrive(journeyId, driveId, userId);
       if (drive.supervisorUserId === userId) {
-        const alreadyRated = await driveHasSupervisorRating(journeyId, driveId);
-        if (alreadyRated) {
+        const fullyObserved = await isDriveFocusFullyObserved(journeyId, driveId);
+        if (fullyObserved) {
           return reply.redirect(`/journey/${journeyId}/drive/${driveId}/done`);
         }
         return reply.redirect(`/journey/${journeyId}/drive/${driveId}/rate`);
       }
+      return reply.redirect(`/journey/${journeyId}/drive/${driveId}`);
+    } catch (error) {
+      const { status, message } = handleError(error);
+      return reply.status(status).type("text/html").send(
+        layout("Fel", errorBanner(message)),
+      );
+    }
+  });
+
+  app.post("/journey/:journeyId/drive/:driveId/observe", async (request, reply) => {
+    const { journeyId, driveId } = request.params as {
+      journeyId: string;
+      driveId: string;
+    };
+    const observerUserId = requireSessionUserId(request);
+    const body = request.body as { skill_id?: string; assessment?: string };
+
+    try {
+      await addLiveObservation(journeyId, driveId, observerUserId, {
+        skillId: body.skill_id ?? "",
+        assessment: body.assessment as AssessmentLevel,
+      });
       return reply.redirect(`/journey/${journeyId}/drive/${driveId}`);
     } catch (error) {
       const { status, message } = handleError(error);
@@ -574,29 +686,44 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
       if (!drive.endedAt) {
         return reply.redirect(`/journey/${journeyId}/drive/${driveId}`);
       }
-      if (await driveHasSupervisorRating(journeyId, driveId)) {
+      if (await isDriveFocusFullyObserved(journeyId, driveId)) {
         return reply.redirect(`/journey/${journeyId}/drive/${driveId}/done`);
       }
 
       const focusSkills = await getDriveFocusSkills(journeyId, driveId, userId);
+      const latestBySkill = await getLatestDriveObservationsBySkill(journeyId, driveId);
+      const latestMap = new Map(
+        latestBySkill.map((obs) => [obs.skillId, obs.assessment]),
+      );
+      const missingSkillIds = await getMissingDriveFocusSkillIds(journeyId, driveId);
+      const missingSet = new Set(missingSkillIds);
+      const hasPartialObservations = latestBySkill.length > 0;
 
       const ratingItems = focusSkills
-        .map(
-          (skill) => `<div class="rating-item">
+        .map((skill) => {
+          const latest = latestMap.get(skill.skillId);
+          if (latest && !missingSet.has(skill.skillId)) {
+            return renderReadOnlyObservedSkill(skill.title, latest);
+          }
+          return `<div class="rating-item">
             <h3>${escapeHtml(skill.title)}</h3>
             <div class="rating-buttons">
               ${RATING_LEVELS.map((level) => renderRatingOption(skill.skillId, level)).join("")}
             </div>
             <input type="hidden" name="skill_ids" value="${escapeHtml(skill.skillId)}">
-          </div>`,
-        )
+          </div>`;
+        })
         .join("");
+
+      const intro = hasPartialObservations
+        ? "<p>Komplettera de moment som saknar bedömning.</p>"
+        : "<p>Handledaren bedömer valda moment.</p>";
 
       reply.type("text/html").send(
         layout(
           "Bedöm körpasset",
           `<h1>Hur gick det?</h1>
-           <p>Handledaren bedömer valda moment.</p>
+           ${intro}
            <form method="post" action="/journey/${escapeHtml(journeyId)}/drive/${escapeHtml(driveId)}/rate" class="rating-list">
              ${ratingItems}
              ${primaryButton("Spara bedömning")}
@@ -632,7 +759,28 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
     });
 
     try {
-      await saveDriveObservations(journeyId, driveId, observerUserId, observations);
+      const missingSkillIds = await getMissingDriveFocusSkillIds(
+        journeyId,
+        driveId,
+      );
+      const focusSkills = await getDriveFocusSkills(journeyId, driveId, observerUserId);
+      const missingSet = new Set(missingSkillIds);
+
+      if (missingSkillIds.length === focusSkills.length) {
+        await saveDriveObservations(journeyId, driveId, observerUserId, observations);
+      } else if (missingSkillIds.length > 0) {
+        const missingObservations = observations.filter((obs) =>
+          missingSet.has(obs.skillId),
+        );
+        await completeMissingDriveObservations(
+          journeyId,
+          driveId,
+          observerUserId,
+          missingObservations,
+        );
+      } else {
+        return reply.redirect(`/journey/${journeyId}/drive/${driveId}/done`);
+      }
       return reply.redirect(`/journey/${journeyId}/drive/${driveId}/done`);
     } catch (error) {
       const { status, message } = handleError(error);
