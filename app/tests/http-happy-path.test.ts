@@ -97,6 +97,7 @@ describe("HTTP happy path (two isolated sessions)", () => {
     });
     assert.equal(focusPage.statusCode, 200);
     assert.match(focusPage.body, /Vad tränar ni på idag/);
+    assert.match(focusPage.body, /0 av 3 valda/);
 
     const driveCreate = await injectWithSession(app, studentCookies, {
       method: "POST",
@@ -158,6 +159,12 @@ describe("HTTP happy path (two isolated sessions)", () => {
     });
     assert.equal(ratePage.statusCode, 200);
     assert.match(ratePage.body, /Hur gick det/);
+    assert.match(ratePage.body, /Utan hjälp/);
+    assert.match(ratePage.body, /Med påminnelse/);
+    assert.match(ratePage.body, /Behöver hjälp/);
+    assert.match(ratePage.body, /rating-option--independent/);
+    assert.match(ratePage.body, /rating-option--with_support/);
+    assert.match(ratePage.body, /rating-option--needs_help/);
 
     const ratingPayload = formBody({
       skill_ids: skillIds,
@@ -213,12 +220,32 @@ describe("HTTP happy path (two isolated sessions)", () => {
     );
 
     // G: done page and refresh
+    const skillTitles = await getPool().query(
+      `SELECT sd.title
+       FROM skills s
+       JOIN skill_definitions sd ON sd.skill_id = s.id AND sd.taxonomy_version = 1
+       WHERE s.id = ANY($1::uuid[])
+       ORDER BY sd.sort_order`,
+      [skillIds],
+    );
+    const [firstTitle, secondTitle, thirdTitle] = skillTitles.rows.map(
+      (row) => row.title as string,
+    );
+
     const donePage = await injectWithSession(app, supervisorCookies, {
       method: "GET",
       url: `/journey/${journeyId}/drive/${driveId}/done`,
     });
     assert.equal(donePage.statusCode, 200);
+    assert.match(donePage.body, /Så gick det/);
     assert.match(donePage.body, /Nästa gång/);
+    assert.match(donePage.body, new RegExp(firstTitle));
+    assert.match(donePage.body, new RegExp(secondTitle));
+    assert.match(donePage.body, new RegExp(thirdTitle));
+    assert.match(donePage.body, /Behöver hjälp/);
+    assert.match(donePage.body, /Med påminnelse/);
+    assert.match(donePage.body, /Utan hjälp/);
+    assert.match(donePage.body, /drive-recap-list/);
 
     const doneRefresh = await injectWithSession(app, supervisorCookies, {
       method: "GET",

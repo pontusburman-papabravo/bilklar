@@ -179,6 +179,41 @@ describe("vertical slice", () => {
     assert.equal(trainingFocusCount.rows[0].count, 0);
   });
 
+  it("rejects drive focus with fewer than 2 or more than 3 skills", async () => {
+    const { journey, userId: studentId } = await createJourneyForStudent("Anna");
+    const invitation = await createInvitation(journey.id, studentId);
+    await acceptInvitation(invitation.token, "Erik", null);
+
+    const skills = await getPool().query(`SELECT id FROM skills ORDER BY skill_key LIMIT 4`);
+    const fourSkillIds = skills.rows.map((row) => row.id);
+    const twoSkillIds = fourSkillIds.slice(0, 2);
+    const threeSkillIds = fourSkillIds.slice(0, 3);
+
+    await assert.rejects(
+      () => createDriveWithFocus(journey.id, studentId, fourSkillIds),
+      (error: Error) => error.message.includes("Select 2–3 skills"),
+    );
+    await assert.rejects(
+      () => createDriveWithFocus(journey.id, studentId, [fourSkillIds[0]]),
+      (error: Error) => error.message.includes("Select 2–3 skills"),
+    );
+
+    const { drive: twoSkillDrive } = await createDriveWithFocus(
+      journey.id,
+      studentId,
+      twoSkillIds,
+    );
+    assert.ok(twoSkillDrive);
+    await endDrive(journey.id, twoSkillDrive.id, studentId);
+
+    const { drive: threeSkillDrive } = await createDriveWithFocus(
+      journey.id,
+      studentId,
+      threeSkillIds,
+    );
+    assert.ok(threeSkillDrive);
+  });
+
   it("allows supervisor to save observations from session actor", async () => {
     const { journey, userId: studentId } = await createJourneyForStudent("Anna");
     const invitation = await createInvitation(journey.id, studentId);

@@ -1,6 +1,6 @@
 import type pg from "pg";
 import { AppError } from "../errors.js";
-import { withTransaction } from "../db/pool.js";
+import { getPool, withTransaction } from "../db/pool.js";
 import { assertDriveSupervisorForObservation } from "./drives.js";
 
 export type AssessmentLevel = "needs_help" | "with_support" | "independent";
@@ -10,6 +10,62 @@ const VALID_ASSESSMENTS = new Set<AssessmentLevel>([
   "with_support",
   "independent",
 ]);
+
+export const ASSESSMENT_DISPLAY: Record<
+  AssessmentLevel,
+  { label: string; microcopy: string; signal: string }
+> = {
+  independent: {
+    label: "Utan hjälp",
+    microcopy: "Eleven klarar momentet utan instruktion eller ingripande",
+    signal: "🟢",
+  },
+  with_support: {
+    label: "Med påminnelse",
+    microcopy: "Behöver ibland en fråga eller kort instruktion",
+    signal: "🟡",
+  },
+  needs_help: {
+    label: "Behöver hjälp",
+    microcopy: "Behöver tydlig eller återkommande vägledning",
+    signal: "🔴",
+  },
+};
+
+export interface DriveObservationRecap {
+  skillId: string;
+  title: string;
+  assessment: AssessmentLevel;
+}
+
+export async function getDriveObservationRecap(
+  journeyId: string,
+  driveId: string,
+  client?: pg.PoolClient,
+): Promise<DriveObservationRecap[]> {
+  const db = client ?? getPool();
+  const result = await db.query(
+    `SELECT o.skill_id, o.assessment, sd.title
+     FROM drive_observations o
+     JOIN skill_definitions sd ON sd.skill_id = o.skill_id AND sd.taxonomy_version = 1
+     WHERE o.journey_id = $1
+       AND o.drive_id = $2
+       AND o.source_type = 'supervisor'
+       AND NOT EXISTS (
+         SELECT 1 FROM drive_observations newer
+         WHERE newer.supersedes_observation_id = o.id
+           AND newer.journey_id = o.journey_id
+       )
+     ORDER BY sd.sort_order`,
+    [journeyId, driveId],
+  );
+
+  return result.rows.map((row) => ({
+    skillId: row.skill_id as string,
+    title: row.title as string,
+    assessment: row.assessment as AssessmentLevel,
+  }));
+}
 
 export interface ObservationInput {
   skillId: string;
