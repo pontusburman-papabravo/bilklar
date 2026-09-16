@@ -29,7 +29,12 @@ import {
   getDriveFocusSkills,
 } from "../services/drives.js";
 import { listSkillsForTaxonomy } from "../services/skills.js";
-import { saveDriveObservations, type AssessmentLevel } from "../services/observations.js";
+import {
+  ASSESSMENT_DISPLAY,
+  getDriveObservationRecap,
+  saveDriveObservations,
+  type AssessmentLevel,
+} from "../services/observations.js";
 import { recommendNextFocus } from "../services/recommendations.js";
 import {
   escapeHtml,
@@ -46,6 +51,23 @@ function handleError(error: unknown): { status: number; message: string } {
   }
   console.error(error);
   return { status: 500, message: "Something went wrong" };
+}
+
+const RATING_LEVELS: AssessmentLevel[] = [
+  "needs_help",
+  "with_support",
+  "independent",
+];
+
+function renderRatingOption(skillId: string, level: AssessmentLevel): string {
+  const display = ASSESSMENT_DISPLAY[level];
+  return `<label class="rating-option rating-option--${level}">
+    <input type="radio" name="assessment_${escapeHtml(skillId)}" value="${level}" required class="rating-option__input">
+    <span class="rating-option__body">
+      <span class="rating-option__label">${escapeHtml(display.label)}</span>
+      <span class="rating-option__micro">${escapeHtml(display.microcopy)}</span>
+    </span>
+  </label>`;
 }
 
 function groupSkillsByArea(
@@ -362,19 +384,45 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
           "Välj fokus",
           `<h1>Vad tränar ni på idag?</h1>
            <p>Välj 2–3 moment.</p>
+           <p class="focus-count" id="focus-count" aria-live="polite">0 av 3 valda</p>
            <form method="post" action="/journey/${escapeHtml(journeyId)}/drives" class="stack" id="focus-form">
              ${supervisorPicker}
              ${areaHtml}
              ${primaryButton("Starta körpass")}
            </form>
            <script>
-             document.getElementById('focus-form').addEventListener('submit', function(e) {
-               const checked = this.querySelectorAll('input[name="skill_ids"]:checked');
-               if (checked.length < 2 || checked.length > 3) {
-                 e.preventDefault();
-                 alert('Välj 2–3 moment.');
+             (function () {
+               const form = document.getElementById('focus-form');
+               const countEl = document.getElementById('focus-count');
+               const checkboxes = form.querySelectorAll('input[name="skill_ids"]');
+
+               function updateFocusSelection() {
+                 const checked = form.querySelectorAll('input[name="skill_ids"]:checked');
+                 const count = checked.length;
+                 countEl.textContent = count + ' av 3 valda';
+                 checkboxes.forEach((checkbox) => {
+                   const option = checkbox.closest('.skill-option');
+                   const atMax = count >= 3 && !checkbox.checked;
+                   checkbox.disabled = atMax;
+                   if (option) {
+                     option.classList.toggle('skill-option--disabled', atMax);
+                   }
+                 });
                }
-             });
+
+               checkboxes.forEach((checkbox) => {
+                 checkbox.addEventListener('change', updateFocusSelection);
+               });
+               updateFocusSelection();
+
+               form.addEventListener('submit', function (e) {
+                 const checked = form.querySelectorAll('input[name="skill_ids"]:checked');
+                 if (checked.length < 2 || checked.length > 3) {
+                   e.preventDefault();
+                   alert('Välj 2–3 moment.');
+                 }
+               });
+             })();
            </script>`,
         ),
       );
@@ -537,18 +585,7 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
           (skill) => `<div class="rating-item">
             <h3>${escapeHtml(skill.title)}</h3>
             <div class="rating-buttons">
-              <label>
-                <input type="radio" name="assessment_${escapeHtml(skill.skillId)}" value="needs_help" required>
-                <span>Behöver hjälp</span>
-              </label>
-              <label>
-                <input type="radio" name="assessment_${escapeHtml(skill.skillId)}" value="with_support" required>
-                <span>Med stöd</span>
-              </label>
-              <label>
-                <input type="radio" name="assessment_${escapeHtml(skill.skillId)}" value="independent" required>
-                <span>Självständig</span>
-              </label>
+              ${RATING_LEVELS.map((level) => renderRatingOption(skill.skillId, level)).join("")}
             </div>
             <input type="hidden" name="skill_ids" value="${escapeHtml(skill.skillId)}">
           </div>`,
@@ -617,7 +654,25 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
 
     try {
       await requireJourneyAccess(journeyId, userId);
+      const recap = await getDriveObservationRecap(journeyId, driveId);
       const recommendations = await recommendNextFocus(journeyId);
+
+      const recapList = recap.length > 0
+        ? `<ul class="drive-recap-list">
+             ${recap
+               .map((item) => {
+                 const display = ASSESSMENT_DISPLAY[item.assessment];
+                 return `<li class="drive-recap-item">
+                   <span class="drive-recap-signal" aria-hidden="true">${display.signal}</span>
+                   <span class="drive-recap-copy">
+                     <span class="drive-recap-title">${escapeHtml(item.title)}</span>
+                     <span class="drive-recap-label">${escapeHtml(display.label)}</span>
+                   </span>
+                 </li>`;
+               })
+               .join("")}
+           </ul>`
+        : "";
 
       const recList = recommendations.length > 0
         ? `<ul class="recommendation-list">
@@ -634,9 +689,15 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
 
       reply.type("text/html").send(
         layout(
-          "Nästa gång",
-          `<h1>Nästa gång</h1>
-           ${recList}
+          "Körpass klart",
+          `${recapList ? `<section class="drive-recap">
+             <h1>Så gick det</h1>
+             ${recapList}
+           </section>` : ""}
+           <section class="drive-next">
+             <h2>Nästa gång</h2>
+             ${recList}
+           </section>
            <a class="btn btn-primary" href="/journey/${escapeHtml(journeyId)}">Tillbaka till resan</a>`,
         ),
       );
