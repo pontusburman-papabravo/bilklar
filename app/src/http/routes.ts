@@ -11,9 +11,10 @@ import {
 import { createInvitation, acceptInvitation, getInvitationByToken } from "../services/invitations.js";
 import {
   createJourneyForStudent,
+  formatAccessibleJourneyLabel,
   getJourneyById,
+  listAccessibleActiveJourneys,
   listActiveSupervisors,
-  resolveHomeJourneyId,
 } from "../services/journeys.js";
 import {
   requireActiveSupervisor,
@@ -88,28 +89,50 @@ function groupSkillsByArea(
   return groups;
 }
 
-export async function registerRoutes(app: FastifyInstance): Promise<void> {
-  app.get("/", async (request, reply) => {
-    const userId = getSessionUserId(request);
-    if (userId) {
-      const journeyId = await resolveHomeJourneyId(userId);
-      if (journeyId) {
-        return reply.redirect(`/journey/${journeyId}`);
-      }
-    }
-
-    reply.type("text/html").send(
-      layout(
-        "Starta din körkortsresa",
-        `<h1>Vad heter du?</h1>
+function onboardingForm(errorMessage?: string): string {
+  return `${errorMessage ? errorBanner(errorMessage) : ""}
+         <h1>Vad heter du?</h1>
          <form method="post" action="/start" class="stack">
            <div>
              <label for="name">Namn</label>
              <input id="name" name="name" type="text" required autocomplete="name" placeholder="Ditt namn">
            </div>
            ${primaryButton("Starta min körkortsresa")}
-         </form>`,
-      ),
+         </form>`;
+}
+
+export async function registerRoutes(app: FastifyInstance): Promise<void> {
+  app.get("/", async (request, reply) => {
+    const userId = getSessionUserId(request);
+    if (userId) {
+      const journeys = await listAccessibleActiveJourneys(userId);
+      if (journeys.length === 1) {
+        return reply.redirect(`/journey/${journeys[0].id}`);
+      }
+      if (journeys.length > 1) {
+        const choices = journeys
+          .map((journey) => {
+            const label = formatAccessibleJourneyLabel(journey);
+            return `<a class="card journey-choice" href="/journey/${escapeHtml(journey.id)}">${escapeHtml(label)}</a>`;
+          })
+          .join("");
+        return reply.type("text/html").send(
+          layout(
+            "Välj elev",
+            `<h1>Välj elev</h1>
+             <p>Vilken körkortsresa vill du öppna?</p>
+             <div class="stack">${choices}</div>`,
+          ),
+        );
+      }
+    }
+
+    return reply.redirect("/onboarding");
+  });
+
+  app.get("/onboarding", async (_request, reply) => {
+    reply.type("text/html").send(
+      layout("Starta din körkortsresa", onboardingForm()),
     );
   });
 
@@ -123,15 +146,7 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
         .send(
           layout(
             "Starta din körkortsresa",
-            `${errorBanner("Ange ditt namn")}
-             <h1>Vad heter du?</h1>
-             <form method="post" action="/start" class="stack">
-               <div>
-                 <label for="name">Namn</label>
-                 <input id="name" name="name" type="text" required autocomplete="name">
-               </div>
-               ${primaryButton("Starta min körkortsresa")}
-             </form>`,
+            onboardingForm("Ange ditt namn"),
           ),
         );
     }

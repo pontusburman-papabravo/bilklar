@@ -78,35 +78,67 @@ export async function getJourneyById(
   };
 }
 
+export interface AccessibleJourney {
+  id: string;
+  studentName: string;
+  lastDriveAt: Date | null;
+}
+
+export function formatAccessibleJourneyLabel(journey: AccessibleJourney): string {
+  const name = journey.studentName.trim() || "Eleven";
+  if (!journey.lastDriveAt) return name;
+  const formatted = journey.lastDriveAt
+    .toLocaleDateString("sv-SE", { day: "numeric", month: "short" })
+    .replaceAll(".", "");
+  return `${name} — senast körd ${formatted}`;
+}
+
+export async function listAccessibleActiveJourneys(
+  userId: string,
+  client?: pg.PoolClient,
+): Promise<AccessibleJourney[]> {
+  const db = client ?? getPool();
+  const result = await db.query(
+    `SELECT j.id,
+            COALESCE(u.display_name, 'Eleven') AS student_name,
+            (
+              SELECT MAX(COALESCE(d.ended_at, d.started_at))
+              FROM drives d
+              WHERE d.journey_id = j.id
+            ) AS last_drive_at
+     FROM driving_journeys j
+     JOIN users u ON u.id = j.student_user_id
+     WHERE j.status = 'active'
+       AND (
+         j.student_user_id = $1
+         OR EXISTS (
+           SELECT 1
+           FROM journey_collaborators jc
+           JOIN users cu ON cu.id = jc.user_id
+           WHERE jc.journey_id = j.id
+             AND jc.user_id = $1
+             AND jc.role = 'supervisor'
+             AND jc.status = 'active'
+             AND cu.account_state <> 'deleted'
+         )
+       )
+     ORDER BY last_drive_at DESC NULLS LAST, j.created_at DESC`,
+    [userId],
+  );
+
+  return result.rows.map((row) => ({
+    id: row.id as string,
+    studentName: row.student_name as string,
+    lastDriveAt: row.last_drive_at ? new Date(row.last_drive_at) : null,
+  }));
+}
+
 export async function resolveHomeJourneyId(
   userId: string,
   client?: pg.PoolClient,
 ): Promise<string | null> {
-  const db = client ?? getPool();
-
-  const studentJourney = await db.query(
-    `SELECT id FROM driving_journeys
-     WHERE student_user_id = $1
-     ORDER BY created_at DESC
-     LIMIT 1`,
-    [userId],
-  );
-  if ((studentJourney.rowCount ?? 0) > 0) {
-    return studentJourney.rows[0].id as string;
-  }
-
-  const supervisorJourneys = await db.query(
-    `SELECT journey_id FROM journey_collaborators
-     WHERE user_id = $1
-       AND role = 'supervisor'
-       AND status = 'active'
-     ORDER BY created_at DESC`,
-    [userId],
-  );
-  if ((supervisorJourneys.rowCount ?? 0) === 1) {
-    return supervisorJourneys.rows[0].journey_id as string;
-  }
-
+  const journeys = await listAccessibleActiveJourneys(userId, client);
+  if (journeys.length === 1) return journeys[0].id;
   return null;
 }
 
@@ -122,6 +154,7 @@ export async function listActiveSupervisors(
      WHERE jc.journey_id = $1
        AND jc.role = 'supervisor'
        AND jc.status = 'active'
+       AND u.account_state <> 'deleted'
      ORDER BY jc.created_at`,
     [journeyId],
   );

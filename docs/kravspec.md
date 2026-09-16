@@ -237,14 +237,38 @@ Kraven nedan beskriver det kanoniska v1-flödet. Där vertical slice redan finns
 | Rekommendation | Högst 3 förslag. Prioritet: aktiv Training Focus → `needs_help` → `with_support` → core skills utan evidens. |
 | Transmission | Vid `automatic_only` ska `car_control_gear_shifting` inte rekommenderas. |
 
-### FR-8 Navigering till rätt journey
+### FR-8 Navigering och kontextväljare på root (`/`)
 
 | Fält | Krav |
 | --- | --- |
 | ID | FR-8 |
-| Aktör | Inloggad user |
+| Aktör | Inloggad user (Elev / Handledare) |
 | Status | Implementerat |
-| Beskrivning | Root `/` ska skicka en user med aktiv journey till den journeyn — även handledare med exakt en aktiv journey. |
+| Beskrivning | Root-rutten `/` utvärderar antalet aktiva, tillgängliga `driving_journeys` för den inloggade aktören och dirigerar användaren baserat på kontext. |
+
+**Routing-regler:**
+
+- **0 tillgängliga resor:** Omdirigera till onboarding (`/onboarding`) där användaren kan skapa en resa eller ansluta via inbjudan.
+- **1 tillgänglig resa:** Omdirigera direkt till den aktiva resans översikt (`/journey/[id]`).
+- **>1 tillgängliga resor:** Visa kontextväljare på `/` med rubriken **"Välj elev"** och hjälptexten **"Vilken körkortsresa vill du öppna?"**.
+
+**Designregler för kontextväljaren:**
+
+- För handledare identifieras varje resa primärt med elevens namn.
+- Senaste körpassets datum får visas som sekundär information, exempelvis **"Clara — senast körd 14 sep"**.
+- Kontextväljaren väljer endast vilken `driving_journey` användaren arbetar i.
+- Den startar inte ett nytt körpass och ska inte använda copy som antyder att ett körpass måste börja.
+
+Tillgängliga resor:
+
+```text
+accessible journeys =
+student-owned active journeys
++
+active collaborator journeys
+```
+
+utan dubbletter. `archived`/`completed` räknas inte. Collaborator-access i v1 är aktiv `supervisor` (inte `removed`, inte `driving_instructor`).
 
 ### FR-9 Flera handledare utan dataflytt
 
@@ -575,6 +599,59 @@ Prioritetsordning, max 3 resultat, utan dubbletter:
 Authorization: `observer_user_id`, `started_by_user_id` och accepterande user vid invitation hämtas från serverns actor/session.
 
 Normal produktkod ska **INSERT** — inte UPDATE/DELETE — på `drive_observations`. Privileged GDPR/admin-process får hantera legitim radering/anonymisering.
+
+### 10.2 Kontoradering och data lifecycle (tombstoning)
+
+**Huvudprincip:** En användares kontoradering får aldrig oavsiktligt radera eller förstöra en annan användares `driving_journey` eller historiska data.
+
+#### Elev raderar konto
+
+När eleven begär kontoradering ska en privileged data-lifecycle-process hantera elevens konto och den elevägda `driving_journey` inklusive tillhörande journey-data som inte längre ska bevaras.
+
+Raderingen ska omfatta beroende data såsom observationer, Drive Focus, Training Focus, drives, collaborators och invitations i den utsträckning som dessa inte behöver bevaras på annan giltig rättslig grund.
+
+Databasen får använda `ON DELETE CASCADE` där detta är förenligt med datamodellens integritetskrav, men cascade-beteende är en implementationsteknik och inte den juridiska huvudregeln.
+
+#### Handledare raderar konto
+
+När en handledare begär kontoradering ska Bilklar:
+
+- radera eller avaktivera samtliga `auth_identities`,
+- återkalla aktiva sessioner, tokens och andra autentiseringsmöjligheter,
+- radera eller nolla direkta profilidentifierare som inte längre behöver behandlas,
+- sätta `users.account_state = deleted`,
+- ta bort handledaren från fortsatt aktiv användning av berörda journeys,
+- bevara det stabila `user_id` i historiska `drives`, `drive_observations` och andra ledger-relationer endast i den utsträckning som det krävs för att bevara elevens dataintegritet och det finns ett giltigt ändamål och rättslig grund för fortsatt behandling.
+
+Historiska observationer får inte försvinna enbart därför att den handledare som skapade dem raderar sitt konto.
+
+#### Pseudonymiserad tombstoned actor
+
+Ett bevarat `user_id` som fortfarande kan kopplas till historik i en specifik `driving_journey` ska behandlas som **pseudonymiserad personuppgift**, inte som anonym data.
+
+Pseudonymisering innebär därför inte obegränsad lagring. Kvarvarande data omfattas fortsatt av Bilklars gallrings- och datalagringspolicy och ska raderas eller omprövas när ändamålet eller den rättsliga grunden för fortsatt behandling upphör.
+
+Om data senare görs faktiskt anonym ska anonymiseringen vara sådan att personen inte längre rimligen kan identifieras eller återkopplas till informationen.
+
+#### UI-presentation
+
+När en handledare är tombstoned:
+
+- ska det tidigare profilnamnet inte visas i normal produkt-UI,
+- historiska poster får visas med neutral etikett, exempelvis **"Tidigare handledare"**,
+- den tombstonade aktören får inte kunna autentisera sig eller återuppta den gamla kontosessionen utan ett uttryckligt nytt account-recovery/reconciliation-flöde.
+
+#### Implementation status (vertical slice v1)
+
+Fullständig kontoradering är **inte** ett produktflöde i vertical slice. Befintligt schema kan stödja handledar-tombstoning utan ny arkitektur eller ny migration:
+
+- `users.account_state` inkluderar redan `deleted` (oanvänd i produktkod före denna delta).
+- Hard `DELETE` av en handledare **blockeras** av default RESTRICT/NO ACTION på `drives.supervisor_user_id`, `drives.started_by_user_id`, `drive_observations.observer_user_id`, `journey_collaborators.user_id` och invitation-FK:er.
+- Hard `DELETE` av en elev **blockeras** av `driving_journeys.student_user_id` (RESTRICT). Om journeyn raderas först CASCADE:ar journey-barn (drives, observations, m.m.) — det är en privileged process, inte handledar-delete.
+- `observer_user_id` är nullable på kolumnnivå, men CHECK kräver värdet för `source_type` supervisor/student. SET NULL skulle alltså bryta constraint:et; tombstone ska **behålla** `user_id`.
+- Enda direkta identifieraren på `users` är `display_name`. E-post och provider-subject ligger i `auth_identities` (oanvänd i slice).
+- Sessioner är signerade cookies; det finns ingen session-tabell att återkalla mot.
+- Återstår som separat implementation: privileged delete-account-API, radering av `auth_identities`, nollning av `display_name`, `account_state = deleted`, collaborator `removed`, server-side session revoke, och historisk UI-etikett där observer-namn visas.
 
 ---
 
