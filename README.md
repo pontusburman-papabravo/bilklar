@@ -10,7 +10,8 @@ Kärnfrågor:
 - **Hur gick det?**
 - **Vad bör vi träna på nästa gång?**
 
-Webb: https://korpasset.se
+Webb: https://korpasset.se  
+Källkod: https://github.com/pontusburman-papabravo/korpasset
 
 v1 är strikt fokuserad på den praktiska privata övningskörningen.
 
@@ -35,6 +36,7 @@ v1 är strikt fokuserad på den praktiska privata övningskörningen.
 ### Arkitektur
 
 - [Database](docs/architecture/database.md)
+- [Production](docs/operations/production.md) — deploy, env, health, backup/restore
 
 ### Beslut (ADR)
 
@@ -71,6 +73,17 @@ npm run dev
 ```
 
 Öppna `http://localhost:3000` i två olika webbläsare/sessioner för att testa elev- och handledarflödet.
+
+## Produktion
+
+Se [Production](docs/operations/production.md). Kort:
+
+```bash
+docker build -t korpasset-app .
+# Kräver DATABASE_URL, SESSION_SECRET, APP_BASE_URL=https://korpasset.se
+```
+
+Health: `GET /health`.
 
 ## Status
 

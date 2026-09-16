@@ -1,0 +1,10 @@
+.git
+**/.git
+**/node_modules
+**/.pgdata-test
+app/dist
+**/.env
+**/.env.*
+!**/.env.example
+*.log
+.cursor

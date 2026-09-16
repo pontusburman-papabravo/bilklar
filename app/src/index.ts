@@ -1,15 +1,40 @@
 import { buildServer } from "./http/server.js";
-import { config } from "./config.js";
+import { assertProductionConfig, config } from "./config.js";
+import { applyMigrations } from "./db/migrate.js";
 import { seedTaxonomy } from "./db/seed-taxonomy.js";
 
+function logFatal(error: unknown): void {
+  const message = error instanceof Error ? error.stack ?? error.message : String(error);
+  console.error(message);
+}
+
+process.on("uncaughtException", (error) => {
+  logFatal(error);
+  process.exit(1);
+});
+
+process.on("unhandledRejection", (error) => {
+  logFatal(error);
+  process.exit(1);
+});
+
 async function main(): Promise<void> {
+  assertProductionConfig();
+  const migrations = await applyMigrations();
   await seedTaxonomy();
   const app = await buildServer();
   await app.listen({ port: config.port, host: "0.0.0.0" });
-  console.log(`Körpasset app listening on ${config.appBaseUrl}`);
+  app.log.info(
+    {
+      url: config.appBaseUrl,
+      appliedMigrations: migrations.applied,
+      stampedMigrations: migrations.stamped,
+    },
+    "Körpasset app listening",
+  );
 }
 
 main().catch((error) => {
-  console.error(error);
+  logFatal(error);
   process.exit(1);
 });
