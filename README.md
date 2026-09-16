@@ -10,7 +10,8 @@ Kärnfrågor:
 - **Hur gick det?**
 - **Vad bör vi träna på nästa gång?**
 
-Webb: https://korpasset.se
+Webb: https://korpasset.se  
+Källkod: https://github.com/pontusburman-papabravo/korpasset
 
 v1 är strikt fokuserad på den praktiska privata övningskörningen.
 

@@ -2,6 +2,8 @@
 
 Minsta produktionsbara körning för Körpassets första beta. En Fastify-process + PostgreSQL 15. Ingen microservice-split.
 
+Git: https://github.com/pontusburman-papabravo/korpasset
+
 ## Canonical routing
 
 Ett origin:
