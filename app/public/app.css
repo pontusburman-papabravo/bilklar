@@ -272,6 +272,21 @@ select.supervisor-select {
   color: #065f46;
 }
 
+.rating-option__input:focus-visible + .rating-option__body {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+@media (max-width: 24rem) {
+  .rating-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .rating-option__micro {
+    font-size: 0.75rem;
+  }
+}
+
 .drive-recap {
   margin-bottom: 1.25rem;
 }
