@@ -1,0 +1,17 @@
+---
+description: Körpasset production VPS (korpasset.se)
+alwaysApply: false
+---
+
+# Körpasset VPS
+
+- Public origin: `https://korpasset.se`
+- Host: `188.66.62.46` (Ubuntu 24, Inleed)
+- SSH user: `deploy`
+- App path: `/var/www/korpasset`
+- Git: `https://github.com/pontusburman-papabravo/korpasset.git`
+- Access setup: `docs/operations/vps-access.md`
+- Host bootstrap: `scripts/vps-bootstrap.sh`
+- Agent SSH helper: `scripts/vps-ssh.sh`
+
+Do not put private keys, `SESSION_SECRET`, or database passwords in the repo or chat.

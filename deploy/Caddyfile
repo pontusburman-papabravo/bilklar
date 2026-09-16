@@ -1,0 +1,8 @@
+{
+	email pontus.burman@papabravo.se
+}
+
+korpasset.se, www.korpasset.se {
+	encode gzip zstd
+	reverse_proxy app:3000
+}

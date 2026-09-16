@@ -102,6 +102,10 @@ function onboardingForm(errorMessage?: string): string {
 }
 
 export async function registerRoutes(app: FastifyInstance): Promise<void> {
+  app.get("/health", async (_request, reply) => {
+    return reply.send({ ok: true });
+  });
+
   app.get("/", async (request, reply) => {
     const userId = getSessionUserId(request);
     if (userId) {

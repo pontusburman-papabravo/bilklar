@@ -1,0 +1,8 @@
+.git
+**/.env
+**/node_modules
+**/dist
+**/.pgdata-test
+**/coverage
+*.md
+!docs/domain/skill-taxonomy-v1.json
