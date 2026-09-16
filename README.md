@@ -35,7 +35,7 @@ v1 är strikt fokuserad på den praktiska privata övningskörningen.
 ### Arkitektur
 
 - [Database](docs/architecture/database.md)
-- [VPS-access](docs/operations/vps-access.md) — `korpasset.se` på Ubuntu 24, SSH för agent + GitHub Actions
+- [VPS-access](docs/operations/vps-access.md) — logga in som root och kör `scripts/vps-bootstrap.sh`
 
 ### Beslut (ADR)
 

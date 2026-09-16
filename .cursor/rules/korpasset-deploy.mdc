@@ -10,8 +10,8 @@ alwaysApply: false
 - SSH user: `deploy`
 - App path: `/var/www/korpasset`
 - Git: `https://github.com/pontusburman-papabravo/korpasset.git`
+- First boot as root: `curl -fsSL …/scripts/vps-bootstrap.sh | bash`
 - Access setup: `docs/operations/vps-access.md`
-- Host bootstrap: `scripts/vps-bootstrap.sh`
 - Agent SSH helper: `scripts/vps-ssh.sh`
 
 Do not put private keys, `SESSION_SECRET`, or database passwords in the repo or chat.
