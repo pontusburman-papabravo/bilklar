@@ -42,6 +42,7 @@ import {
   layout,
   primaryButton,
   errorBanner,
+  invitationAlreadyUsedPage,
 } from "./layout.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -130,7 +131,14 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
     return reply.redirect("/onboarding");
   });
 
-  app.get("/onboarding", async (_request, reply) => {
+  app.get("/onboarding", async (request, reply) => {
+    const userId = getSessionUserId(request);
+    if (userId) {
+      const journeys = await listAccessibleActiveJourneys(userId);
+      if (journeys.length > 0) {
+        return reply.redirect("/");
+      }
+    }
     reply.type("text/html").send(
       layout("Starta din körkortsresa", onboardingForm()),
     );
@@ -294,7 +302,17 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
 
     if (invitation.status !== "pending") {
       if (invitation.status === "accepted") {
-        return reply.redirect(`/journey/${invitation.journeyId}`);
+        const sessionUserId = getSessionUserId(request);
+        if (
+          sessionUserId &&
+          (sessionUserId === invitation.acceptedByUserId ||
+            sessionUserId === invitation.studentUserId)
+        ) {
+          return reply.redirect(`/journey/${invitation.journeyId}`);
+        }
+        return reply.status(410).type("text/html").send(
+          invitationAlreadyUsedPage(invitation.studentName),
+        );
       }
       return reply.status(410).type("text/html").send(
         layout("Inbjudan", errorBanner("Inbjudan är inte längre giltig")),
@@ -339,6 +357,12 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
       setSessionCookie(reply, result.userId);
       return reply.redirect(`/journey/${result.journeyId}`);
     } catch (error) {
+      if (error instanceof AppError && error.code === "already_accepted") {
+        const invitation = await getInvitationByToken(token);
+        return reply.status(409).type("text/html").send(
+          invitationAlreadyUsedPage(invitation?.studentName ?? "Eleven"),
+        );
+      }
       const { status, message } = handleError(error);
       return reply.status(status).type("text/html").send(
         layout("Anslut", errorBanner(message)),
