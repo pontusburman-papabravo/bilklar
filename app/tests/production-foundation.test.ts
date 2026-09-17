@@ -93,6 +93,10 @@ describe("production foundation", () => {
       "/invite/[redacted]?x=1",
     );
     assert.equal(redactRequestPath("/journey/123"), "/journey/123");
+    assert.equal(
+      redactRequestPath("/admin/reset-password?token=abc.def"),
+      "/admin/reset-password?token=[redacted]",
+    );
     assert.equal(redactRequestPath(undefined), "");
   });
 
@@ -179,14 +183,18 @@ describe("production foundation / fresh database migrate", () => {
     assert.deepEqual(first.applied, [
       "0001_initial.sql",
       "0002_interest_signups.sql",
+      "0003_admin_auth.sql",
     ]);
     assert.deepEqual(first.stamped, []);
 
     const tables = await client.query(
-      `SELECT to_regclass('public.users') AS users, to_regclass('public.interest_signups') AS interest`,
+      `SELECT to_regclass('public.users') AS users,
+              to_regclass('public.interest_signups') AS interest,
+              to_regclass('public.admin_users') AS admins`,
     );
     assert.ok(tables.rows[0].users);
     assert.ok(tables.rows[0].interest);
+    assert.ok(tables.rows[0].admins);
 
     const second = await applyMigrations(client);
     assert.deepEqual(second.applied, []);

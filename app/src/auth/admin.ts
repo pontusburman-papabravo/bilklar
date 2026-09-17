@@ -1,9 +1,15 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { config } from "../config.js";
+import { getAdminUserById, type AdminUser } from "../services/admin-users.js";
 
-const ADMIN_COOKIE = "korpasset_admin";
-const ADMIN_MAX_AGE_SECONDS = 60 * 60 * 24 * 7;
+export const ADMIN_COOKIE = "korpasset_admin";
+const ADMIN_MAX_AGE_SECONDS = 60 * 60 * 12;
+
+interface AdminSession {
+  adminUserId: string;
+  issuedAt: number;
+}
 
 function sign(payload: string): string {
   return createHmac("sha256", config.sessionSecret)
@@ -11,54 +17,36 @@ function sign(payload: string): string {
     .digest("base64url");
 }
 
-function passwordsEqual(provided: string, expected: string): boolean {
-  const a = Buffer.from(provided);
-  const b = Buffer.from(expected);
-  if (a.length !== b.length) {
-    timingSafeEqual(a, Buffer.alloc(a.length));
-    return false;
-  }
-  return timingSafeEqual(a, b);
-}
-
-export function isAdminConfigured(): boolean {
-  return Boolean(config.adminPassword);
-}
-
-export function verifyAdminPassword(password: string): boolean {
-  if (!config.adminPassword) return false;
-  return passwordsEqual(password, config.adminPassword);
-}
-
-export function createAdminToken(): string {
-  const payload = Buffer.from(
-    JSON.stringify({ admin: true, issuedAt: Date.now() }),
-  ).toString("base64url");
+export function createAdminToken(adminUserId: string, issuedAt = Date.now()): string {
+  const data: AdminSession = { adminUserId, issuedAt };
+  const payload = Buffer.from(JSON.stringify(data)).toString("base64url");
   return `${payload}.${sign(payload)}`;
 }
 
-export function parseAdminToken(token: string | undefined): boolean {
-  if (!token) return false;
+export function parseAdminToken(token: string | undefined): AdminSession | null {
+  if (!token) return null;
   const [payload, signature] = token.split(".");
-  if (!payload || !signature) return false;
+  if (!payload || !signature) return null;
   const expected = sign(payload);
   const sigBuf = Buffer.from(signature);
   const expBuf = Buffer.from(expected);
   if (sigBuf.length !== expBuf.length || !timingSafeEqual(sigBuf, expBuf)) {
-    return false;
+    return null;
   }
   try {
-    const data = JSON.parse(Buffer.from(payload, "base64url").toString("utf8")) as {
-      admin?: boolean;
-    };
-    return data.admin === true;
+    const data = JSON.parse(
+      Buffer.from(payload, "base64url").toString("utf8"),
+    ) as AdminSession;
+    if (!data.adminUserId || typeof data.adminUserId !== "string") return null;
+    if (typeof data.issuedAt !== "number") return null;
+    return data;
   } catch {
-    return false;
+    return null;
   }
 }
 
-export function setAdminCookie(reply: FastifyReply): void {
-  reply.setCookie(ADMIN_COOKIE, createAdminToken(), {
+export function setAdminCookie(reply: FastifyReply, adminUserId: string): void {
+  reply.setCookie(ADMIN_COOKIE, createAdminToken(adminUserId), {
     path: "/admin",
     httpOnly: true,
     sameSite: "lax",
@@ -72,6 +60,13 @@ export function clearAdminCookie(reply: FastifyReply): void {
   reply.clearCookie(ADMIN_COOKIE, { path: "/admin" });
 }
 
-export function isAdminRequest(request: FastifyRequest): boolean {
-  return parseAdminToken(request.cookies[ADMIN_COOKIE]);
+export async function getAdminFromRequest(
+  request: FastifyRequest,
+): Promise<AdminUser | null> {
+  const session = parseAdminToken(request.cookies[ADMIN_COOKIE]);
+  if (!session) return null;
+  const admin = await getAdminUserById(session.adminUserId);
+  if (!admin || admin.disabledAt) return null;
+  if (session.issuedAt <= admin.passwordChangedAt.getTime()) return null;
+  return admin;
 }

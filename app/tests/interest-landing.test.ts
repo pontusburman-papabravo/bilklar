@@ -19,6 +19,8 @@ describe("landing and interest waitlist", () => {
     assert.match(response.body, /Pappa vet vad mamma övade på sist/);
     assert.match(response.body, /Skicka intresseanmälan/);
     assert.match(response.body, /integritetspolicyn/);
+    assert.match(response.body, /Vi söker familjer som övningskör privat/);
+    assert.doesNotMatch(response.body, /fonts\.googleapis/);
     await app.close();
   });
 
@@ -40,7 +42,8 @@ describe("landing and interest waitlist", () => {
     assert.equal(terms.statusCode, 200);
     assert.match(terms.body, /gratis/i);
     assert.equal(contact.statusCode, 200);
-    assert.match(contact.body, /intresseanmälan/);
+    assert.match(contact.body, /info@korpasset\.se/);
+    assert.doesNotMatch(privacy.body, /fonts\.googleapis/);
     await app.close();
   });
 

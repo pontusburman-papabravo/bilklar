@@ -46,9 +46,6 @@ export function siteLayout(
   <meta property="og:title" content="${escapeHtml(title)} · Körpasset">
   <meta property="og:description" content="${escapeHtml(description)}">
   <meta property="og:type" content="website">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/landing.css">
   ${extraCss}
 </head>
@@ -64,4 +61,8 @@ export function primaryButton(label: string, attrs = ""): string {
 
 export function errorBanner(message: string): string {
   return `<div class="banner banner-error" role="alert">${escapeHtml(message)}</div>`;
+}
+
+export function successBanner(message: string): string {
+  return `<div class="banner banner-success" role="status">${escapeHtml(message)}</div>`;
 }

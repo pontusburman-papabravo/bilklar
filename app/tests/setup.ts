@@ -6,6 +6,7 @@ import pg from "pg";
 import { seedTaxonomy } from "../src/db/seed-taxonomy.js";
 import { applyMigrations } from "../src/db/migrate.js";
 import { closePool, getPool } from "../src/db/pool.js";
+import { resetRateLimitsForTests } from "../src/http/rate-limit.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const TEST_DATABASE_URL =
@@ -82,6 +83,8 @@ export async function resetDatabaseData(): Promise<void> {
   const pool = getPool();
   await pool.query(`
     TRUNCATE
+      admin_password_reset_tokens,
+      admin_users,
       interest_signups,
       drive_observations,
       drive_focus_skills,
@@ -97,4 +100,5 @@ export async function resetDatabaseData(): Promise<void> {
     RESTART IDENTITY CASCADE
   `);
   await seedTaxonomy(pool);
+  resetRateLimitsForTests();
 }

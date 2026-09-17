@@ -1,23 +1,43 @@
-import type { FastifyInstance } from "fastify";
+import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { AppError } from "../errors.js";
 import {
   clearAdminCookie,
-  isAdminConfigured,
-  isAdminRequest,
+  getAdminFromRequest,
   setAdminCookie,
-  verifyAdminPassword,
 } from "../auth/admin.js";
+import { config } from "../config.js";
+import { csvCell } from "./csv.js";
+import {
+  ADMIN_RESET_NEUTRAL_MESSAGE,
+  authenticateAdmin,
+  countEnabledAdmins,
+  requestAdminPasswordReset,
+  resetAdminPassword,
+} from "../services/admin-users.js";
+import { EmailSendError, sendAdminResetEmail } from "../services/email.js";
 import {
   INTEREST_STATUSES,
   countNewInterestSignups,
+  deleteInterestSignup,
   getInterestSignup,
   listInterestSignups,
   updateInterestSignup,
   type InterestRole,
   type InterestStatus,
 } from "../services/interest.js";
-import { escapeHtml, errorBanner, primaryButton, siteLayout } from "./layout.js";
+import {
+  escapeHtml,
+  errorBanner,
+  primaryButton,
+  siteLayout,
+  successBanner,
+} from "./layout.js";
 import { siteFooter, siteHeader } from "./landing.js";
+import {
+  ADMIN_LOGIN_RATE_LIMIT,
+  ADMIN_RESET_RATE_LIMIT,
+  allowRequest,
+} from "./rate-limit.js";
 
 const ROLE_LABELS: Record<InterestRole, string> = {
   parent: "Förälder",
@@ -33,10 +53,15 @@ const STATUS_LABELS: Record<InterestStatus, string> = {
   declined: "Avböjd",
 };
 
-function adminPage(title: string, body: string): string {
-  return siteLayout(title, `${siteHeader({ variant: "admin" })}${body}${siteFooter()}`, {
-    extraCss: [],
-  });
+function adminPage(
+  title: string,
+  body: string,
+  options: { signedIn?: boolean } = {},
+): string {
+  return siteLayout(
+    title,
+    `${siteHeader({ variant: "admin", signedIn: options.signedIn })}${body}${siteFooter()}`,
+  );
 }
 
 function notConfigured() {
@@ -49,20 +74,72 @@ function notConfigured() {
   };
 }
 
-function loginPage(errorMessage?: string): string {
+function loginPage(options: { errorMessage?: string; successMessage?: string } = {}): string {
   return adminPage(
     "Admin",
     `<main class="site-section site-section--cream">
        <div class="site-inner site-inner--narrow">
          <h1>Admin</h1>
          <p>Intresseanmälningar för Körpassets beta.</p>
-         ${errorMessage ? errorBanner(errorMessage) : ""}
+         ${options.successMessage ? successBanner(options.successMessage) : ""}
+         ${options.errorMessage ? errorBanner(options.errorMessage) : ""}
          <form method="post" action="/admin/login" class="admin-form">
+           <div>
+             <label for="email">E-post</label>
+             <input id="email" name="email" type="email" required autocomplete="username">
+           </div>
            <div>
              <label for="password">Lösenord</label>
              <input id="password" name="password" type="password" required autocomplete="current-password">
            </div>
            ${primaryButton("Logga in")}
+         </form>
+         <p><a href="/admin/forgot-password">Glömt lösenord?</a></p>
+       </div>
+     </main>`,
+  );
+}
+
+function forgotPage(message?: { kind: "ok" | "error"; text: string }): string {
+  return adminPage(
+    "Glömt lösenord",
+    `<main class="site-section site-section--cream">
+       <div class="site-inner site-inner--narrow">
+         <h1>Glömt lösenord</h1>
+         <p>Ange e-postadressen för admin-kontot.</p>
+         ${message?.kind === "ok" ? successBanner(message.text) : ""}
+         ${message?.kind === "error" ? errorBanner(message.text) : ""}
+         <form method="post" action="/admin/forgot-password" class="admin-form">
+           <div>
+             <label for="email">E-post</label>
+             <input id="email" name="email" type="email" required autocomplete="username">
+           </div>
+           ${primaryButton("Skicka länk")}
+         </form>
+         <p><a href="/admin/login">Tillbaka till inloggning</a></p>
+       </div>
+     </main>`,
+  );
+}
+
+function resetPage(options: { token?: string; errorMessage?: string }): string {
+  return adminPage(
+    "Nytt lösenord",
+    `<main class="site-section site-section--cream">
+       <div class="site-inner site-inner--narrow">
+         <h1>Välj nytt lösenord</h1>
+         ${options.errorMessage ? errorBanner(options.errorMessage) : ""}
+         <form method="post" action="/admin/reset-password" class="admin-form">
+           <input type="hidden" name="token" value="${escapeHtml(options.token ?? "")}">
+           <div>
+             <label for="password">Nytt lösenord</label>
+             <input id="password" name="password" type="password" required minlength="12" autocomplete="new-password">
+           </div>
+           <div>
+             <label for="confirm">Upprepa lösenord</label>
+             <input id="confirm" name="confirm" type="password" required minlength="12" autocomplete="new-password">
+           </div>
+           ${primaryButton("Spara lösenord")}
          </form>
        </div>
      </main>`,
@@ -77,49 +154,178 @@ function formatWhen(iso: string): string {
   }).format(new Date(iso));
 }
 
-function csvEscape(value: string): string {
-  if (/[",\n]/.test(value)) return `"${value.replaceAll('"', '""')}"`;
-  return value;
+function clientKey(request: FastifyRequest, prefix: string): string {
+  return `${prefix}:${request.ip || "unknown"}`;
+}
+
+async function requireAdmin(
+  request: FastifyRequest,
+  reply: FastifyReply,
+): Promise<boolean> {
+  if ((await countEnabledAdmins()) === 0) {
+    const missing = notConfigured();
+    await reply.status(missing.status).type("text/html").send(missing.html);
+    return false;
+  }
+  const admin = await getAdminFromRequest(request);
+  if (!admin) {
+    await reply.redirect("/admin/login");
+    return false;
+  }
+  return true;
 }
 
 export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
   app.get("/admin", async (request, reply) => {
-    if (!isAdminConfigured()) {
+    if ((await countEnabledAdmins()) === 0) {
       const missing = notConfigured();
       return reply.status(missing.status).type("text/html").send(missing.html);
     }
-    if (!isAdminRequest(request)) {
-      return reply.type("text/html").send(loginPage());
+    if (!(await getAdminFromRequest(request))) {
+      return reply.redirect("/admin/login");
     }
     return reply.redirect("/admin/signups");
+  });
+
+  app.get("/admin/login", async (request, reply) => {
+    if ((await countEnabledAdmins()) === 0) {
+      const missing = notConfigured();
+      return reply.status(missing.status).type("text/html").send(missing.html);
+    }
+    if (await getAdminFromRequest(request)) {
+      return reply.redirect("/admin/signups");
+    }
+    const query = request.query as { reset?: string };
+    return reply.type("text/html").send(
+      loginPage({
+        successMessage:
+          query.reset === "1" ? "Lösenordet är uppdaterat. Logga in med det nya lösenordet." : undefined,
+      }),
+    );
   });
 
   app.post("/admin/login", async (request, reply) => {
-    if (!isAdminConfigured()) {
+    if ((await countEnabledAdmins()) === 0) {
       const missing = notConfigured();
       return reply.status(missing.status).type("text/html").send(missing.html);
     }
-    const body = request.body as { password?: string };
-    if (!verifyAdminPassword(body.password ?? "")) {
-      return reply.status(401).type("text/html").send(loginPage("Fel lösenord"));
+    if (
+      !allowRequest(
+        clientKey(request, "admin-login"),
+        ADMIN_LOGIN_RATE_LIMIT.limit,
+        ADMIN_LOGIN_RATE_LIMIT.windowMs,
+      )
+    ) {
+      return reply.status(429).type("text/html").send(
+        loginPage({ errorMessage: "För många försök. Vänta en stund och prova igen." }),
+      );
     }
-    setAdminCookie(reply);
+    const body = request.body as { email?: string; password?: string };
+    const admin = await authenticateAdmin(body.email ?? "", body.password ?? "");
+    if (!admin) {
+      return reply.status(401).type("text/html").send(
+        loginPage({ errorMessage: "Fel e-post eller lösenord" }),
+      );
+    }
+    setAdminCookie(reply, admin.id);
     return reply.redirect("/admin/signups");
   });
 
-  app.post("/admin/logout", async (request, reply) => {
+  app.post("/admin/logout", async (_request, reply) => {
     clearAdminCookie(reply);
-    return reply.redirect("/admin");
+    return reply.redirect("/admin/login");
   });
 
-  app.get("/admin/signups", async (request, reply) => {
-    if (!isAdminConfigured()) {
+  app.get("/admin/forgot-password", async (_request, reply) => {
+    if ((await countEnabledAdmins()) === 0) {
       const missing = notConfigured();
       return reply.status(missing.status).type("text/html").send(missing.html);
     }
-    if (!isAdminRequest(request)) {
-      return reply.redirect("/admin");
+    return reply.type("text/html").send(forgotPage());
+  });
+
+  app.post("/admin/forgot-password", async (request, reply) => {
+    if ((await countEnabledAdmins()) === 0) {
+      const missing = notConfigured();
+      return reply.status(missing.status).type("text/html").send(missing.html);
     }
+    if (
+      !allowRequest(
+        clientKey(request, "admin-reset"),
+        ADMIN_RESET_RATE_LIMIT.limit,
+        ADMIN_RESET_RATE_LIMIT.windowMs,
+      )
+    ) {
+      return reply.status(429).type("text/html").send(
+        forgotPage({
+          kind: "error",
+          text: "För många försök. Vänta en stund och prova igen.",
+        }),
+      );
+    }
+    const body = request.body as { email?: string };
+    const result = await requestAdminPasswordReset(body.email ?? "");
+    if (result.created && result.rawToken && result.admin) {
+      const resetUrl = `${config.appBaseUrl.replace(/\/$/, "")}/admin/reset-password?token=${encodeURIComponent(result.rawToken)}`;
+      try {
+        await sendAdminResetEmail(result.admin.email, resetUrl);
+      } catch (error) {
+        request.log.error(
+          {
+            err: error instanceof EmailSendError ? error.message : "email_send_failed",
+            adminUserId: result.admin.id,
+          },
+          "admin password reset email failed",
+        );
+      }
+    }
+    return reply.type("text/html").send(
+      forgotPage({ kind: "ok", text: ADMIN_RESET_NEUTRAL_MESSAGE }),
+    );
+  });
+
+  app.get("/admin/reset-password", async (request, reply) => {
+    if ((await countEnabledAdmins()) === 0) {
+      const missing = notConfigured();
+      return reply.status(missing.status).type("text/html").send(missing.html);
+    }
+    const query = request.query as { token?: string };
+    if (!query.token) {
+      return reply.status(400).type("text/html").send(
+        resetPage({ errorMessage: "Ogiltig eller utgången länk" }),
+      );
+    }
+    return reply.type("text/html").send(resetPage({ token: query.token }));
+  });
+
+  app.post("/admin/reset-password", async (request, reply) => {
+    if ((await countEnabledAdmins()) === 0) {
+      const missing = notConfigured();
+      return reply.status(missing.status).type("text/html").send(missing.html);
+    }
+    const body = request.body as { token?: string; password?: string; confirm?: string };
+    if ((body.password ?? "") !== (body.confirm ?? "")) {
+      return reply.status(400).type("text/html").send(
+        resetPage({
+          token: body.token,
+          errorMessage: "Lösenorden matchar inte",
+        }),
+      );
+    }
+    try {
+      await resetAdminPassword(body.token ?? "", body.password ?? "");
+      return reply.redirect("/admin/login?reset=1");
+    } catch (error) {
+      const message =
+        error instanceof AppError ? error.message : "Ogiltig eller utgången länk";
+      return reply.status(400).type("text/html").send(
+        resetPage({ token: body.token, errorMessage: message }),
+      );
+    }
+  });
+
+  app.get("/admin/signups", async (request, reply) => {
+    if (!(await requireAdmin(request, reply))) return;
 
     const query = request.query as { status?: string };
     const status = INTEREST_STATUSES.includes(query.status as InterestStatus)
@@ -162,7 +368,6 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
            <div class="admin-toolbar">
              <div>${filters}</div>
              <a href="/admin/signups.csv">Ladda ner CSV</a>
-             <form method="post" action="/admin/logout"><button type="submit" class="btn-link">Logga ut</button></form>
            </div>
            <table class="admin-table">
              <thead>
@@ -173,25 +378,24 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
              </tbody>
            </table>
          </main>`,
+        { signedIn: true },
       ),
     );
   });
 
   app.get("/admin/signups.csv", async (request, reply) => {
-    if (!isAdminConfigured() || !isAdminRequest(request)) {
-      return reply.redirect("/admin");
-    }
+    if (!(await requireAdmin(request, reply))) return;
     const signups = await listInterestSignups();
     const header = "created_at,name,email,role,city,status,message";
     const lines = signups.map((signup) =>
       [
         signup.createdAt,
-        csvEscape(signup.name),
-        csvEscape(signup.email),
+        csvCell(signup.name),
+        csvCell(signup.email),
         signup.role,
-        csvEscape(signup.city ?? ""),
+        csvCell(signup.city ?? ""),
         signup.status,
-        csvEscape(signup.message ?? ""),
+        csvCell(signup.message ?? ""),
       ].join(","),
     );
     return reply
@@ -201,14 +405,14 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
   });
 
   app.get("/admin/signups/:id", async (request, reply) => {
-    if (!isAdminConfigured() || !isAdminRequest(request)) {
-      return reply.redirect("/admin");
-    }
+    if (!(await requireAdmin(request, reply))) return;
     const { id } = request.params as { id: string };
     const signup = await getInterestSignup(id);
     if (!signup) {
       return reply.status(404).type("text/html").send(
-        adminPage("Saknas", `<main class="admin-shell">${errorBanner("Anmälan hittades inte")}</main>`),
+        adminPage("Saknas", `<main class="admin-shell">${errorBanner("Anmälan hittades inte")}</main>`, {
+          signedIn: true,
+        }),
       );
     }
 
@@ -237,15 +441,22 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
              </div>
              ${primaryButton("Spara")}
            </form>
+           <form method="post" action="/admin/signups/${escapeHtml(signup.id)}/delete" class="admin-form admin-form--danger" onsubmit="return confirm('Radera anmälan? Det går inte att ångra.');">
+             <p>Radering tar bort waitlist-raden. Används vid begäran eller manuell retention.</p>
+             <label class="consent">
+               <input type="checkbox" name="confirm" value="yes" required>
+               <span>Jag vill radera den här anmälan.</span>
+             </label>
+             ${primaryButton("Radera anmälan")}
+           </form>
          </main>`,
+        { signedIn: true },
       ),
     );
   });
 
   app.post("/admin/signups/:id", async (request, reply) => {
-    if (!isAdminConfigured() || !isAdminRequest(request)) {
-      return reply.redirect("/admin");
-    }
+    if (!(await requireAdmin(request, reply))) return;
     const { id } = request.params as { id: string };
     const body = request.body as { status?: string; admin_note?: string };
     try {
@@ -257,7 +468,35 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
     } catch (error) {
       const message = error instanceof AppError ? error.message : "Kunde inte spara";
       return reply.status(400).type("text/html").send(
-        adminPage("Fel", `<main class="admin-shell">${errorBanner(message)}</main>`),
+        adminPage("Fel", `<main class="admin-shell">${errorBanner(message)}</main>`, {
+          signedIn: true,
+        }),
+      );
+    }
+  });
+
+  app.post("/admin/signups/:id/delete", async (request, reply) => {
+    if (!(await requireAdmin(request, reply))) return;
+    const { id } = request.params as { id: string };
+    const body = request.body as { confirm?: string };
+    if (body.confirm !== "yes") {
+      return reply.status(400).type("text/html").send(
+        adminPage(
+          "Bekräfta radering",
+          `<main class="admin-shell">${errorBanner("Bekräfta raderingen.")}<p><a href="/admin/signups/${escapeHtml(id)}">Tillbaka</a></p></main>`,
+          { signedIn: true },
+        ),
+      );
+    }
+    try {
+      await deleteInterestSignup(id);
+      return reply.redirect("/admin/signups");
+    } catch (error) {
+      const message = error instanceof AppError ? error.message : "Kunde inte radera";
+      return reply.status(400).type("text/html").send(
+        adminPage("Fel", `<main class="admin-shell">${errorBanner(message)}</main>`, {
+          signedIn: true,
+        }),
       );
     }
   });

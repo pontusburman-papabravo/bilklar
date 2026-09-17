@@ -119,12 +119,12 @@ export async function saveInterestSignup(
     `INSERT INTO interest_signups (name, email, email_normalized, role, city, message)
      VALUES ($1, $2, $3, $4, $5, $6)
      ON CONFLICT (email_normalized) DO UPDATE SET
-       name = EXCLUDED.name,
-       email = EXCLUDED.email,
-       role = EXCLUDED.role,
-       city = EXCLUDED.city,
-       message = EXCLUDED.message,
-       updated_at = now()
+       name = CASE WHEN interest_signups.status = 'new' THEN EXCLUDED.name ELSE interest_signups.name END,
+       email = CASE WHEN interest_signups.status = 'new' THEN EXCLUDED.email ELSE interest_signups.email END,
+       role = CASE WHEN interest_signups.status = 'new' THEN EXCLUDED.role ELSE interest_signups.role END,
+       city = CASE WHEN interest_signups.status = 'new' THEN EXCLUDED.city ELSE interest_signups.city END,
+       message = CASE WHEN interest_signups.status = 'new' THEN EXCLUDED.message ELSE interest_signups.message END,
+       updated_at = CASE WHEN interest_signups.status = 'new' THEN now() ELSE interest_signups.updated_at END
      RETURNING *, (xmax = 0) AS inserted`,
     [data.name, data.email, data.emailNormalized, data.role, data.city, data.message],
   );
@@ -195,4 +195,14 @@ export async function updateInterestSignup(
     [id, status, adminNote],
   );
   return mapRow(result.rows[0] as Record<string, unknown>);
+}
+
+export async function deleteInterestSignup(id: string): Promise<void> {
+  const result = await getPool().query(
+    `DELETE FROM interest_signups WHERE id = $1`,
+    [id],
+  );
+  if (result.rowCount === 0) {
+    throw new AppError("Anmälan hittades inte", 404, "not_found");
+  }
 }

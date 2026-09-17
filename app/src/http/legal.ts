@@ -16,13 +16,13 @@ export function privacyPage(): string {
      <p>Vi samlar inte in personnummer, GPS-spår eller hälsodata.</p>
 
      <h2>Lagring</h2>
-     <p>Uppgifterna lagras på Körpassets server och databas inom EU/EES. Förbindelsen är HTTPS. Intresseanmälningar sparas tills du återkallar samtycket, eller tills betan är avslutad och vi inte längre behöver kön — som längst 18 månader efter att du anmälde dig, om du inte blivit användare.</p>
+     <p>Uppgifterna lagras på Körpassets server och databas inom EU/EES. Förbindelsen är HTTPS. Intresseanmälningar raderas senast 18 månader efter anmälan, tidigare på begäran, eller när betan är avslutad och kön inte längre behövs. Under betan sker radering manuellt av admin — det finns inget automatiskt retention-jobb.</p>
 
      <h2>Dina rättigheter</h2>
-     <p>Du kan begära registerutdrag, rättelse, radering eller återkalla samtycket via <a href="/kontakt">kontakt</a>. Du kan klaga till Integritetsskyddsmyndigheten.</p>
+     <p>Du kan begära registerutdrag, rättelse, radering eller återkalla samtycket via <a href="mailto:info@korpasset.se">info@korpasset.se</a> eller <a href="/kontakt">kontakt</a>. Du kan klaga till Integritetsskyddsmyndigheten.</p>
 
      <h2>Cookies</h2>
-     <p>På landningssidan sätter vi inga analys- eller reklamcookies. Om du loggar in i produkten används en nödvändig sessionscookie för att hålla dig inloggad.</p>`,
+     <p>På landningssidan sätter vi inga analys- eller reklamcookies och gör inga tredjepartsanrop för typsnitt. Om du loggar in i produkten används en nödvändig sessionscookie. Waitlist-admin använder en separat HttpOnly-cookie på <code>/admin</code>.</p>`,
   );
 }
 
@@ -44,7 +44,7 @@ export function termsPage(): string {
      <p>Du ansvarar för att de uppgifter du lämnar är riktiga och för hur ni övningskör. Körpasset tillhandahålls i befintligt skick. Svensk lag gäller.</p>
 
      <h2>Kontakt</h2>
-     <p>Frågor: <a href="/kontakt">kontakta oss</a>.</p>`,
+     <p>Allmänt: <a href="mailto:info@korpasset.se">info@korpasset.se</a>. Support: <a href="mailto:support@korpasset.se">support@korpasset.se</a>.</p>`,
   );
 }
 
@@ -52,8 +52,9 @@ export function contactPage(): string {
   return renderLegalPage(
     "Kontakt",
     `<h1>Kontakt</h1>
-     <p>Körpasset är i sluten beta. Den snabbaste vägen är <a href="/#intresse">intresseanmälan</a> — då hamnar du i kön och vi kan återkomma.</p>
-     <p>Personuppgiftsfrågor och övrig kontakt: använd samma formulär och skriv vad det gäller i meddelandefältet, så sorterar vi det i admin.</p>
+     <p>Körpasset är i sluten beta. Den snabbaste vägen in är <a href="/#intresse">intresseanmälan</a> — då hamnar du i kön och vi kan återkomma.</p>
+     <p>Allmän kontakt: <a href="mailto:info@korpasset.se">info@korpasset.se</a>.</p>
+     <p>Support och personuppgiftsfrågor: <a href="mailto:support@korpasset.se">support@korpasset.se</a>.</p>
      <p>Personuppgiftsansvarig: Papa Bravo AB.</p>
      <p>Körpasset är en fristående tjänst och är inte utvecklad av, ansluten till eller godkänd av Transportstyrelsen eller Trafikverket.</p>`,
   );

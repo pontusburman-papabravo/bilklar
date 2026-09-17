@@ -14,7 +14,7 @@ Ett origin:
 | `https://korpasset.se/onboarding` | Skapa elevresa |
 | `https://korpasset.se/invite/<token>` | Canonical invitation-länk |
 | `https://korpasset.se/integritet` `/villkor` `/kontakt` | Legal |
-| `https://korpasset.se/admin` | Waitlist-admin (kräver `ADMIN_PASSWORD`) |
+| `https://korpasset.se/admin` | Waitlist-admin (e-post + lösenord, skapas med `admin:create`) |
 | `https://korpasset.se/health` | Health, ingen auth |
 
 Ingen `app.`-subdomän i första betan. Samma host förenklar cookies, QR, SMS och en Capacitor-shell som laddar produktionens origin.
@@ -30,7 +30,35 @@ Invitationer byggs från `APP_BASE_URL`. Den **måste** vara `https://korpasset.
 | `SESSION_SECRET` | Minst 32 tecken. Inte utvecklingsdefaulten. |
 | `APP_BASE_URL` | `https://korpasset.se` |
 | `PORT` | Valfritt, default `3000` |
-| `ADMIN_PASSWORD` | Valfritt. Sätts för att öppna `/admin` och hantera intresseanmälningar. Utan variabeln svarar admin 404. |
+| `RESEND_API_KEY` | Valfritt men krävs för att faktiskt skicka admin-resetmejl. Utan nyckel loggas felet och användaren får samma neutrala text. |
+| `EMAIL_FROM` | Valfritt. Default `Körpasset <support@korpasset.se>` |
+
+Första waitlist-admin skapas **inte** via env och inte via publik signup:
+
+```bash
+# Lokal utveckling
+cd app && npm run admin:create -- --email you@korpasset.se
+
+# Produktion (efter image-build, interaktivt)
+node dist/cli/create-admin.js --email you@korpasset.se
+```
+
+Skriptet frågar efter lösenord (minst 12 tecken), hashar med Argon2id och skriver till `admin_users`. Inget plaintext-lösen i env. Utan minst en aktiv admin-rad svarar `/admin` 404.
+
+### Admin-session och reset
+
+- Cookie `korpasset_admin`: HttpOnly, SameSite=Lax, Path=`/admin`, Secure när `APP_BASE_URL` är https, 12 timmar.
+- Innehåll: HMAC-signerad `{ adminUserId, issuedAt }` mot `SESSION_SECRET`. Inte `{ admin: true }`.
+- Lösenord hashas med Argon2id (`@node-rs/argon2`, m=19456, t=2, p=1).
+- Reset-token: 32 slumpbytes, bara hashen i DB, 30 minuter, one-time. URL byggs från `APP_BASE_URL`, inte `Host`.
+- Ordning: token skapas i DB, sedan skickas mejl. Misslyckad send loggas utan token/lösenord. Publikt svar är alltid neutralt.
+- Password reset sätter `password_changed_at` så äldre admin-cookies slutar gälla.
+
+### Rate limit för intresseanmälan
+
+`POST /interest` tillåter 8 försök / 10 minuter per IP i app-minnet. I produktion är `trustProxy` på så Fastify använder `X-Forwarded-For` från Caddy. Det är inte en global WAF; det stoppar enkel botspam. Admin-login 10/15 min och forgot-password 5/15 min per IP.
+
+`ADMIN_PASSWORD` används inte längre.
 
 Appen vägrar starta i `NODE_ENV=production` om secrets saknas, om `SESSION_SECRET` är dev-default, eller om `APP_BASE_URL` inte är https (`ALLOW_HTTP=true` endast för lokal prod-lik körning).
 

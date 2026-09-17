@@ -6,6 +6,7 @@ import {
   renderInterestThanksPage,
 } from "./landing.js";
 import { contactPage, privacyPage, termsPage } from "./legal.js";
+import { INTEREST_RATE_LIMIT, allowRequest } from "./rate-limit.js";
 
 function formValues(body: Record<string, unknown>) {
   return {
@@ -35,6 +36,20 @@ export async function registerMarketingRoutes(app: FastifyInstance): Promise<voi
   });
 
   app.post("/interest", async (request, reply) => {
+    if (
+      !allowRequest(
+        `interest:${request.ip || "unknown"}`,
+        INTEREST_RATE_LIMIT.limit,
+        INTEREST_RATE_LIMIT.windowMs,
+      )
+    ) {
+      return reply.status(429).type("text/html").send(
+        renderInterestFormError(
+          "För många försök. Vänta en stund och prova igen.",
+          formValues((request.body ?? {}) as Record<string, unknown>),
+        ),
+      );
+    }
     const body = (request.body ?? {}) as Record<string, unknown>;
     const values = formValues(body);
 

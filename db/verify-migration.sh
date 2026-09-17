@@ -42,7 +42,9 @@ DECLARE
     'users', 'auth_identities', 'driving_journeys', 'journey_collaborators',
     'journey_invitations', 'skills', 'skill_definitions', 'drives',
     'training_focus_items', 'drive_focus_skills', 'drive_observations',
-    'interest_signups'
+    'interest_signups',
+    'admin_users',
+    'admin_password_reset_tokens'
   ];
   t text;
 BEGIN

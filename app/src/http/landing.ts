@@ -29,7 +29,6 @@ export function renderLandingPage(options: {
        ${problem()}
        ${howItWorks()}
        ${multiSupervisor()}
-       ${principles()}
        ${faq()}
        ${interestSection(formError, values)}
      </main>
@@ -46,8 +45,7 @@ export function renderInterestThanksPage(): string {
          <div class="site-inner site-inner--narrow">
            <p class="eyebrow">Betan</p>
            <h1>Tack — vi hör av oss.</h1>
-           <p class="lede">Din intresseanmälan är inne. Körpasset är gratis under betaperioden. Vi tar in familjer löpande och mejlar när det är dags.</p>
-           <p>Ingen betalvägg. Inget löfte om livstidsfri användning. Du hjälper oss se att kärnloopen håller i riktig övningskörning.</p>
+           <p class="lede">Din intresseanmälan är inne. Vi tar in familjer löpande och mejlar när det är dags — inte automatisk access.</p>
            <p><a class="btn-link" href="/">Tillbaka till startsidan</a></p>
          </div>
        </section>
@@ -74,14 +72,19 @@ export function renderLegalPage(title: string, body: string): string {
   );
 }
 
-export function siteHeader(options: { ctaHref?: string; variant?: "site" | "admin" } = {}): string {
+export function siteHeader(
+  options: { ctaHref?: string; variant?: "site" | "admin"; signedIn?: boolean } = {},
+): string {
   if (options.variant === "admin") {
+    const links = options.signedIn
+      ? `<nav class="site-nav__links site-nav__links--admin" aria-label="Admin">
+      <a href="/admin/signups">Anmälningar</a>
+      <form method="post" action="/admin/logout"><button type="submit" class="btn-link">Logga ut</button></form>
+    </nav>`
+      : "";
     return `<header class="site-nav">
     <a class="site-logo" href="/admin">Körpasset admin</a>
-    <nav class="site-nav__links" aria-label="Admin">
-      <a href="/admin/signups">Anmälningar</a>
-      <a href="/">Till sajten</a>
-    </nav>
+    ${links}
   </header>`;
   }
 
@@ -107,6 +110,7 @@ export function siteFooter(): string {
         <a href="/integritet">Integritet</a>
         <a href="/villkor">Villkor</a>
         <a href="/kontakt">Kontakt</a>
+        <a href="mailto:info@korpasset.se">info@korpasset.se</a>
       </div>
       <p class="muted">Körpasset är en fristående tjänst från Papa Bravo AB. Inte utvecklad av, ansluten till eller godkänd av Transportstyrelsen eller Trafikverket.</p>
     </div>
@@ -120,12 +124,12 @@ function hero(): string {
         <p class="eyebrow">Privat övningskörning · B-körkort</p>
         <h1>Övningskör med en plan.</h1>
         <p class="lede">Välj vad ni ska träna på. Kör. Följ upp på några sekunder.</p>
-        <p>Körpasset håller ihop elevens träning mellan en eller flera handledare — så nästa körpass kan fortsätta där det förra slutade.</p>
+        <p>Flera handledare, samma plan. Nästa körpass fortsätter där ni slutade.</p>
         <div class="hero__ctas">
           <a class="btn btn-primary" href="#intresse">Bli betatestare</a>
-          <a class="btn-link" href="#sa-funkar-det">Se hur det fungerar</a>
+          <a class="btn-link" href="#sa-funkar-det">Så funkar det</a>
         </div>
-        <p class="hero__trust">Gratis under betan · Inga betaluppgifter · Webb först</p>
+        <p class="hero__trust">Gratis under betan · Vi hör av oss när det är er tur</p>
       </div>
       ${heroCard()}
     </div>
@@ -158,19 +162,19 @@ function problem(): string {
     <div class="site-inner">
       <p class="eyebrow">Varför Körpasset</p>
       <h2>När flera hjälper till blir övningskörningen lätt spretig.</h2>
-      <p class="lede">Pappa vet inte vad mamma övade på sist. Eleven hör olika råd. Ingen har en gemensam bild av vad som faktiskt tränats.</p>
+      <p class="lede">Pappa vet inte vad mamma övade på sist. Eleven hör olika råd.</p>
       <div class="card-grid">
         <article class="value-card">
           <h3>Vad ska vi träna på idag?</h3>
-          <p>Välj 2–3 moment före körpasset. Inte hela kursplanen. Inte “kör runt lite”.</p>
+          <p>Välj 2–3 moment. Inte hela kursplanen.</p>
         </article>
         <article class="value-card">
           <h3>Hur gick det?</h3>
-          <p>Handledaren bedömer bara dagens fokus. Tre nivåer. Ungefär 15–20 sekunder.</p>
+          <p>Tre nivåer. Ungefär 15–20 sekunder efter körningen.</p>
         </article>
         <article class="value-card">
-          <h3>Vad bör vi träna på nästa gång?</h3>
-          <p>Recap och nästa fokus följer eleven — oavsett vem som sitter bredvid.</p>
+          <h3>Vad blir nästa gång?</h3>
+          <p>Planen följer eleven — oavsett vem som sitter bredvid.</p>
         </article>
       </div>
     </div>
@@ -187,21 +191,21 @@ function howItWorks(): string {
           <span class="steps__num">1</span>
           <div>
             <h3>Eleven skapar resan och bjuder in</h3>
-            <p>QR eller länk till handledaren. Ingen administration för den som ska sitta bredvid.</p>
+            <p>QR eller länk till handledaren.</p>
           </div>
         </li>
         <li>
           <span class="steps__num">2</span>
           <div>
             <h3>Ni väljer dagens fokus och kör</h3>
-            <p>2–3 moment. Finns flera handledare väljer eleven vem som kör med dem idag.</p>
+            <p>2–3 moment. Inte “kör runt lite”.</p>
           </div>
         </li>
         <li>
           <span class="steps__num">3</span>
           <div>
             <h3>Handledaren följer upp på några sekunder</h3>
-            <p>Behöver hjälp / Med påminnelse / Utan hjälp. Sen recap och ett förslag på nästa gång.</p>
+            <p>Behöver hjälp / Med påminnelse / Utan hjälp.</p>
           </div>
         </li>
       </ol>
@@ -215,30 +219,6 @@ function multiSupervisor(): string {
       <p class="eyebrow">Flera handledare</p>
       <h2>Pappa vet vad mamma övade på sist.</h2>
       <p class="lede">När flera hjälper till med övningskörningen blir det lätt spretigt. Körpasset håller ihop träningen kring eleven, så nästa körpass kan fortsätta där det förra slutade – oavsett vem som sitter bredvid.</p>
-      <p>Observationer och rekommendationer tillhör elevens körkortsresa, inte en enskild handledare. Ingen ska behöva mejla över en lista till nästa pass.</p>
-    </div>
-  </section>`;
-}
-
-function principles(): string {
-  return `<section class="site-section site-section--white">
-    <div class="site-inner">
-      <p class="eyebrow">Vad Körpasset inte är</p>
-      <h2>Utveckling utan falska procentsiffror.</h2>
-      <div class="card-grid">
-        <article class="value-card">
-          <h3>Inte en teoriapp</h3>
-          <p>Körpasset äger den praktiska träningsloopen. Inte kunskapsfrågor, inte provsimulator.</p>
-        </article>
-        <article class="value-card">
-          <h3>Ingen “87 % körklar”</h3>
-          <p>Vi visar evidens: inte tränat ännu, behöver hjälp, med påminnelse, utan hjälp. Inte certifiering.</p>
-        </article>
-        <article class="value-card">
-          <h3>Byggd mot officiell vägledning</h3>
-          <p>Taxonomin utgår från svenska regler och vägledning för privat övningskörning. Körpasset är ändå en fristående tjänst.</p>
-        </article>
-      </div>
     </div>
   </section>`;
 }
@@ -250,24 +230,16 @@ function faq(): string {
       <h2>Innan ni anmäler er</h2>
       <div class="faq">
         <details open>
-          <summary>Kostar Körpasset något under betan?</summary>
-          <p>Nej. Körpasset är gratis under betaperioden. Du får tidig tillgång och hjälper oss förbättra tjänsten. Vi lovar inte livstidsfri användning och tar inte emot betaluppgifter nu.</p>
-        </details>
-        <details>
-          <summary>Måste vi gå på trafikskola?</summary>
-          <p>Nej. v1 är privat övningskörning. Ingen trafikskoleportal och inga externa myndighets-API:er.</p>
+          <summary>Kostar det något?</summary>
+          <p>Nej, Körpasset är gratis under betan. En anmälan ger inte automatisk access och är inget löfte om livstidsfri användning.</p>
         </details>
         <details>
           <summary>Kan flera handledare vara med?</summary>
-          <p>Ja. Det är ett centralt värde. Samma elevresa, flera handledare, gemensam historik.</p>
-        </details>
-        <details>
-          <summary>Finns det en app?</summary>
-          <p>Just nu är Körpasset en webbapp på korpasset.se. iPhone och Android via TestFlight och Play kommer inför öppen beta. Du kan anmäla er redan nu.</p>
+          <p>Ja. Samma elevresa, flera handledare, gemensam historik.</p>
         </details>
         <details>
           <summary>Är Körpasset från Transportstyrelsen?</summary>
-          <p>Nej. Körpasset är en fristående tjänst och är inte utvecklad av, ansluten till eller godkänd av Transportstyrelsen eller Trafikverket. Den är däremot utvecklad med utgångspunkt i deras regler och vägledning.</p>
+          <p>Nej. Körpasset är en fristående tjänst och är inte utvecklad av, ansluten till eller godkänd av Transportstyrelsen eller Trafikverket.</p>
         </details>
       </div>
     </div>
@@ -295,7 +267,8 @@ function interestSection(
     <div class="site-inner site-inner--narrow">
       <p class="eyebrow">Beta</p>
       <h2>Bli betatestare</h2>
-      <p class="lede">Vi tar in familjer som övningskör privat mot B-körkort. Anmäl intresse så hör vi av oss när det är er tur.</p>
+      <p class="lede">Vi söker familjer som övningskör privat och vill hjälpa oss testa Körpasset.</p>
+      <p>Anmäl intresse. Vi mejlar när det är er tur — en anmälan ger inte automatisk access.</p>
       ${formError}
       <form method="post" action="/interest" class="interest-form" novalidate>
         <div class="hp" aria-hidden="true">
