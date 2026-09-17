@@ -37,6 +37,12 @@ export const config = {
   get migrationsDir() {
     return process.env.MIGRATIONS_DIR ?? "";
   },
+  get resendApiKey() {
+    return process.env.RESEND_API_KEY ?? "";
+  },
+  get emailFrom() {
+    return process.env.EMAIL_FROM ?? "Körpasset <support@korpasset.se>";
+  },
 };
 
 export function assertProductionConfig(): void {

@@ -74,6 +74,13 @@ npm run dev
 
 Öppna `http://localhost:3000` i två olika webbläsare/sessioner för att testa elev- och handledarflödet.
 
+Första waitlist-admin (ingen publik signup):
+
+```bash
+cd app
+npm run admin:create -- --email you@korpasset.se
+```
+
 ## Produktion
 
 Se [Production](docs/operations/production.md). Kort:
@@ -81,10 +88,12 @@ Se [Production](docs/operations/production.md). Kort:
 ```bash
 docker build -t korpasset-app .
 # Kräver DATABASE_URL, SESSION_SECRET, APP_BASE_URL=https://korpasset.se
+# Första admin: node dist/cli/create-admin.js --email you@korpasset.se
+# Mejlreset: RESEND_API_KEY (valfritt tills reset ska fungera)
 ```
 
 Health: `GET /health`.
 
 ## Status
 
-Canonical produkt- och databasgrund. Första vertical slice: journey → invitation → körpass → observation → rekommendation. Nästa fas: **Beta Readiness för iOS + Android + korpasset.se**.
+Canonical produkt- och databasgrund. Första vertical slice: journey → invitation → körpass → observation → rekommendation. Publik landning med intresseanmälan på `https://korpasset.se`. Nästa fas: **Beta Readiness** (session-fallback, auth, legal i produktion, observability, iOS/Android).

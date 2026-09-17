@@ -8,6 +8,8 @@ import { fileURLToPath } from "node:url";
 import { config, isProduction } from "../config.js";
 import { getPool } from "../db/pool.js";
 import { redactRequestPath } from "./log.js";
+import { registerAdminRoutes } from "./admin.js";
+import { registerMarketingRoutes } from "./marketing.js";
 import { registerRoutes } from "./routes.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -95,6 +97,8 @@ export async function buildServer() {
     });
   });
 
+  await registerMarketingRoutes(app);
+  await registerAdminRoutes(app);
   await registerRoutes(app);
   return app;
 }

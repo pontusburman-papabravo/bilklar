@@ -2,7 +2,6 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-MIGRATION="${SCRIPT_DIR}/migrations/0001_initial.sql"
 COMPOSE_FILE="${SCRIPT_DIR}/docker-compose.yml"
 
 export DATABASE_URL="${DATABASE_URL:-postgresql://bilklar:bilklar@localhost:54329/bilklar_test}"
@@ -29,8 +28,11 @@ GRANT ALL ON SCHEMA public TO bilklar;
 GRANT ALL ON SCHEMA public TO public;
 SQL
 
-echo "==> Apply migration"
-psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$MIGRATION"
+echo "==> Apply migrations"
+for sql in "$SCRIPT_DIR"/migrations/*.sql; do
+  echo "  $(basename "$sql")"
+  psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$sql"
+done
 
 echo "==> Verify enums and tables exist"
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
@@ -39,7 +41,10 @@ DECLARE
   expected_tables text[] := ARRAY[
     'users', 'auth_identities', 'driving_journeys', 'journey_collaborators',
     'journey_invitations', 'skills', 'skill_definitions', 'drives',
-    'training_focus_items', 'drive_focus_skills', 'drive_observations'
+    'training_focus_items', 'drive_focus_skills', 'drive_observations',
+    'interest_signups',
+    'admin_users',
+    'admin_password_reset_tokens'
   ];
   t text;
 BEGIN

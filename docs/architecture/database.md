@@ -11,6 +11,8 @@ Motivering: kolumnspecifik `ON DELETE SET NULL` på composite foreign keys, som 
 | Fil | Beskrivning |
 | --- | --- |
 | [`db/migrations/0001_initial.sql`](../../db/migrations/0001_initial.sql) | Initial schema — enums, tabeller, constraints, index |
+| [`db/migrations/0002_interest_signups.sql`](../../db/migrations/0002_interest_signups.sql) | Intresseanmälningar till betan |
+| [`db/migrations/0003_admin_auth.sql`](../../db/migrations/0003_admin_auth.sql) | Waitlist-admin (`admin_users`, reset-tokens) |
 
 Runtime-applikationen tillämpar samma filer via [`app/src/db/migrate.ts`](../../app/src/db/migrate.ts) och tabellen `schema_migrations`. Redan migrerade databaser stämplas, SQL körs inte om. Deploy: [Production](../operations/production.md).
 
