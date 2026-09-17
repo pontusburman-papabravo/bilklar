@@ -388,3 +388,77 @@ a.journey-choice {
   margin-bottom: 0.35rem;
   font-weight: 600;
 }
+
+.live-observe__safety {
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin: 0 0 1rem;
+}
+
+.live-observe__list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+}
+
+.live-observe__item {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.live-observe__item:last-child {
+  border-bottom: none;
+}
+
+.live-observe__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.live-observe__status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.live-observe__details {
+  margin-top: 0.5rem;
+}
+
+.live-observe__summary {
+  display: inline-block;
+  cursor: pointer;
+  list-style: none;
+}
+
+.live-observe__summary::-webkit-details-marker {
+  display: none;
+}
+
+.live-observe__choices {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.live-observe__choice {
+  width: 100%;
+  text-align: left;
+}
+
+.rating-item--observed h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+}
+
+.rating-observed {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  color: var(--muted);
+}
