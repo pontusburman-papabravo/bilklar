@@ -136,11 +136,20 @@ ufw allow 443/udp
 ufw --force enable
 dpkg-reconfigure -f noninteractive unattended-upgrades >/dev/null || true
 
+mark_git_safe() {
+  git config --global --get-all safe.directory 2>/dev/null | grep -Fxq "$APP_PATH" \
+    || git config --global --add safe.directory "$APP_PATH"
+}
+
 log "Klonar ${REPO_URL}"
 mkdir -p "$(dirname "$APP_PATH")"
+if [[ -d "$APP_PATH" ]]; then
+  mark_git_safe
+fi
 if [[ ! -d "$APP_PATH/.git" ]]; then
   git clone "$REPO_URL" "$APP_PATH"
 fi
+mark_git_safe
 cd "$APP_PATH"
 git fetch origin --prune
 
