@@ -40,6 +40,9 @@ export const config = {
   get resendApiKey() {
     return process.env.RESEND_API_KEY ?? "";
   },
+  get resendWebhookSecret() {
+    return process.env.RESEND_WEBHOOK_SECRET ?? "";
+  },
   get emailFrom() {
     return process.env.EMAIL_FROM ?? "Körpasset <support@korpasset.se>";
   },

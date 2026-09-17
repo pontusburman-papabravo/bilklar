@@ -44,7 +44,8 @@ DECLARE
     'training_focus_items', 'drive_focus_skills', 'drive_observations',
     'interest_signups',
     'admin_users',
-    'admin_password_reset_tokens'
+    'admin_password_reset_tokens',
+    'resend_webhook_events'
   ];
   t text;
 BEGIN

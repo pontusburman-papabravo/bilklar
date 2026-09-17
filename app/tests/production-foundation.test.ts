@@ -184,17 +184,20 @@ describe("production foundation / fresh database migrate", () => {
       "0001_initial.sql",
       "0002_interest_signups.sql",
       "0003_admin_auth.sql",
+      "0004_resend_webhook_events.sql",
     ]);
     assert.deepEqual(first.stamped, []);
 
     const tables = await client.query(
       `SELECT to_regclass('public.users') AS users,
               to_regclass('public.interest_signups') AS interest,
-              to_regclass('public.admin_users') AS admins`,
+              to_regclass('public.admin_users') AS admins,
+              to_regclass('public.resend_webhook_events') AS webhooks`,
     );
     assert.ok(tables.rows[0].users);
     assert.ok(tables.rows[0].interest);
     assert.ok(tables.rows[0].admins);
+    assert.ok(tables.rows[0].webhooks);
 
     const second = await applyMigrations(client);
     assert.deepEqual(second.applied, []);

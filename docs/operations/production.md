@@ -16,6 +16,7 @@ Ett origin:
 | `https://korpasset.se/integritet` `/villkor` `/kontakt` | Legal |
 | `https://korpasset.se/admin` | Waitlist-admin (e-post + lösenord, skapas med `admin:create`) |
 | `https://korpasset.se/health` | Health, ingen auth |
+| `https://korpasset.se/api/resend/webhook` | Resend-händelser (Svix-signatur, ingen användar-auth) |
 
 Ingen `app.`-subdomän i första betan. Samma host förenklar cookies, QR, SMS och en Capacitor-shell som laddar produktionens origin.
 
@@ -31,6 +32,7 @@ Invitationer byggs från `APP_BASE_URL`. Den **måste** vara `https://korpasset.
 | `APP_BASE_URL` | `https://korpasset.se` |
 | `PORT` | Valfritt, default `3000` |
 | `RESEND_API_KEY` | Valfritt men krävs för att faktiskt skicka admin-resetmejl. Utan nyckel loggas felet och användaren får samma neutrala text. |
+| `RESEND_WEBHOOK_SECRET` | Valfritt. Svix-signing secret från Resend → Webhooks. Utan secret svarar `POST /api/resend/webhook` 503. |
 | `EMAIL_FROM` | Valfritt. Default `Körpasset <support@korpasset.se>` |
 
 Första waitlist-admin skapas **inte** via env och inte via publik signup:
@@ -53,6 +55,19 @@ Skriptet frågar efter lösenord (minst 12 tecken), hashar med Argon2id och skri
 - Reset-token: 32 slumpbytes, bara hashen i DB, 30 minuter, one-time. URL byggs från `APP_BASE_URL`, inte `Host`.
 - Ordning: token skapas i DB, sedan skickas mejl. Misslyckad send loggas utan token/lösenord. Publikt svar är alltid neutralt.
 - Password reset sätter `password_changed_at` så äldre admin-cookies slutar gälla.
+
+### Resend webhook
+
+Samma mönster som My Starday: `POST /api/resend/webhook`.
+
+1. Deploya appen med `RESEND_WEBHOOK_SECRET`.
+2. I Resend Dashboard → Webhooks, skapa en webhook mot `https://korpasset.se/api/resend/webhook`.
+3. Events: `email.sent`, `email.delivered`, `email.bounced`, `email.complained`, `email.delivery_delayed`. Inte `email.opened` / `email.clicked` — resetmejl är text-only och tracking är av på `korpasset.se`.
+4. Sätt signing secret i `RESEND_WEBHOOK_SECRET` (`whsec_…`).
+
+Endpointen verifierar Svix-signatur mot raw body, sparar `event_type` + `email_id` i `resend_webhook_events`, och loggar bounce/complaint utan mottagaradress. Samma Svix-id skrivs inte om (Resend-retries).
+
+Resend-webhooks är per konto. Om Körpasset delar Resend-projekt med My Starday får båda endpointerna alla mejlhändelser. Körpasset ignorerar okända typer och lagrar bara id. My Starday kan fortfarande se Körpasset-events på sin webhook.
 
 ### Rate limit för intresseanmälan
 

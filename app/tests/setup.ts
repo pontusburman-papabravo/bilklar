@@ -83,6 +83,7 @@ export async function resetDatabaseData(): Promise<void> {
   const pool = getPool();
   await pool.query(`
     TRUNCATE
+      resend_webhook_events,
       admin_password_reset_tokens,
       admin_users,
       interest_signups,
