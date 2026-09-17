@@ -32,7 +32,7 @@ services:
       APP_BASE_URL: ${APP_BASE_URL:-https://korpasset.se}
       RESEND_API_KEY: ${RESEND_API_KEY:-}
       RESEND_WEBHOOK_SECRET: ${RESEND_WEBHOOK_SECRET:-}
-      EMAIL_FROM: ${EMAIL_FROM:-Körpasset <support@korpasset.se>}
+      EMAIL_FROM: "${EMAIL_FROM:-Körpasset <support@korpasset.se>}"
     depends_on:
       postgres:
         condition: service_healthy

@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
 import { after, beforeEach, describe, it } from "node:test";
+import { fileURLToPath } from "node:url";
 import pg from "pg";
 import {
   assertProductionConfig,
@@ -15,6 +18,12 @@ import { resetDatabaseData } from "./setup.js";
 
 const FRESH_DB_URL =
   "postgresql://bilklar:bilklar@127.0.0.1:54330/korpasset_migrate_fresh";
+const PRODLIKE_DB_URL =
+  "postgresql://bilklar:bilklar@127.0.0.1:54330/korpasset_migrate_prodlike";
+const INITIAL_MIGRATION_SQL = readFileSync(
+  join(dirname(fileURLToPath(import.meta.url)), "../../db/migrations/0001_initial.sql"),
+  "utf8",
+);
 
 describe("production foundation", () => {
   beforeEach(async () => {
@@ -202,6 +211,82 @@ describe("production foundation / fresh database migrate", () => {
     const second = await applyMigrations(client);
     assert.deepEqual(second.applied, []);
     assert.ok(second.skipped.includes("0001_initial.sql"));
+    await client.end();
+  });
+});
+
+describe("production foundation / existing 0001 without schema_migrations", () => {
+  after(async () => {
+    const admin = new pg.Client({
+      connectionString: "postgresql://bilklar:bilklar@127.0.0.1:54330/postgres",
+    });
+    await admin.connect();
+    await admin.query(`DROP DATABASE IF EXISTS korpasset_migrate_prodlike`);
+    await admin.end();
+  });
+
+  it("stamps 0001 and applies 0002-0004 on a bootstrap-style database", async () => {
+    const admin = new pg.Client({
+      connectionString: "postgresql://bilklar:bilklar@127.0.0.1:54330/postgres",
+    });
+    await admin.connect();
+    await admin.query(`DROP DATABASE IF EXISTS korpasset_migrate_prodlike`);
+    await admin.query(`CREATE DATABASE korpasset_migrate_prodlike`);
+    await admin.end();
+
+    const client = new pg.Client({ connectionString: PRODLIKE_DB_URL });
+    await client.connect();
+    await client.query(INITIAL_MIGRATION_SQL);
+
+    const before = await client.query(
+      `SELECT to_regclass('public.schema_migrations') AS migrations,
+              to_regclass('public.users') AS users,
+              to_regclass('public.interest_signups') AS interest,
+              to_regclass('public.admin_users') AS admins,
+              to_regclass('public.resend_webhook_events') AS webhooks`,
+    );
+    assert.equal(before.rows[0].migrations, null);
+    assert.ok(before.rows[0].users);
+    assert.equal(before.rows[0].interest, null);
+    assert.equal(before.rows[0].admins, null);
+    assert.equal(before.rows[0].webhooks, null);
+
+    const first = await applyMigrations(client);
+    assert.deepEqual(first.stamped, ["0001_initial.sql"]);
+    assert.deepEqual(first.applied, [
+      "0002_interest_signups.sql",
+      "0003_admin_auth.sql",
+      "0004_resend_webhook_events.sql",
+    ]);
+    assert.deepEqual(first.skipped, []);
+
+    const after = await client.query(
+      `SELECT to_regclass('public.schema_migrations') AS migrations,
+              to_regclass('public.interest_signups') AS interest,
+              to_regclass('public.admin_users') AS admins,
+              to_regclass('public.resend_webhook_events') AS webhooks`,
+    );
+    assert.ok(after.rows[0].migrations);
+    assert.ok(after.rows[0].interest);
+    assert.ok(after.rows[0].admins);
+    assert.ok(after.rows[0].webhooks);
+
+    const ids = await client.query(`SELECT id FROM schema_migrations ORDER BY id`);
+    assert.deepEqual(
+      ids.rows.map((row) => row.id),
+      [
+        "0001_initial.sql",
+        "0002_interest_signups.sql",
+        "0003_admin_auth.sql",
+        "0004_resend_webhook_events.sql",
+      ],
+    );
+
+    const second = await applyMigrations(client);
+    assert.deepEqual(second.applied, []);
+    assert.deepEqual(second.stamped, []);
+    assert.ok(second.skipped.includes("0001_initial.sql"));
+    assert.ok(second.skipped.includes("0004_resend_webhook_events.sql"));
     await client.end();
   });
 });

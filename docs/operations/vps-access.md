@@ -28,18 +28,21 @@ befintliga volymer (`deploy_postgres_data`) återanvänds. Appen kör
 `applyMigrations` vid start: 0001 stämpas om `users` redan finns, sedan
 appliceras 0002–0004.
 
-Lägg till i **befintlig** `/var/www/korpasset/deploy/.env` (tomma rader är OK
-tills nycklarna finns):
+Före checkout vägrar scriptet SHA:n om `deploy/docker-compose.yml`,
+`deploy/Dockerfile` eller `scripts/vps-deploy-revision.sh` saknas.
+
+Sätt **icke-tomma** värden i befintlig `/var/www/korpasset/deploy/.env` före
+deploy. Tom `RESEND_API_KEY` eller `RESEND_WEBHOOK_SECRET` avbryter
+deploy (password reset och webhook ska fungera i public beta). Rotera inte
+`POSTGRES_PASSWORD` eller `SESSION_SECRET`.
 
 ```
-RESEND_API_KEY=
-RESEND_WEBHOOK_SECRET=
+RESEND_API_KEY=<befintlig nyckel>
+RESEND_WEBHOOK_SECRET=<befintlig signing secret>
 EMAIL_FROM=Körpasset <support@korpasset.se>
 ```
 
-Utan `RESEND_WEBHOOK_SECRET` svarar `POST /api/resend/webhook` 503. Utan
-`RESEND_API_KEY` skickas inga resetmejl. Första admin skapas i containern
-efter migrate:
+Första admin skapas i containern efter migrate:
 
 ```bash
 docker compose --project-directory /var/www/korpasset/deploy \
