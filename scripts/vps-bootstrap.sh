@@ -22,11 +22,58 @@ COMPOSE="docker compose --project-directory ${APP_PATH}/deploy -f ${APP_PATH}/de
 
 log() { printf '\n==> %s\n' "$*"; }
 
+apt_locked() {
+  fuser /var/lib/dpkg/lock-frontend /var/lib/dpkg/lock /var/cache/apt/archives/lock >/dev/null 2>&1
+}
+
+wait_for_apt() {
+  local waited=0
+  local max="${APT_LOCK_TIMEOUT:-600}"
+  while apt_locked; do
+    if (( waited == 0 )); then
+      log "Väntar tills unattended-upgrades släpper dpkg-låset"
+    fi
+    if (( waited >= max )); then
+      echo "dpkg-låset hölls fortfarande efter ${max}s" >&2
+      fuser -v /var/lib/dpkg/lock-frontend /var/lib/dpkg/lock /var/cache/apt/archives/lock >&2 || true
+      exit 1
+    fi
+    sleep 5
+    waited=$((waited + 5))
+  done
+}
+
+apt_get() {
+  local n=0
+  local max=120
+  local logf
+  logf="$(mktemp)"
+  while true; do
+    wait_for_apt
+    if apt-get "$@" 2>&1 | tee "$logf"; then
+      rm -f "$logf"
+      return 0
+    fi
+    if ! grep -q "lock-frontend\|Unable to acquire the dpkg frontend lock\|Could not get lock" "$logf"; then
+      rm -f "$logf"
+      exit 1
+    fi
+    n=$((n + 1))
+    if (( n >= max )); then
+      rm -f "$logf"
+      echo "apt-get gav upp efter ${n} försök p.g.a. dpkg-lås" >&2
+      exit 1
+    fi
+    log "apt är upptaget, väntar 5s (${n}/${max})"
+    sleep 5
+  done
+}
+
 export DEBIAN_FRONTEND=noninteractive
 
 log "Paket"
-apt-get update -y
-apt-get install -y --no-install-recommends \
+apt_get update -y
+apt_get install -y --no-install-recommends \
   ca-certificates curl git ufw unattended-upgrades \
   gnupg apt-transport-https openssl openssh-client
 
@@ -39,8 +86,8 @@ if ! command -v docker >/dev/null 2>&1; then
   . /etc/os-release
   echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu ${VERSION_CODENAME} stable" \
     > /etc/apt/sources.list.d/docker.list
-  apt-get update -y
-  apt-get install -y --no-install-recommends \
+  apt_get update -y
+  apt_get install -y --no-install-recommends \
     docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-buildx-plugin
 fi
 systemctl enable --now docker
@@ -157,8 +204,8 @@ if [[ -n "${GH_TOKEN:-}" ]]; then
       | gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
       > /etc/apt/sources.list.d/github-cli.list
-    apt-get update -y
-    apt-get install -y gh
+    apt_get update -y
+    apt_get install -y gh
   fi
   unset GITHUB_TOKEN
   echo "$GH_TOKEN" | gh auth login --with-token
