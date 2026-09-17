@@ -86,7 +86,7 @@ Mall: [`app/.env.example`](../../app/.env.example). Committa aldrig `.env`.
 Från reporoot:
 
 ```bash
-docker build -t korpasset-app .
+docker build -f deploy/Dockerfile -t korpasset-app .
 docker run --rm -p 3000:3000 \
   -e NODE_ENV=production \
   -e DATABASE_URL="$DATABASE_URL" \
@@ -94,6 +94,9 @@ docker run --rm -p 3000:3000 \
   -e APP_BASE_URL=https://korpasset.se \
   korpasset-app
 ```
+
+På den befintliga VPS:en: [`docs/operations/vps-access.md`](vps-access.md) och
+`docker compose --project-directory deploy -f deploy/docker-compose.yml`.
 
 Startsekvens i containern:
 
@@ -148,16 +151,8 @@ Lagra dump utanför apprecot. Innehållet är personuppgifter (namn, journey-dat
 
 `db/verify-migration.sh` är fortfarande för schema-invarianter mot en nollställd databas. Den är inte deploy-sökvägen.
 
-## Host och DNS (manuellt)
+## Host och DNS
 
-Koden gissar inte hostingleverantör. Vilken som helst som kör Docker-imagen + Postgres 15 + TLS räcker.
-
-Pontus behöver:
-
-1. DNS för `korpasset.se` → load balancer / host
-2. TLS-certifikat (ofta automatiskt hos hosten)
-3. Managed Postgres 15 med persistent disk
-4. Env-variablerna ovan i hostens secret store
-5. En första restore-övning av en dummy-dump
-
-Tills DNS och host finns kan imagen byggas och testerna köras lokalt, men invitationer och cookies mot riktiga telefoner kräver `https://korpasset.se`.
+Live är Ubuntu 24 + Docker Compose + Caddy på `korpasset.se`. Se
+[`vps-access.md`](vps-access.md). DNS och TLS finns redan. Rotera inte
+databaslösen eller `SESSION_SECRET` vid redeploy.
