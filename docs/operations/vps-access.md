@@ -46,6 +46,12 @@ Cursor-secrets injiceras bara vid **start** av en agent. Efter scriptet:
 
 Klistra inte in den privata nyckeln i chatten.
 
+Cursor runtime secrets kan flatten:a `VPS_SSH_KEY` till en rad (mellanslag
+istället för PEM-radbrytningar) och lämna inledande mellanslag på
+`VPS_HOST` / `VPS_USER` / `VPS_APP_PATH`. `scripts/vps-ssh.sh` strippar
+värdena och rekonstruerar OpenSSH-PEM (body 70 tecken). Nyckeln ska inte
+in i git.
+
 | Vem | Hur |
 | --- | --- |
 | **Du som root** | Inleed-konsol, en gång, kör scriptet |
