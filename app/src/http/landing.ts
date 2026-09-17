@@ -74,7 +74,18 @@ export function renderLegalPage(title: string, body: string): string {
   );
 }
 
-export function siteHeader(ctaHref = "/#intresse"): string {
+export function siteHeader(options: { ctaHref?: string; variant?: "site" | "admin" } = {}): string {
+  if (options.variant === "admin") {
+    return `<header class="site-nav">
+    <a class="site-logo" href="/admin">Körpasset admin</a>
+    <nav class="site-nav__links" aria-label="Admin">
+      <a href="/admin/signups">Anmälningar</a>
+      <a href="/">Till sajten</a>
+    </nav>
+  </header>`;
+  }
+
+  const ctaHref = options.ctaHref ?? "/#intresse";
   return `<header class="site-nav">
     <a class="site-logo" href="/">Körpasset</a>
     <nav class="site-nav__links" aria-label="Huvudmeny">
@@ -296,7 +307,7 @@ function interestSection(
           <input id="name" name="name" type="text" required maxlength="80" autocomplete="name" value="${escapeHtml(values.name ?? "")}">
         </div>
         <div>
-          <label for="email">E-post</label>
+          <label for="email">Mejladress</label>
           <input id="email" name="email" type="email" required maxlength="120" autocomplete="email" value="${escapeHtml(values.email ?? "")}">
         </div>
         <div>

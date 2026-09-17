@@ -34,7 +34,7 @@ const STATUS_LABELS: Record<InterestStatus, string> = {
 };
 
 function adminPage(title: string, body: string): string {
-  return siteLayout(title, `${siteHeader("/admin")}${body}${siteFooter()}`, {
+  return siteLayout(title, `${siteHeader({ variant: "admin" })}${body}${siteFooter()}`, {
     extraCss: [],
   });
 }

@@ -418,4 +418,7 @@ a { color: inherit; }
   margin: 1rem 0 1.25rem;
 }
 
-.admin-toolbar a { font-weight: 600; }
+.admin-shell .btn-primary {
+  width: auto;
+  min-width: 10rem;
+}
