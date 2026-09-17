@@ -176,13 +176,17 @@ describe("production foundation / fresh database migrate", () => {
     const client = new pg.Client({ connectionString: FRESH_DB_URL });
     await client.connect();
     const first = await applyMigrations(client);
-    assert.deepEqual(first.applied, ["0001_initial.sql"]);
+    assert.deepEqual(first.applied, [
+      "0001_initial.sql",
+      "0002_interest_signups.sql",
+    ]);
     assert.deepEqual(first.stamped, []);
 
     const tables = await client.query(
-      `SELECT to_regclass('public.users') AS table_name`,
+      `SELECT to_regclass('public.users') AS users, to_regclass('public.interest_signups') AS interest`,
     );
-    assert.ok(tables.rows[0].table_name);
+    assert.ok(tables.rows[0].users);
+    assert.ok(tables.rows[0].interest);
 
     const second = await applyMigrations(client);
     assert.deepEqual(second.applied, []);

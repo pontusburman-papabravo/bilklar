@@ -1,13 +1,13 @@
-import { readFileSync, rmSync } from "node:fs";
+import { rmSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import EmbeddedPostgres from "embedded-postgres";
 import pg from "pg";
 import { seedTaxonomy } from "../src/db/seed-taxonomy.js";
+import { applyMigrations } from "../src/db/migrate.js";
 import { closePool, getPool } from "../src/db/pool.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const migrationPath = join(__dirname, "../../db/migrations/0001_initial.sql");
 const TEST_DATABASE_URL =
   "postgresql://bilklar:bilklar@127.0.0.1:54330/bilklar_test";
 const PGDATA_DIR = join(__dirname, "../.pgdata-test");
@@ -64,13 +64,7 @@ export async function setupTestDatabase(): Promise<void> {
   await adminClient.end();
 
   await waitForPostgres(TEST_DATABASE_URL);
-
-  const client = new pg.Client({ connectionString: TEST_DATABASE_URL });
-  await client.connect();
-  const migration = readFileSync(migrationPath, "utf8");
-  await client.query(migration);
-  await client.end();
-
+  await applyMigrations(getPool());
   await seedTaxonomy(getPool());
   databaseReady = true;
 }
@@ -88,6 +82,7 @@ export async function resetDatabaseData(): Promise<void> {
   const pool = getPool();
   await pool.query(`
     TRUNCATE
+      interest_signups,
       drive_observations,
       drive_focus_skills,
       training_focus_items,

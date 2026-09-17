@@ -43,6 +43,7 @@ import {
   primaryButton,
   errorBanner,
 } from "./layout.js";
+import { renderLandingPage } from "./landing.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -125,9 +126,10 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
           ),
         );
       }
+      return reply.redirect("/onboarding");
     }
 
-    return reply.redirect("/onboarding");
+    return reply.type("text/html").send(renderLandingPage());
   });
 
   app.get("/onboarding", async (_request, reply) => {

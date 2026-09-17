@@ -87,4 +87,4 @@ Health: `GET /health`.
 
 ## Status
 
-Canonical produkt- och databasgrund. Första vertical slice: journey → invitation → körpass → observation → rekommendation. Nästa fas: **Beta Readiness för iOS + Android + korpasset.se**.
+Canonical produkt- och databasgrund. Första vertical slice: journey → invitation → körpass → observation → rekommendation. Publik landning med intresseanmälan på `https://korpasset.se`. Nästa fas: **Beta Readiness** (session-fallback, auth, legal i produktion, observability, iOS/Android).

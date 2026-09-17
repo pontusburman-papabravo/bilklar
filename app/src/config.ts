@@ -37,6 +37,9 @@ export const config = {
   get migrationsDir() {
     return process.env.MIGRATIONS_DIR ?? "";
   },
+  get adminPassword() {
+    return process.env.ADMIN_PASSWORD ?? "";
+  },
 };
 
 export function assertProductionConfig(): void {

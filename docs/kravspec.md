@@ -318,7 +318,8 @@ Kraven nedan beskriver det kanoniska v1-flödet. Där vertical slice redan finns
 
 **Routing-regler:**
 
-- **0 tillgängliga resor:** Omdirigera till onboarding (`/onboarding`) där användaren kan skapa en resa eller ansluta via inbjudan.
+- **Ingen session:** Visa landningen på `/` med intresseanmälan till betan. Produktens onboarding finns kvar på `/onboarding`.
+- **0 tillgängliga resor (inloggad):** Omdirigera till onboarding (`/onboarding`) där användaren kan skapa en resa eller ansluta via inbjudan.
 - **1 tillgänglig resa:** Omdirigera direkt till den aktiva resans översikt (`/journey/[id]`).
 - **>1 tillgängliga resor:** Visa kontextväljare på `/` med rubriken **"Välj elev"** och hjälptexten **"Vilken körkortsresa vill du öppna?"**.
 
@@ -886,7 +887,9 @@ Betalning ingår inte som blockerare för första beta. Se [Beta Validation och 
 
 ## 15. korpasset.se
 
-Hemsida för nästa Beta Readiness-fas. **Byggs inte i denna delta.** Informationshierarki:
+Publik landning för intresseanmälan till betan. Produktloopen ligger kvar bakom session, inbjudningslänk och `/onboarding`.
+
+Informationshierarki:
 
 ```text
 Körpasset
@@ -904,7 +907,7 @@ Följ upp på några sekunder.
 → Inte ännu en teoriapp
 → Officiella källor/metodik
 → Disclaimer
-→ Beta CTA
+→ Beta CTA / intresseanmälan
 → Privacy / Terms / Contact
 ```
 

@@ -10,8 +10,11 @@ Ett origin:
 
 | URL | Vad |
 | --- | --- |
-| `https://korpasset.se` | Produkt + (senare) landning, legal och signup |
+| `https://korpasset.se` | Landning + intresseanmälan. Inloggad användare med resa går till produkten. |
+| `https://korpasset.se/onboarding` | Skapa elevresa |
 | `https://korpasset.se/invite/<token>` | Canonical invitation-länk |
+| `https://korpasset.se/integritet` `/villkor` `/kontakt` | Legal |
+| `https://korpasset.se/admin` | Waitlist-admin (kräver `ADMIN_PASSWORD`) |
 | `https://korpasset.se/health` | Health, ingen auth |
 
 Ingen `app.`-subdomän i första betan. Samma host förenklar cookies, QR, SMS och en Capacitor-shell som laddar produktionens origin.
@@ -27,6 +30,7 @@ Invitationer byggs från `APP_BASE_URL`. Den **måste** vara `https://korpasset.
 | `SESSION_SECRET` | Minst 32 tecken. Inte utvecklingsdefaulten. |
 | `APP_BASE_URL` | `https://korpasset.se` |
 | `PORT` | Valfritt, default `3000` |
+| `ADMIN_PASSWORD` | Valfritt. Sätts för att öppna `/admin` och hantera intresseanmälningar. Utan variabeln svarar admin 404. |
 
 Appen vägrar starta i `NODE_ENV=production` om secrets saknas, om `SESSION_SECRET` är dev-default, eller om `APP_BASE_URL` inte är https (`ALLOW_HTTP=true` endast för lokal prod-lik körning).
 

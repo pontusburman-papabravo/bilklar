@@ -213,11 +213,12 @@ describe("root navigation (GET /)", () => {
     await app.close();
   });
 
-  it("redirects anonymous users to onboarding", async () => {
+  it("shows the marketing homepage to anonymous users", async () => {
     const app = await createTestApp();
     const response = await app.inject({ method: "GET", url: "/" });
-    assert.equal(response.statusCode, 302);
-    assert.equal(response.headers.location, "/onboarding");
+    assert.equal(response.statusCode, 200);
+    assert.match(response.body, /Övningskör med en plan/);
+    assert.match(response.body, /Bli betatestare/);
 
     const onboarding = await app.inject({ method: "GET", url: "/onboarding" });
     assert.equal(onboarding.statusCode, 200);
