@@ -90,6 +90,7 @@ docker build -t korpasset-app .
 # Kräver DATABASE_URL, SESSION_SECRET, APP_BASE_URL=https://korpasset.se
 # Första admin: node dist/cli/create-admin.js --email you@korpasset.se
 # Mejlreset: RESEND_API_KEY (valfritt tills reset ska fungera)
+# Resend webhook: RESEND_WEBHOOK_SECRET + POST https://korpasset.se/api/resend/webhook
 ```
 
 Health: `GET /health`.
