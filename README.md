@@ -36,7 +36,8 @@ v1 är strikt fokuserad på den praktiska privata övningskörningen.
 ### Arkitektur
 
 - [Database](docs/architecture/database.md)
-- [Production](docs/operations/production.md) — deploy, env, health, backup/restore
+- [Production](docs/operations/production.md) — env, health, backup/restore
+- [VPS-access](docs/operations/vps-access.md) — korpasset.se host, Compose, redeploy
 
 ### Beslut (ADR)
 
@@ -83,17 +84,17 @@ npm run admin:create -- --email you@korpasset.se
 
 ## Produktion
 
-Se [Production](docs/operations/production.md). Kort:
+Se [Production](docs/operations/production.md) och [VPS-access](docs/operations/vps-access.md). Kort:
 
 ```bash
-docker build -t korpasset-app .
+docker build -f deploy/Dockerfile -t korpasset-app .
 # Kräver DATABASE_URL, SESSION_SECRET, APP_BASE_URL=https://korpasset.se
 # Första admin: node dist/cli/create-admin.js --email you@korpasset.se
 # Mejlreset: RESEND_API_KEY (valfritt tills reset ska fungera)
 # Resend webhook: RESEND_WEBHOOK_SECRET + POST https://korpasset.se/api/resend/webhook
 ```
 
-Health: `GET /health`.
+Health: `GET /health` → `{ "status": "ok" }`.
 
 ## Status
 

@@ -1,0 +1,18 @@
+---
+description: Körpasset production VPS (korpasset.se)
+alwaysApply: false
+---
+
+# Körpasset VPS
+
+- Public origin: `https://korpasset.se`
+- Host: `188.66.62.46` (Ubuntu 24, Inleed)
+- SSH user: `deploy`
+- App path: `/var/www/korpasset`
+- Git: `https://github.com/pontusburman-papabravo/korpasset.git`
+- Live VPS is already bootstrapped. Redeploy with `scripts/vps-deploy-revision.sh`.
+- Do not check out `cursor/vps-bootstrap-korpasset-aca8` — it has old app code.
+- Access setup: `docs/operations/vps-access.md`
+- Agent SSH helper: `scripts/vps-ssh.sh`
+
+Do not put private keys, `SESSION_SECRET`, or database passwords in the repo or chat.
