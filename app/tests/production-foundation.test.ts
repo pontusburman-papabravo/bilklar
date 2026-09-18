@@ -194,6 +194,7 @@ describe("production foundation / fresh database migrate", () => {
       "0002_interest_signups.sql",
       "0003_admin_auth.sql",
       "0004_resend_webhook_events.sql",
+      "0005_admin_audit_events.sql",
     ]);
     assert.deepEqual(first.stamped, []);
 
@@ -201,12 +202,14 @@ describe("production foundation / fresh database migrate", () => {
       `SELECT to_regclass('public.users') AS users,
               to_regclass('public.interest_signups') AS interest,
               to_regclass('public.admin_users') AS admins,
-              to_regclass('public.resend_webhook_events') AS webhooks`,
+              to_regclass('public.resend_webhook_events') AS webhooks,
+              to_regclass('public.admin_audit_events') AS audit`,
     );
     assert.ok(tables.rows[0].users);
     assert.ok(tables.rows[0].interest);
     assert.ok(tables.rows[0].admins);
     assert.ok(tables.rows[0].webhooks);
+    assert.ok(tables.rows[0].audit);
 
     const second = await applyMigrations(client);
     assert.deepEqual(second.applied, []);
@@ -225,7 +228,7 @@ describe("production foundation / existing 0001 without schema_migrations", () =
     await admin.end();
   });
 
-  it("stamps 0001 and applies 0002-0004 on a bootstrap-style database", async () => {
+  it("stamps 0001 and applies 0002-0005 on a bootstrap-style database", async () => {
     const admin = new pg.Client({
       connectionString: "postgresql://bilklar:bilklar@127.0.0.1:54330/postgres",
     });
@@ -257,6 +260,7 @@ describe("production foundation / existing 0001 without schema_migrations", () =
       "0002_interest_signups.sql",
       "0003_admin_auth.sql",
       "0004_resend_webhook_events.sql",
+      "0005_admin_audit_events.sql",
     ]);
     assert.deepEqual(first.skipped, []);
 
@@ -264,12 +268,14 @@ describe("production foundation / existing 0001 without schema_migrations", () =
       `SELECT to_regclass('public.schema_migrations') AS migrations,
               to_regclass('public.interest_signups') AS interest,
               to_regclass('public.admin_users') AS admins,
-              to_regclass('public.resend_webhook_events') AS webhooks`,
+              to_regclass('public.resend_webhook_events') AS webhooks,
+              to_regclass('public.admin_audit_events') AS audit`,
     );
     assert.ok(after.rows[0].migrations);
     assert.ok(after.rows[0].interest);
     assert.ok(after.rows[0].admins);
     assert.ok(after.rows[0].webhooks);
+    assert.ok(after.rows[0].audit);
 
     const ids = await client.query(`SELECT id FROM schema_migrations ORDER BY id`);
     assert.deepEqual(
@@ -279,6 +285,7 @@ describe("production foundation / existing 0001 without schema_migrations", () =
         "0002_interest_signups.sql",
         "0003_admin_auth.sql",
         "0004_resend_webhook_events.sql",
+        "0005_admin_audit_events.sql",
       ],
     );
 
