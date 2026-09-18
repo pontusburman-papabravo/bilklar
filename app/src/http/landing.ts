@@ -1,5 +1,11 @@
-import { escapeHtml, errorBanner, primaryButton, siteLayout } from "./layout.js";
 import { BETA_COHORT_SIZE, type InterestRole } from "../services/interest.js";
+import { BRAND_ASSETS, escapeHtml, errorBanner, primaryButton, siteLayout } from "./layout.js";
+
+const BRAND_TAGLINE = "ÖVNING IDAG. FRIHET IMORGON.";
+
+function siteLogo(href = "/"): string {
+  return `<a class="site-logo" href="${escapeHtml(href)}"><img src="${BRAND_ASSETS.logo}" alt="Körpasset"></a>`;
+}
 
 const ROLE_LABELS: Record<InterestRole, string> = {
   parent: "Förälder / vårdnadshavare",
@@ -56,7 +62,7 @@ export function renderLandingPage(options: {
        ${interestSection(formError, values, betaFilled)}
      </main>
      ${siteFooter()}`,
-    { description: LANDING_DESCRIPTION },
+    { description: LANDING_DESCRIPTION, path: "/" },
   );
 }
 
@@ -77,11 +83,12 @@ export function renderInterestThanksPage(): string {
      ${siteFooter()}`,
     {
       description: "Tack för din intresseanmälan till Körpassets beta.",
+      path: "/interest/tack",
     },
   );
 }
 
-export function renderLegalPage(title: string, body: string): string {
+export function renderLegalPage(title: string, body: string, path = "/"): string {
   return siteLayout(
     title,
     `${siteHeader()}
@@ -93,6 +100,7 @@ export function renderLegalPage(title: string, body: string): string {
        </article>
      </main>
      ${siteFooter()}`,
+    { path },
   );
 }
 
@@ -123,7 +131,7 @@ export function siteHeader(
 
   const ctaHref = options.ctaHref ?? "/#intresse";
   return `<header class="site-nav">
-    <a class="site-logo" href="/">Körpasset</a>
+    ${siteLogo("/")}
     <nav class="site-nav__links" aria-label="Huvudmeny">
       <a href="/#sa-funkar-det">Så fungerar det</a>
       <a href="/#regler">Regler</a>
@@ -137,7 +145,7 @@ export function siteFooter(): string {
   return `<footer class="site-footer">
     <div class="site-inner site-footer__grid">
       <div>
-        <p class="site-logo">Körpasset</p>
+        <p class="site-logo site-logo--footer">Körpasset</p>
         <p>Få bättre struktur på övningskörningen.</p>
       </div>
       <div>
@@ -164,6 +172,7 @@ function hero(): string {
           <a class="btn-link" href="#sa-funkar-det">Så fungerar det</a>
         </div>
         <p class="hero__trust">Gratis under betan · Vi hör av oss när det är er tur</p>
+        <p class="hero__tagline">${BRAND_TAGLINE}</p>
       </div>
       ${heroCard()}
     </div>
