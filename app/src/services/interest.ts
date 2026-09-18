@@ -136,18 +136,37 @@ export async function saveInterestSignup(
   };
 }
 
+export const INTEREST_PAGE_SIZE = 50;
+
 export async function listInterestSignups(
   status?: InterestStatus,
+  page?: { limit: number; offset: number },
 ): Promise<InterestSignup[]> {
+  const params: unknown[] = [];
+  let sql = `SELECT * FROM interest_signups`;
+  if (status) {
+    params.push(status);
+    sql += ` WHERE status = $1`;
+  }
+  sql += ` ORDER BY created_at DESC, id DESC`;
+  if (page) {
+    params.push(page.limit);
+    sql += ` LIMIT $${params.length}`;
+    params.push(page.offset);
+    sql += ` OFFSET $${params.length}`;
+  }
+  const result = await getPool().query(sql, params);
+  return result.rows.map((row) => mapRow(row as Record<string, unknown>));
+}
+
+export async function countInterestSignups(status?: InterestStatus): Promise<number> {
   const result = status
     ? await getPool().query(
-        `SELECT * FROM interest_signups WHERE status = $1 ORDER BY created_at DESC`,
+        `SELECT count(*)::int AS count FROM interest_signups WHERE status = $1`,
         [status],
       )
-    : await getPool().query(
-        `SELECT * FROM interest_signups ORDER BY created_at DESC`,
-      );
-  return result.rows.map((row) => mapRow(row as Record<string, unknown>));
+    : await getPool().query(`SELECT count(*)::int AS count FROM interest_signups`);
+  return result.rows[0]?.count ?? 0;
 }
 
 export async function countNewInterestSignups(): Promise<number> {

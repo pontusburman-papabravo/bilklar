@@ -13,178 +13,95 @@ import {
   countEnabledAdmins,
   requestAdminPasswordReset,
   resetAdminPassword,
+  type AdminUser,
 } from "../services/admin-users.js";
+import { recordAdminAudit } from "../services/admin-audit.js";
+import {
+  getAdminBetaStats,
+  listRecentInterestSignups,
+} from "../services/admin-stats.js";
+import {
+  getSupportUserView,
+  searchSupport,
+} from "../services/admin-support.js";
+import {
+  deleteProductAccount,
+  formatDeletionAuditSummary,
+} from "../services/account-lifecycle.js";
 import { EmailSendError, sendAdminResetEmail } from "../services/email.js";
 import {
+  INTEREST_PAGE_SIZE,
   INTEREST_STATUSES,
+  countInterestSignups,
   countNewInterestSignups,
   deleteInterestSignup,
   getInterestSignup,
   listInterestSignups,
   updateInterestSignup,
-  type InterestRole,
   type InterestStatus,
 } from "../services/interest.js";
+import { errorBanner, escapeHtml } from "./layout.js";
 import {
-  escapeHtml,
-  errorBanner,
-  primaryButton,
-  siteLayout,
-  successBanner,
-} from "./layout.js";
-import { siteFooter, siteHeader } from "./landing.js";
+  adminPage,
+  forgotPage,
+  loginPage,
+  notConfigured,
+  overviewPage,
+  resetPage,
+  signupDetailPage,
+  signupsListPage,
+  statistikPage,
+  supportSearchPage,
+  supportUserGonePage,
+  supportUserPage,
+} from "./admin-pages.js";
 import {
   ADMIN_LOGIN_RATE_LIMIT,
   ADMIN_RESET_RATE_LIMIT,
   allowRequest,
 } from "./rate-limit.js";
 
-const ROLE_LABELS: Record<InterestRole, string> = {
-  parent: "Förälder",
-  student: "Elev",
-  supervisor: "Handledare",
-  other: "Annat",
-};
-
-const STATUS_LABELS: Record<InterestStatus, string> = {
-  new: "Ny",
-  contacted: "Kontaktad",
-  invited: "Inbjuden",
-  declined: "Avböjd",
-};
-
-function adminPage(
-  title: string,
-  body: string,
-  options: { signedIn?: boolean } = {},
-): string {
-  return siteLayout(
-    title,
-    `${siteHeader({ variant: "admin", signedIn: options.signedIn })}${body}${siteFooter()}`,
-  );
-}
-
-function notConfigured() {
-  return {
-    status: 404 as const,
-    html: siteLayout(
-      "Inte hittad",
-      `${siteHeader()}<main class="site-section"><div class="site-inner site-inner--narrow"><h1>Sidan finns inte</h1></div></main>${siteFooter()}`,
-    ),
-  };
-}
-
-function loginPage(options: { errorMessage?: string; successMessage?: string } = {}): string {
-  return adminPage(
-    "Admin",
-    `<main class="site-section site-section--cream">
-       <div class="site-inner site-inner--narrow">
-         <h1>Admin</h1>
-         <p>Intresseanmälningar för Körpassets beta.</p>
-         ${options.successMessage ? successBanner(options.successMessage) : ""}
-         ${options.errorMessage ? errorBanner(options.errorMessage) : ""}
-         <form method="post" action="/admin/login" class="admin-form">
-           <div>
-             <label for="email">E-post</label>
-             <input id="email" name="email" type="email" required autocomplete="username">
-           </div>
-           <div>
-             <label for="password">Lösenord</label>
-             <input id="password" name="password" type="password" required autocomplete="current-password">
-           </div>
-           ${primaryButton("Logga in")}
-         </form>
-         <p><a href="/admin/forgot-password">Glömt lösenord?</a></p>
-       </div>
-     </main>`,
-  );
-}
-
-function forgotPage(message?: { kind: "ok" | "error"; text: string }): string {
-  return adminPage(
-    "Glömt lösenord",
-    `<main class="site-section site-section--cream">
-       <div class="site-inner site-inner--narrow">
-         <h1>Glömt lösenord</h1>
-         <p>Ange e-postadressen för admin-kontot.</p>
-         ${message?.kind === "ok" ? successBanner(message.text) : ""}
-         ${message?.kind === "error" ? errorBanner(message.text) : ""}
-         <form method="post" action="/admin/forgot-password" class="admin-form">
-           <div>
-             <label for="email">E-post</label>
-             <input id="email" name="email" type="email" required autocomplete="username">
-           </div>
-           ${primaryButton("Skicka länk")}
-         </form>
-         <p><a href="/admin/login">Tillbaka till inloggning</a></p>
-       </div>
-     </main>`,
-  );
-}
-
-function resetPage(options: { token?: string; errorMessage?: string }): string {
-  return adminPage(
-    "Nytt lösenord",
-    `<main class="site-section site-section--cream">
-       <div class="site-inner site-inner--narrow">
-         <h1>Välj nytt lösenord</h1>
-         ${options.errorMessage ? errorBanner(options.errorMessage) : ""}
-         <form method="post" action="/admin/reset-password" class="admin-form">
-           <input type="hidden" name="token" value="${escapeHtml(options.token ?? "")}">
-           <div>
-             <label for="password">Nytt lösenord</label>
-             <input id="password" name="password" type="password" required minlength="12" autocomplete="new-password">
-           </div>
-           <div>
-             <label for="confirm">Upprepa lösenord</label>
-             <input id="confirm" name="confirm" type="password" required minlength="12" autocomplete="new-password">
-           </div>
-           ${primaryButton("Spara lösenord")}
-         </form>
-       </div>
-     </main>`,
-  );
-}
-
-function formatWhen(iso: string): string {
-  return new Intl.DateTimeFormat("sv-SE", {
-    dateStyle: "short",
-    timeStyle: "short",
-    timeZone: "Europe/Stockholm",
-  }).format(new Date(iso));
-}
-
 function clientKey(request: FastifyRequest, prefix: string): string {
   return `${prefix}:${request.ip || "unknown"}`;
+}
+
+function parseStatus(value: string | undefined): InterestStatus | undefined {
+  return INTEREST_STATUSES.includes(value as InterestStatus)
+    ? (value as InterestStatus)
+    : undefined;
+}
+
+function parsePage(value: string | undefined): number {
+  const page = Number.parseInt(value ?? "1", 10);
+  if (!Number.isFinite(page) || page < 1) return 1;
+  return page;
 }
 
 async function requireAdmin(
   request: FastifyRequest,
   reply: FastifyReply,
-): Promise<boolean> {
+): Promise<AdminUser | null> {
   if ((await countEnabledAdmins()) === 0) {
     const missing = notConfigured();
     await reply.status(missing.status).type("text/html").send(missing.html);
-    return false;
+    return null;
   }
   const admin = await getAdminFromRequest(request);
   if (!admin) {
     await reply.redirect("/admin/login");
-    return false;
+    return null;
   }
-  return true;
+  return admin;
 }
 
 export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
   app.get("/admin", async (request, reply) => {
-    if ((await countEnabledAdmins()) === 0) {
-      const missing = notConfigured();
-      return reply.status(missing.status).type("text/html").send(missing.html);
-    }
-    if (!(await getAdminFromRequest(request))) {
-      return reply.redirect("/admin/login");
-    }
-    return reply.redirect("/admin/signups");
+    if (!(await requireAdmin(request, reply))) return;
+    const [stats, recent] = await Promise.all([
+      getAdminBetaStats(),
+      listRecentInterestSignups(5),
+    ]);
+    return reply.type("text/html").send(overviewPage({ stats, recent }));
   });
 
   app.get("/admin/login", async (request, reply) => {
@@ -193,7 +110,7 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
       return reply.status(missing.status).type("text/html").send(missing.html);
     }
     if (await getAdminFromRequest(request)) {
-      return reply.redirect("/admin/signups");
+      return reply.redirect("/admin");
     }
     const query = request.query as { reset?: string };
     return reply.type("text/html").send(
@@ -228,7 +145,7 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
       );
     }
     setAdminCookie(reply, admin.id);
-    return reply.redirect("/admin/signups");
+    return reply.redirect("/admin");
   });
 
   app.post("/admin/logout", async (_request, reply) => {
@@ -327,65 +244,34 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
   app.get("/admin/signups", async (request, reply) => {
     if (!(await requireAdmin(request, reply))) return;
 
-    const query = request.query as { status?: string };
-    const status = INTEREST_STATUSES.includes(query.status as InterestStatus)
-      ? (query.status as InterestStatus)
-      : undefined;
-    const signups = await listInterestSignups(status);
-    const newCount = await countNewInterestSignups();
-
-    const rows = signups
-      .map((signup) => {
-        const preview = signup.message
-          ? escapeHtml(signup.message.slice(0, 80))
-          : "—";
-        return `<tr>
-          <td><a href="/admin/signups/${escapeHtml(signup.id)}">${escapeHtml(signup.name)}</a><div class="muted">${escapeHtml(signup.email)}</div></td>
-          <td>${escapeHtml(ROLE_LABELS[signup.role])}</td>
-          <td><span class="status status--${signup.status}">${escapeHtml(STATUS_LABELS[signup.status])}</span></td>
-          <td>${escapeHtml(signup.city ?? "—")}</td>
-          <td>${preview}</td>
-          <td>${escapeHtml(formatWhen(signup.createdAt))}</td>
-        </tr>`;
-      })
-      .join("");
-
-    const filters = ["all", ...INTEREST_STATUSES]
-      .map((value) => {
-        const href = value === "all" ? "/admin/signups" : `/admin/signups?status=${value}`;
-        const label = value === "all" ? "Alla" : STATUS_LABELS[value as InterestStatus];
-        const current = (value === "all" && !status) || value === status;
-        return `<a href="${href}"${current ? ' aria-current="page"' : ""}>${escapeHtml(label)}</a>`;
-      })
-      .join(" · ");
+    const query = request.query as { status?: string; page?: string };
+    const status = parseStatus(query.status);
+    const page = parsePage(query.page);
+    const pageSize = INTEREST_PAGE_SIZE;
+    const offset = (page - 1) * pageSize;
+    const [signups, newCount, total] = await Promise.all([
+      listInterestSignups(status, { limit: pageSize, offset }),
+      countNewInterestSignups(),
+      countInterestSignups(status),
+    ]);
 
     return reply.type("text/html").send(
-      adminPage(
-        "Intresseanmälningar",
-        `<main class="admin-shell">
-           <h1>Intresseanmälningar</h1>
-           <p>${newCount} nya · ${signups.length} visade</p>
-           <div class="admin-toolbar">
-             <div>${filters}</div>
-             <a href="/admin/signups.csv">Ladda ner CSV</a>
-           </div>
-           <table class="admin-table">
-             <thead>
-               <tr><th>Namn</th><th>Roll</th><th>Status</th><th>Ort</th><th>Meddelande</th><th>Inkommen</th></tr>
-             </thead>
-             <tbody>
-               ${rows || `<tr><td colspan="6">Inga anmälningar ännu.</td></tr>`}
-             </tbody>
-           </table>
-         </main>`,
-        { signedIn: true },
-      ),
+      signupsListPage({
+        signups,
+        newCount,
+        total,
+        page,
+        pageSize,
+        status,
+      }),
     );
   });
 
   app.get("/admin/signups.csv", async (request, reply) => {
     if (!(await requireAdmin(request, reply))) return;
-    const signups = await listInterestSignups();
+    const query = request.query as { status?: string };
+    const status = parseStatus(query.status);
+    const signups = await listInterestSignups(status);
     const header = "created_at,name,email,role,city,status,message";
     const lines = signups.map((signup) =>
       [
@@ -412,71 +298,46 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
       return reply.status(404).type("text/html").send(
         adminPage("Saknas", `<main class="admin-shell">${errorBanner("Anmälan hittades inte")}</main>`, {
           signedIn: true,
+          nav: "signups",
         }),
       );
     }
-
-    const options = INTEREST_STATUSES.map((status) => {
-      const selected = status === signup.status ? " selected" : "";
-      return `<option value="${status}"${selected}>${escapeHtml(STATUS_LABELS[status])}</option>`;
-    }).join("");
-
-    return reply.type("text/html").send(
-      adminPage(
-        signup.name,
-        `<main class="admin-shell">
-           <p><a href="/admin/signups">← Alla anmälningar</a></p>
-           <h1>${escapeHtml(signup.name)}</h1>
-           <p>${escapeHtml(signup.email)} · ${escapeHtml(ROLE_LABELS[signup.role])} · ${escapeHtml(signup.city ?? "Ingen ort")}</p>
-           <p>Inkommen ${escapeHtml(formatWhen(signup.createdAt))}</p>
-           ${signup.message ? `<blockquote>${escapeHtml(signup.message)}</blockquote>` : "<p class=\"muted\">Inget meddelande.</p>"}
-           <form method="post" action="/admin/signups/${escapeHtml(signup.id)}" class="admin-form">
-             <div>
-               <label for="status">Status</label>
-               <select id="status" name="status">${options}</select>
-             </div>
-             <div>
-               <label for="admin_note">Intern anteckning</label>
-               <textarea id="admin_note" name="admin_note" rows="4">${escapeHtml(signup.adminNote ?? "")}</textarea>
-             </div>
-             ${primaryButton("Spara")}
-           </form>
-           <form method="post" action="/admin/signups/${escapeHtml(signup.id)}/delete" class="admin-form admin-form--danger" onsubmit="return confirm('Radera anmälan? Det går inte att ångra.');">
-             <p>Radering tar bort waitlist-raden. Används vid begäran eller manuell retention.</p>
-             <label class="consent">
-               <input type="checkbox" name="confirm" value="yes" required>
-               <span>Jag vill radera den här anmälan.</span>
-             </label>
-             ${primaryButton("Radera anmälan")}
-           </form>
-         </main>`,
-        { signedIn: true },
-      ),
-    );
+    return reply.type("text/html").send(signupDetailPage(signup));
   });
 
   app.post("/admin/signups/:id", async (request, reply) => {
-    if (!(await requireAdmin(request, reply))) return;
+    const admin = await requireAdmin(request, reply);
+    if (!admin) return;
     const { id } = request.params as { id: string };
     const body = request.body as { status?: string; admin_note?: string };
     try {
-      await updateInterestSignup(id, {
+      const previous = await getInterestSignup(id);
+      const updated = await updateInterestSignup(id, {
         status: body.status,
         adminNote: body.admin_note,
+      });
+      await recordAdminAudit({
+        adminUserId: admin.id,
+        operation: "waitlist_update",
+        targetType: "interest_signup",
+        targetId: id,
+        summary: `status ${previous?.status ?? "?"} → ${updated.status}; note_set=${Boolean(updated.adminNote)}`,
       });
       return reply.redirect(`/admin/signups/${id}`);
     } catch (error) {
       const message = error instanceof AppError ? error.message : "Kunde inte spara";
-      return reply.status(400).type("text/html").send(
+      return reply.status(error instanceof AppError ? error.statusCode : 400).type("text/html").send(
         adminPage("Fel", `<main class="admin-shell">${errorBanner(message)}</main>`, {
           signedIn: true,
+          nav: "signups",
         }),
       );
     }
   });
 
   app.post("/admin/signups/:id/delete", async (request, reply) => {
-    if (!(await requireAdmin(request, reply))) return;
+    const admin = await requireAdmin(request, reply);
+    if (!admin) return;
     const { id } = request.params as { id: string };
     const body = request.body as { confirm?: string };
     if (body.confirm !== "yes") {
@@ -484,19 +345,96 @@ export async function registerAdminRoutes(app: FastifyInstance): Promise<void> {
         adminPage(
           "Bekräfta radering",
           `<main class="admin-shell">${errorBanner("Bekräfta raderingen.")}<p><a href="/admin/signups/${escapeHtml(id)}">Tillbaka</a></p></main>`,
-          { signedIn: true },
+          { signedIn: true, nav: "signups" },
         ),
       );
     }
     try {
+      const existing = await getInterestSignup(id);
       await deleteInterestSignup(id);
+      await recordAdminAudit({
+        adminUserId: admin.id,
+        operation: "waitlist_delete",
+        targetType: "interest_signup",
+        targetId: id,
+        summary: `deleted waitlist row email=${existing?.email ?? "unknown"}; product_user_untouched=true`,
+      });
       return reply.redirect("/admin/signups");
     } catch (error) {
       const message = error instanceof AppError ? error.message : "Kunde inte radera";
-      return reply.status(400).type("text/html").send(
+      return reply.status(error instanceof AppError ? error.statusCode : 400).type("text/html").send(
         adminPage("Fel", `<main class="admin-shell">${errorBanner(message)}</main>`, {
           signedIn: true,
+          nav: "signups",
         }),
+      );
+    }
+  });
+
+  app.get("/admin/statistik", async (request, reply) => {
+    if (!(await requireAdmin(request, reply))) return;
+    const stats = await getAdminBetaStats();
+    return reply.type("text/html").send(statistikPage(stats));
+  });
+
+  app.get("/admin/support", async (request, reply) => {
+    if (!(await requireAdmin(request, reply))) return;
+    const query = request.query as { q?: string; deleted?: string };
+    const search = await searchSupport(query.q ?? "");
+    return reply.type("text/html").send(
+      supportSearchPage(search, {
+        successMessage:
+          query.deleted === "1" ? "Kontot är raderat enligt account-lifecycle." : undefined,
+      }),
+    );
+  });
+
+  app.get("/admin/support/users/:id", async (request, reply) => {
+    if (!(await requireAdmin(request, reply))) return;
+    const { id } = request.params as { id: string };
+    const view = await getSupportUserView(id);
+    if (!view) {
+      return reply.status(404).type("text/html").send(supportUserGonePage());
+    }
+    return reply.type("text/html").send(supportUserPage(view));
+  });
+
+  app.post("/admin/support/users/:id/delete-account", async (request, reply) => {
+    const admin = await requireAdmin(request, reply);
+    if (!admin) return;
+    const { id } = request.params as { id: string };
+    const body = request.body as {
+      confirm_irreversible?: string;
+      confirm_user_id?: string;
+    };
+    const view = await getSupportUserView(id);
+    if (!view) {
+      return reply.status(404).type("text/html").send(supportUserGonePage());
+    }
+
+    const typedId = (body.confirm_user_id ?? "").trim();
+    if (body.confirm_irreversible !== "yes" || typedId !== id) {
+      return reply.status(400).type("text/html").send(
+        supportUserPage(view, {
+          errorMessage: "Bekräfta den irreversibla operationen och skriv in rätt UUID.",
+        }),
+      );
+    }
+
+    try {
+      const summary = await deleteProductAccount(id);
+      await recordAdminAudit({
+        adminUserId: admin.id,
+        operation: "gdpr_delete_account",
+        targetType: "user",
+        targetId: id,
+        summary: formatDeletionAuditSummary(summary),
+      });
+      return reply.redirect("/admin/support?deleted=1");
+    } catch (error) {
+      const message = error instanceof AppError ? error.message : "Kunde inte radera kontot";
+      return reply.status(error instanceof AppError ? error.statusCode : 400).type("text/html").send(
+        supportUserPage(view, { errorMessage: message }),
       );
     }
   });

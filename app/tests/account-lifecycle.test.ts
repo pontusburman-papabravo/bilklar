@@ -12,6 +12,9 @@ import {
   listActiveSupervisors,
 } from "../src/services/journeys.js";
 import { createJourneyForStudent } from "../src/services/journeys.js";
+import {
+  deleteProductAccount,
+} from "../src/services/account-lifecycle.js";
 import { createTestApp } from "./helpers.js";
 import { formBody, injectWithSession } from "./http-helpers.js";
 import { resetDatabaseData } from "./setup.js";
@@ -271,5 +274,44 @@ describe("account lifecycle / tombstoning invariants", () => {
     );
     assert.equal(newUser.rows[0].display_name, "Ny handledare");
     assert.equal(newUser.rows[0].account_state, "guest");
+  });
+
+  it("deleteProductAccount tombstones a supervisor without dropping the student ledger", async () => {
+    const seeded = await seedRatedDrive();
+
+    const summary = await deleteProductAccount(seeded.supervisorId);
+    assert.equal(summary.deleted.authIdentities, 1);
+    assert.equal(summary.deleted.studentJourneys, 0);
+    assert.equal(summary.tombstoned.userRow, true);
+    assert.ok(summary.retained.historicalObservationAttributions >= 1);
+
+    const user = await getPool().query(
+      `SELECT account_state, display_name FROM users WHERE id = $1`,
+      [seeded.supervisorId],
+    );
+    assert.equal(user.rows[0].account_state, "deleted");
+    assert.equal(user.rows[0].display_name, null);
+    assert.equal((await listAccessibleActiveJourneys(seeded.supervisorId)).length, 0);
+    assert.ok(await getJourneyAccess(seeded.journeyId, seeded.studentId));
+  });
+
+  it("deleteProductAccount deletes the student-owned journey but never hard-deletes the user row", async () => {
+    const seeded = await seedRatedDrive();
+    const summary = await deleteProductAccount(seeded.studentId);
+    assert.equal(summary.deleted.studentJourneys, 1);
+    assert.ok(summary.deleted.studentDrives >= 1);
+
+    const user = await getPool().query(
+      `SELECT id, account_state FROM users WHERE id = $1`,
+      [seeded.studentId],
+    );
+    assert.equal(user.rowCount, 1);
+    assert.equal(user.rows[0].account_state, "deleted");
+
+    const journey = await getPool().query(
+      `SELECT count(*)::int AS n FROM driving_journeys WHERE id = $1`,
+      [seeded.journeyId],
+    );
+    assert.equal(journey.rows[0].n, 0);
   });
 });

@@ -84,6 +84,7 @@ export async function resetDatabaseData(): Promise<void> {
   await pool.query(`
     TRUNCATE
       resend_webhook_events,
+      admin_audit_events,
       admin_password_reset_tokens,
       admin_users,
       interest_signups,

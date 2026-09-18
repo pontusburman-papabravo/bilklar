@@ -97,12 +97,21 @@ export function renderLegalPage(title: string, body: string): string {
 }
 
 export function siteHeader(
-  options: { ctaHref?: string; variant?: "site" | "admin"; signedIn?: boolean } = {},
+  options: {
+    ctaHref?: string;
+    variant?: "site" | "admin";
+    signedIn?: boolean;
+    adminNav?: "overview" | "signups" | "statistik" | "support";
+  } = {},
 ): string {
   if (options.variant === "admin") {
+    const current = (href: string, nav: string, label: string) =>
+      `<a href="${href}"${options.adminNav === nav ? ' aria-current="page"' : ""}>${label}</a>`;
     const links = options.signedIn
       ? `<nav class="site-nav__links site-nav__links--admin" aria-label="Admin">
-      <a href="/admin/signups">Anmälningar</a>
+      ${current("/admin", "overview", "Översikt")}
+      ${current("/admin/signups", "signups", "Intresseanmälningar")}
+      ${current("/admin/statistik", "statistik", "Statistik")}
       <form method="post" action="/admin/logout"><button type="submit" class="btn-link">Logga ut</button></form>
     </nav>`
       : "";
