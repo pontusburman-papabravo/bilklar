@@ -54,6 +54,7 @@ export function renderLandingPage(options: {
     `${siteHeader()}
      <main>
        ${hero()}
+       ${trafficPhotos()}
        ${betaProgress(betaFilled)}
        ${howItWorks()}
        ${whyItExists()}
@@ -176,6 +177,20 @@ function hero(): string {
       </div>
       ${heroCard()}
     </div>
+  </section>`;
+}
+
+function trafficPhotos(): string {
+  return `<section class="photo-strip" aria-label="Svensk trafikmiljö">
+    <figure>
+      <img src="/images/landing/roundabout.jpg" width="1280" height="720" alt="Rondell i ett svenskt villaområde, sett från bilen" decoding="async">
+    </figure>
+    <figure>
+      <img src="/images/landing/residential-street.jpg" width="1152" height="864" alt="Bostadsgata där en bil kör rakt fram" decoding="async">
+    </figure>
+    <figure>
+      <img src="/images/landing/country-road.jpg" width="1280" height="720" alt="Svensk landsväg med mittlinje genom skog" decoding="async">
+    </figure>
   </section>`;
 }
 

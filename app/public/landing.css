@@ -147,7 +147,32 @@ a { color: inherit; }
 }
 
 .hero {
-  padding: 3rem 0 4rem;
+  padding: 3rem 0 2rem;
+}
+
+.photo-strip {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 1.25rem 3rem;
+}
+
+.photo-strip figure {
+  margin: 0;
+}
+
+.photo-strip figure:last-child {
+  grid-column: 1 / -1;
+}
+
+.photo-strip img {
+  display: block;
+  width: 100%;
+  height: 9.5rem;
+  object-fit: cover;
+  border-radius: 1.15rem;
 }
 
 .hero__grid {
@@ -456,6 +481,9 @@ a { color: inherit; }
   .card-grid { grid-template-columns: repeat(3, 1fr); }
   .site-footer__grid { grid-template-columns: 1.2fr 1fr 1.4fr; }
   .site-logo img { height: 2.15rem; max-width: 11rem; }
+  .photo-strip { grid-template-columns: 1fr 1fr 1fr; }
+  .photo-strip figure:last-child { grid-column: auto; }
+  .photo-strip img { height: 13.5rem; }
 }
 
 .admin-shell {

@@ -62,6 +62,29 @@ describe("landing and interest waitlist", () => {
     await app.close();
   });
 
+  it("shows local traffic photos on the marketing homepage", async () => {
+    const app = await createTestApp();
+    const response = await app.inject({ method: "GET", url: "/" });
+    const header = response.body.match(/<header class="site-nav">[\s\S]*?<\/header>/)?.[0];
+    assert.ok(header);
+    assert.doesNotMatch(header, /\/images\/landing\//);
+    assert.match(response.body, /aria-label="Svensk trafikmiljö"/);
+    assert.match(response.body, /src="\/images\/landing\/roundabout\.jpg"/);
+    assert.match(response.body, /src="\/images\/landing\/residential-street\.jpg"/);
+    assert.match(response.body, /src="\/images\/landing\/country-road\.jpg"/);
+
+    for (const path of [
+      "/images/landing/roundabout.jpg",
+      "/images/landing/residential-street.jpg",
+      "/images/landing/country-road.jpg",
+    ]) {
+      const asset = await app.inject({ method: "GET", url: path });
+      assert.equal(asset.statusCode, 200, path);
+      assert.match(String(asset.headers["content-type"]), /image\/jpeg/);
+    }
+    await app.close();
+  });
+
   it("keeps product onboarding available", async () => {
     const app = await createTestApp();
     const onboarding = await app.inject({ method: "GET", url: "/onboarding" });
