@@ -5,13 +5,15 @@ Design för hur en elev bjuder in handledare utan administration och utan att by
 ## Flöde
 
 ```text
+Elev fortsätter med Apple eller Google i appen
+    ↓
 Elev skapar driving_journey
     ↓
 Elev genererar invitation (QR eller länk)
     ↓
-Handledare scannar / öppnar länk
+Handledare scannar / öppnar länk (Universal Link in i appen)
     ↓
-Guest actor skapas (stable user_id) ELLER befintlig user loggar in
+Inloggad Apple/Google-user återanvänds, annars guest actor (stable user_id)
     ↓
 Handledare accepterar invitation
     ↓
@@ -26,7 +28,9 @@ En handledare som inte har autentiserat sig än får:
 
 1. En **stable `user_id`** vid första besök (via invitation token)
 2. Möjlighet att **delta** i körpass och registrera observations
-3. Möjlighet att **claima** identiteten senare (Apple, Google, passkey, email magic link)
+3. Möjlighet att **claima** identiteten senare med Apple eller Google i appen
+
+Guest är **inte** ett produktkonto. Kontoregistrering sker bara via Sign in with Apple eller Sign in with Google — första lyckade inloggningen skapar `auth_identities` och sätter `account_state = active`. Se [ADR-008](../decisions/ADR-008-app-oauth-accounts.md).
 
 **Ingen normal guest→registered-process ska kräva merge av `users`.** Samma `user_id` behålls när auth läggs till via `auth_identities`.
 
@@ -70,4 +74,5 @@ Exakt en caller får raden. `RETURNING` tom → invitation redan accepterad, exp
 
 - [Data model](../domain/data-model.md) — `journey_invitations`, `journey_collaborators`
 - [ADR-002: Actor/auth separation](../decisions/ADR-002-actor-auth-separation.md)
+- [ADR-008: App-only konton via Apple och Google](../decisions/ADR-008-app-oauth-accounts.md)
 - [ADR-001: Student-owned journey](../decisions/ADR-001-student-owned-journey.md)

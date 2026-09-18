@@ -10,15 +10,15 @@ Ett origin:
 
 | URL | Vad |
 | --- | --- |
-| `https://korpasset.se` | Landning + intresseanmälan. Inloggad användare med resa går till produkten. |
-| `https://korpasset.se/onboarding` | Skapa elevresa |
-| `https://korpasset.se/invite/<token>` | Canonical invitation-länk |
+| `https://korpasset.se` | Landning + intresseanmälan. Skapar **inte** produktkonto. |
+| `https://korpasset.se/onboarding` | Slice-fallback för att skapa elevresa. Inte betans kontomodell. |
+| `https://korpasset.se/invite/<token>` | Canonical invitation-länk; i beta öppnas den i appen |
 | `https://korpasset.se/integritet` `/villkor` `/kontakt` | Legal |
 | `https://korpasset.se/admin` | Waitlist-admin (e-post + lösenord, skapas med `admin:create`) |
 | `https://korpasset.se/health` | Health, ingen auth |
 | `https://korpasset.se/api/resend/webhook` | Resend-händelser (Svix-signatur, ingen användar-auth) |
 
-Ingen `app.`-subdomän i första betan. Samma host förenklar cookies, QR, SMS och en Capacitor-shell som laddar produktionens origin.
+Ingen `app.`-subdomän i första betan. Samma host förenklar cookies, QR, SMS och en Capacitor-shell som laddar produktionens origin. Produktkonton skapas i den shellen via Apple och Google, inte på landningen.
 
 Invitationer byggs från `APP_BASE_URL`. Den **måste** vara `https://korpasset.se` i produktion — annars pekar QR mot localhost.
 

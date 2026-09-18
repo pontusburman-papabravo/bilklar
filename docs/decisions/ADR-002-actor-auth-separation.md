@@ -5,7 +5,7 @@
 
 ## Context
 
-Handledare ska kunna delta via QR/länk innan full autentisering. Senare ska samma person kunna claima identiteten via Apple, Google, passkey eller email magic link — utan att byta `user_id`.
+Handledare ska kunna delta via QR/länk innan full autentisering. Senare ska samma person kunna claima identiteten via Apple eller Google — utan att byta `user_id`. Passkey och e-post magic link är inte v1-produktauth; se [ADR-008](ADR-008-app-oauth-accounts.md).
 
 ## Decision
 
@@ -18,7 +18,7 @@ Handledare ska kunna delta via QR/länk innan full autentisering. Senare ska sam
 ## Consequences
 
 - Alla FK (`observer_user_id`, `supervisor_user_id`, etc.) pekar på `users.id` — stabilt genom hela livscykeln
-- Auth-provider integration är separat concern i framtida PR
+- Auth-provider integration för produktkonton är Apple och Google i appen ([ADR-008](ADR-008-app-oauth-accounts.md))
 - Guest session kan skapas vid invitation accept utan login-formulär
 - Scenario "guest på ny telefon → gör körpass → loggar in med befintlig Apple-identitet som redan sitter på annan user" kräver reconciliation — byggs inte nu
 
@@ -26,3 +26,4 @@ Handledare ska kunna delta via QR/länk innan full autentisering. Senare ska sam
 
 - [Onboarding & handoff](../product/onboarding-handoff.md)
 - [Data model](../domain/data-model.md)
+- [ADR-008: App-only konton via Apple och Google](ADR-008-app-oauth-accounts.md)

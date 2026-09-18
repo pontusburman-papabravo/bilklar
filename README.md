@@ -48,6 +48,7 @@ v1 är strikt fokuserad på den praktiska privata övningskörningen.
 - [ADR-005: Observation/focus separation](docs/decisions/ADR-005-observation-focus-separation.md)
 - [ADR-006: B2C-first](docs/decisions/ADR-006-b2c-first.md)
 - [ADR-007: PostgreSQL 15](docs/decisions/ADR-007-postgresql-15.md)
+- [ADR-008: App-only konton via Apple och Google](docs/decisions/ADR-008-app-oauth-accounts.md)
 
 ## Databas
 
@@ -98,4 +99,4 @@ Health: `GET /health` → `{ "status": "ok" }`.
 
 ## Status
 
-Canonical produkt- och databasgrund. Första vertical slice: journey → invitation → körpass → observation → rekommendation. Publik landning med intresseanmälan på `https://korpasset.se`. Nästa fas: **Beta Readiness** (session-fallback, auth, legal i produktion, observability, iOS/Android).
+Canonical produkt- och databasgrund. Första vertical slice: journey → invitation → körpass → observation → rekommendation. Publik landning med intresseanmälan på `https://korpasset.se`. Nästa fas: **Beta Readiness** (app-shell, Apple/Google-konto enligt [ADR-008](docs/decisions/ADR-008-app-oauth-accounts.md), legal i produktion, observability, iOS/Android).
