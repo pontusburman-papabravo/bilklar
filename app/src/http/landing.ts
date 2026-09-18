@@ -1,5 +1,5 @@
 import { escapeHtml, errorBanner, primaryButton, siteLayout } from "./layout.js";
-import type { InterestRole } from "../services/interest.js";
+import { BETA_COHORT_SIZE, type InterestRole } from "../services/interest.js";
 
 const ROLE_LABELS: Record<InterestRole, string> = {
   parent: "Förälder / vårdnadshavare",
@@ -8,8 +8,29 @@ const ROLE_LABELS: Record<InterestRole, string> = {
   other: "Annat",
 };
 
+export const TRANSPORTSTYRELSEN_LINKS = {
+  ovningskora:
+    "https://www.transportstyrelsen.se/sv/vagtrafik/korkort/ta-korkort/handledarskap-och-ovningskorning/ovningskora/",
+  handledare:
+    "https://www.transportstyrelsen.se/sv/vagtrafik/korkort/ta-korkort/handledarskap-och-ovningskorning/handledare/",
+  korkortstillstand:
+    "https://www.transportstyrelsen.se/sv/vagtrafik/korkort/ta-korkort/korkortstillstand/",
+  planera:
+    "https://www.transportstyrelsen.se/sv/vagtrafik/korkort/ta-korkort/handledarskap-och-ovningskorning/planera-ovningsskorningen/",
+  personbilB:
+    "https://www.transportstyrelsen.se/sv/vagtrafik/korkort/ta-korkort/valj-behorighet/personbil-och-latt-lastbil/b-personbil-och-latt-lastbil/",
+} as const;
+
+const LANDING_DESCRIPTION =
+  "Körpasset hjälper elev och handledare att planera, följa upp och se utvecklingen under den privata övningskörningen. Gratis beta för B-körkort.";
+
+function tsLink(href: string, label: string): string {
+  return `<a href="${escapeHtml(href)}" rel="noopener noreferrer" target="_blank">${escapeHtml(label)}</a>`;
+}
+
 export function renderLandingPage(options: {
   errorMessage?: string;
+  betaFilled?: number;
   values?: {
     name?: string;
     email?: string;
@@ -20,19 +41,22 @@ export function renderLandingPage(options: {
 } = {}): string {
   const values = options.values ?? {};
   const formError = options.errorMessage ? errorBanner(options.errorMessage) : "";
+  const betaFilled = options.betaFilled ?? 0;
 
   return siteLayout(
-    "Övningskör med en plan",
+    "Övningskör med bättre koll",
     `${siteHeader()}
      <main>
        ${hero()}
-       ${problem()}
+       ${betaProgress(betaFilled)}
        ${howItWorks()}
-       ${multiSupervisor()}
+       ${whyItExists()}
+       ${officialRules()}
        ${faq()}
-       ${interestSection(formError, values)}
+       ${interestSection(formError, values, betaFilled)}
      </main>
      ${siteFooter()}`,
+    { description: LANDING_DESCRIPTION },
   );
 }
 
@@ -92,7 +116,8 @@ export function siteHeader(
   return `<header class="site-nav">
     <a class="site-logo" href="/">Körpasset</a>
     <nav class="site-nav__links" aria-label="Huvudmeny">
-      <a href="/#sa-funkar-det">Så funkar det</a>
+      <a href="/#sa-funkar-det">Så fungerar det</a>
+      <a href="/#regler">Regler</a>
       <a href="/#intresse" class="site-nav__cta">Bli betatestare</a>
     </nav>
     <a class="site-nav__cta site-nav__cta--mobile" href="${escapeHtml(ctaHref)}">Bli betatestare</a>
@@ -104,7 +129,7 @@ export function siteFooter(): string {
     <div class="site-inner site-footer__grid">
       <div>
         <p class="site-logo">Körpasset</p>
-        <p>Övningskör med en plan.</p>
+        <p>Få bättre struktur på övningskörningen.</p>
       </div>
       <div>
         <a href="/integritet">Integritet</a>
@@ -122,12 +147,12 @@ function hero(): string {
     <div class="site-inner hero__grid">
       <div>
         <p class="eyebrow">Privat övningskörning · B-körkort</p>
-        <h1>Övningskör med en plan.</h1>
-        <p class="lede">Välj vad ni ska träna på. Kör. Följ upp på några sekunder.</p>
-        <p>Flera handledare, samma plan. Nästa körpass fortsätter där ni slutade.</p>
+        <h1>Övningskör med bättre koll</h1>
+        <p class="lede">Körpasset hjälper elev och handledare att planera, följa upp och se utvecklingen under den privata övningskörningen.</p>
+        <p>Håll koll på vad ni har tränat på, dokumentera körpassen och samarbeta även om eleven har flera handledare.</p>
         <div class="hero__ctas">
           <a class="btn btn-primary" href="#intresse">Bli betatestare</a>
-          <a class="btn-link" href="#sa-funkar-det">Så funkar det</a>
+          <a class="btn-link" href="#sa-funkar-det">Så fungerar det</a>
         </div>
         <p class="hero__trust">Gratis under betan · Vi hör av oss när det är er tur</p>
       </div>
@@ -157,26 +182,27 @@ function heroCard(): string {
   </aside>`;
 }
 
-function problem(): string {
-  return `<section class="site-section site-section--white" id="problemet">
-    <div class="site-inner">
-      <p class="eyebrow">Varför Körpasset</p>
-      <h2>När flera hjälper till blir övningskörningen lätt spretig.</h2>
-      <p class="lede">Pappa vet inte vad mamma övade på sist. Eleven hör olika råd.</p>
-      <div class="card-grid">
-        <article class="value-card">
-          <h3>Vad ska vi träna på idag?</h3>
-          <p>Välj 2–3 moment. Inte hela kursplanen.</p>
-        </article>
-        <article class="value-card">
-          <h3>Hur gick det?</h3>
-          <p>Tre nivåer. Ungefär 15–20 sekunder efter körningen.</p>
-        </article>
-        <article class="value-card">
-          <h3>Vad blir nästa gång?</h3>
-          <p>Planen följer eleven — oavsett vem som sitter bredvid.</p>
-        </article>
+function betaProgress(filled: number): string {
+  const shown = Math.min(filled, BETA_COHORT_SIZE);
+  const percent = Math.round((shown / BETA_COHORT_SIZE) * 100);
+  const cohortFull = filled >= BETA_COHORT_SIZE;
+
+  const heading = cohortFull
+    ? "Första betagruppen är fylld — skriv upp dig för nästa plats"
+    : "Vi söker våra första 25 betatestare";
+  const status = cohortFull
+    ? `Första gruppen på ${BETA_COHORT_SIZE} är fylld. Du kan fortfarande anmäla intresse.`
+    : `${shown} av ${BETA_COHORT_SIZE} platser fyllda`;
+
+  return `<section class="site-section site-section--white" id="beta" aria-labelledby="beta-heading">
+    <div class="site-inner site-inner--narrow">
+      <p class="eyebrow">Beta</p>
+      <h2 id="beta-heading">${escapeHtml(heading)}</h2>
+      <p class="lede">${escapeHtml(status)}</p>
+      <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="${BETA_COHORT_SIZE}" aria-valuenow="${shown}" aria-label="${escapeHtml(status)}">
+        <span style="width:${percent}%"></span>
       </div>
+      <p><a class="btn btn-primary" href="#intresse">Jag vill vara med</a></p>
     </div>
   </section>`;
 }
@@ -190,22 +216,22 @@ function howItWorks(): string {
         <li>
           <span class="steps__num">1</span>
           <div>
-            <h3>Eleven skapar resan och bjuder in</h3>
-            <p>QR eller länk till handledaren.</p>
+            <h3>Koppla ihop elev och handledare</h3>
+            <p>Eleven skapar resan och bjuder in via QR eller länk. Det går att ha en eller flera handledare.</p>
           </div>
         </li>
         <li>
           <span class="steps__num">2</span>
           <div>
-            <h3>Ni väljer dagens fokus och kör</h3>
-            <p>2–3 moment. Inte “kör runt lite”.</p>
+            <h3>Kör och följ upp</h3>
+            <p>Ni väljer 2–3 moment att träna på, kör, och registrerar kort hur det gick efteråt.</p>
           </div>
         </li>
         <li>
           <span class="steps__num">3</span>
           <div>
-            <h3>Handledaren följer upp på några sekunder</h3>
-            <p>Behöver hjälp / Med påminnelse / Utan hjälp.</p>
+            <h3>Se utvecklingen</h3>
+            <p>Körpassen bygger upp en gemensam bild av vad eleven har tränat på och vad som kan vara bra att fokusera på härnäst.</p>
           </div>
         </li>
       </ol>
@@ -213,12 +239,46 @@ function howItWorks(): string {
   </section>`;
 }
 
-function multiSupervisor(): string {
-  return `<section class="site-section site-section--navy" id="handledare">
+function whyItExists(): string {
+  return `<section class="site-section site-section--navy" id="varfor">
     <div class="site-inner site-inner--narrow">
-      <p class="eyebrow">Flera handledare</p>
-      <h2>Pappa vet vad mamma övade på sist.</h2>
-      <p class="lede">När flera hjälper till med övningskörningen blir det lätt spretigt. Körpasset håller ihop träningen kring eleven, så nästa körpass kan fortsätta där det förra slutade – oavsett vem som sitter bredvid.</p>
+      <p class="eyebrow">Varför Körpasset</p>
+      <h2>Få bättre struktur på övningskörningen</h2>
+      <p class="lede">Privat övningskörning kan pågå länge och ske med flera olika personer. Det är lätt att tappa bort vad man redan tränat på, vad som fortfarande är svårt, vad nästa handledare bör fokusera på och hur eleven faktiskt utvecklas.</p>
+      <p>Körpasset gör det enklare att hålla ihop — utan att ersätta handledarens ansvar i bilen eller en trafikskola.</p>
+    </div>
+  </section>`;
+}
+
+function officialRules(): string {
+  return `<section class="site-section site-section--white" id="regler">
+    <div class="site-inner">
+      <p class="eyebrow">Officiella regler</p>
+      <h2>Ska du övningsköra privat?</h2>
+      <p class="lede">Här är en kort sammanfattning. Körpasset är inte en myndighet — kontrollera alltid originalinformationen hos Transportstyrelsen.</p>
+      <ul class="rule-list">
+        <li>Eleven behöver ett giltigt körkortstillstånd.</li>
+        <li>Privat övningskörning kräver en godkänd handledare.</li>
+        <li>För B-behörighet får man börja övningsköra med personbil från 16 års ålder.</li>
+        <li>Handledaren ansvarar som förare under privat övningskörning.</li>
+        <li>ÖVNINGSKÖR-skylten ska vara väl synlig bakifrån.</li>
+        <li>Kravet på introduktionsutbildning för privat övningskörning med personbil/lätt lastbil slopades 1 augusti 2026.</li>
+      </ul>
+      <aside class="info-box">
+        <h3>Introduktionsutbildningen är inte längre ett krav</h3>
+        <p>Sedan den 1 augusti 2026 behöver elev och handledare inte längre ha genomfört introduktionsutbildningen för privat övningskörning med personbil/lätt lastbil.</p>
+        <p>Det krävs fortfarande bland annat körkortstillstånd för eleven och en godkänd handledare.</p>
+        <p>${tsLink(TRANSPORTSTYRELSEN_LINKS.ovningskora, "Läs vad som gäller hos Transportstyrelsen")}</p>
+      </aside>
+      <h3>Läs mer hos Transportstyrelsen</h3>
+      <ul class="official-links">
+        <li>${tsLink(TRANSPORTSTYRELSEN_LINKS.ovningskora, "Övningsköra")}</li>
+        <li>${tsLink(TRANSPORTSTYRELSEN_LINKS.handledare, "Handledare")}</li>
+        <li>${tsLink(TRANSPORTSTYRELSEN_LINKS.korkortstillstand, "Körkortstillstånd")}</li>
+        <li>${tsLink(TRANSPORTSTYRELSEN_LINKS.planera, "Planera övningskörningen")}</li>
+        <li>${tsLink(TRANSPORTSTYRELSEN_LINKS.personbilB, "B – Personbil och lätt lastbil")}</li>
+      </ul>
+      <p class="muted">Regler kan ändras. Kontrollera alltid aktuell information hos Transportstyrelsen.</p>
     </div>
   </section>`;
 }
@@ -230,16 +290,28 @@ function faq(): string {
       <h2>Innan ni anmäler er</h2>
       <div class="faq">
         <details open>
-          <summary>Kostar det något?</summary>
-          <p>Nej, Körpasset är gratis under betan. En anmälan ger inte automatisk access och är inget löfte om livstidsfri användning.</p>
+          <summary>Vad är Körpasset?</summary>
+          <p>Ett enkelt stöd för privat övningskörning. Elev och handledare håller koll på vad ni har tränat på, dokumenterar körpassen och ser utvecklingen över tid.</p>
         </details>
         <details>
-          <summary>Kan flera handledare vara med?</summary>
-          <p>Ja. Samma elevresa, flera handledare, gemensam historik.</p>
+          <summary>Vem kan bli betatestare?</summary>
+          <p>Elever, handledare och föräldrar som övningskör privat mot B-körkort. En anmälan ger inte automatisk access — vi tar in familjer löpande.</p>
         </details>
         <details>
-          <summary>Är Körpasset från Transportstyrelsen?</summary>
-          <p>Nej. Körpasset är en fristående tjänst och är inte utvecklad av, ansluten till eller godkänd av Transportstyrelsen eller Trafikverket.</p>
+          <summary>Kostar betan något?</summary>
+          <p>Nej. Körpasset är gratis under betan. En anmälan är inget löfte om livstidsfri användning, och betalning införs inte via den här sidan.</p>
+        </details>
+        <details>
+          <summary>Kan jag ha flera handledare?</summary>
+          <p>Ja. Samma elevresa, flera handledare, gemensam historik. Nästa körpass kan fortsätta där det förra slutade.</p>
+        </details>
+        <details>
+          <summary>Ersätter Körpasset en trafikskola?</summary>
+          <p>Nej. Körpasset ersätter inte trafikskola, bedömer inte om eleven är redo för uppkörning och garanterar inte körkort. Det är ett stöd för att hålla ihop den privata träningen.</p>
+        </details>
+        <details>
+          <summary>Var hittar jag de officiella reglerna för privat övningskörning?</summary>
+          <p>Hos Transportstyrelsen. Börja med ${tsLink(TRANSPORTSTYRELSEN_LINKS.ovningskora, "Övningsköra")} och ${tsLink(TRANSPORTSTYRELSEN_LINKS.handledare, "Handledare")}. Körpasset är inte Transportstyrelsens tjänst.</p>
         </details>
       </div>
     </div>
@@ -255,6 +327,7 @@ function interestSection(
     city?: string;
     message?: string;
   },
+  betaFilled: number,
 ): string {
   const roleOptions = (Object.entries(ROLE_LABELS) as [InterestRole, string][])
     .map(([value, label]) => {
@@ -263,12 +336,17 @@ function interestSection(
     })
     .join("");
 
+  const cohortNote =
+    betaFilled >= BETA_COHORT_SIZE
+      ? "Första gruppen är fylld, men du kan skriva upp dig för nästa plats."
+      : "Vi söker just nu våra första 25 elever och handledare som vill hjälpa oss testa tjänsten.";
+
   return `<section class="site-section site-section--cta" id="intresse">
     <div class="site-inner site-inner--narrow">
       <p class="eyebrow">Beta</p>
-      <h2>Bli betatestare</h2>
-      <p class="lede">Vi söker familjer som övningskör privat och vill hjälpa oss testa Körpasset.</p>
-      <p>Anmäl intresse. Vi mejlar när det är er tur — en anmälan ger inte automatisk access.</p>
+      <h2>Vill du testa Körpasset?</h2>
+      <p class="lede">${escapeHtml(cohortNote)}</p>
+      <p>Produkten utvecklas fortfarande. Deltagare kan få frågor om hur det fungerar. Ingen betalning under betan.</p>
       ${formError}
       <form method="post" action="/interest" class="interest-form" novalidate>
         <div class="hp" aria-hidden="true">
@@ -302,7 +380,7 @@ function interestSection(
           <input type="checkbox" name="consent" value="yes" required>
           <span>Jag vill bli kontaktad om betan. Vi använder uppgifterna bara för det. Läs mer i <a href="/integritet">integritetspolicyn</a>.</span>
         </label>
-        ${primaryButton("Skicka intresseanmälan")}
+        ${primaryButton("Bli betatestare")}
       </form>
     </div>
   </section>`;
@@ -317,6 +395,7 @@ export function renderInterestFormError(
     city?: string;
     message?: string;
   },
+  betaFilled = 0,
 ): string {
-  return renderLandingPage({ errorMessage: message, values });
+  return renderLandingPage({ errorMessage: message, values, betaFilled });
 }

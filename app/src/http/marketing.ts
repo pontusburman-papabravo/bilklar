@@ -1,6 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import { AppError } from "../errors.js";
-import { saveInterestSignup } from "../services/interest.js";
+import { countBetaWaitlist, saveInterestSignup } from "../services/interest.js";
 import {
   renderInterestFormError,
   renderInterestThanksPage,
@@ -47,6 +47,7 @@ export async function registerMarketingRoutes(app: FastifyInstance): Promise<voi
         renderInterestFormError(
           "För många försök. Vänta en stund och prova igen.",
           formValues((request.body ?? {}) as Record<string, unknown>),
+          await countBetaWaitlist(),
         ),
       );
     }
@@ -58,6 +59,7 @@ export async function registerMarketingRoutes(app: FastifyInstance): Promise<voi
         renderInterestFormError(
           "Bekräfta att du vill bli kontaktad om betan.",
           values,
+          await countBetaWaitlist(),
         ),
       );
     }
@@ -75,7 +77,7 @@ export async function registerMarketingRoutes(app: FastifyInstance): Promise<voi
       const message =
         error instanceof AppError ? error.message : "Kunde inte spara anmälan.";
       return reply.status(400).type("text/html").send(
-        renderInterestFormError(message, values),
+        renderInterestFormError(message, values, await countBetaWaitlist()),
       );
     }
   });

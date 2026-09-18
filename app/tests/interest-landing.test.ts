@@ -1,6 +1,11 @@
 import assert from "node:assert/strict";
 import { beforeEach, describe, it } from "node:test";
 import { getPool } from "../src/db/pool.js";
+import {
+  saveInterestSignup,
+  updateInterestSignup,
+} from "../src/services/interest.js";
+import { TRANSPORTSTYRELSEN_LINKS } from "../src/http/landing.js";
 import { createTestApp } from "./helpers.js";
 import { formBody } from "./http-helpers.js";
 import { resetDatabaseData } from "./setup.js";
@@ -14,12 +19,13 @@ describe("landing and interest waitlist", () => {
     const app = await createTestApp();
     const response = await app.inject({ method: "GET", url: "/" });
     assert.equal(response.statusCode, 200);
-    assert.match(response.body, /Övningskör med en plan/);
+    assert.match(response.body, /Övningskör med bättre koll/);
     assert.match(response.body, /Bli betatestare/);
-    assert.match(response.body, /Pappa vet vad mamma övade på sist/);
-    assert.match(response.body, /Skicka intresseanmälan/);
+    assert.match(response.body, /0 av 25 platser fyllda/);
+    assert.match(response.body, /Ska du övningsköra privat/);
+    assert.match(response.body, /action="\/interest"/);
     assert.match(response.body, /integritetspolicyn/);
-    assert.match(response.body, /Vi söker familjer som övningskör privat/);
+    assert.match(response.body, /Vi söker just nu våra första 25/);
     assert.doesNotMatch(response.body, /fonts\.googleapis/);
     await app.close();
   });
@@ -165,6 +171,63 @@ describe("landing and interest waitlist", () => {
     assert.equal(response.statusCode, 302);
     const count = await getPool().query(`SELECT count(*)::int AS n FROM interest_signups`);
     assert.equal(count.rows[0].n, 0);
+    await app.close();
+  });
+
+  it("shows waitlist progress from unique rows and ignores declined", async () => {
+    for (let i = 0; i < 3; i += 1) {
+      await saveInterestSignup({
+        name: `Familj ${i}`,
+        email: `familj${i}@example.com`,
+        role: "parent",
+      });
+    }
+    const declined = await saveInterestSignup({
+      name: "Avböjd",
+      email: "avbojd@example.com",
+      role: "other",
+    });
+    assert.ok(declined);
+    await updateInterestSignup(declined.signup.id, { status: "declined" });
+
+    const app = await createTestApp();
+    const home = await app.inject({ method: "GET", url: "/" });
+    assert.equal(home.statusCode, 200);
+    assert.match(home.body, /3 av 25 platser fyllda/);
+    assert.doesNotMatch(home.body, /4 av 25/);
+    await app.close();
+  });
+
+  it("caps the public counter at 25 and keeps the waitlist form", async () => {
+    for (let i = 0; i < 26; i += 1) {
+      await saveInterestSignup({
+        name: `Person ${i}`,
+        email: `person${i}@example.com`,
+        role: "student",
+      });
+    }
+    const app = await createTestApp();
+    const home = await app.inject({ method: "GET", url: "/" });
+    assert.match(home.body, /Första betagruppen är fylld/);
+    assert.match(home.body, /action="\/interest"/);
+    assert.doesNotMatch(home.body, /26 av 25/);
+    assert.match(home.body, /aria-valuenow="25"/);
+    await app.close();
+  });
+
+  it("links official driving rules only to transportstyrelsen.se", async () => {
+    const app = await createTestApp();
+    const home = await app.inject({ method: "GET", url: "/" });
+    for (const href of Object.values(TRANSPORTSTYRELSEN_LINKS)) {
+      assert.match(home.body, new RegExp(href.replaceAll("/", "\\/")));
+    }
+    const externals = [...home.body.matchAll(/href="(https?:[^"]+)"/g)].map(
+      (match) => match[1],
+    );
+    assert.ok(externals.length >= 5);
+    for (const href of externals) {
+      assert.match(href, /^https:\/\/www\.transportstyrelsen\.se\//);
+    }
     await app.close();
   });
 });
