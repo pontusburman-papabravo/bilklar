@@ -121,6 +121,15 @@ describe("waitlist hardening", () => {
     assert.ok(saved);
     const app = await createTestApp();
     const token = createAdminToken(admin.id);
+    const list = await app.inject({
+      method: "GET",
+      url: "/admin/signups",
+      cookies: { korpasset_admin: token },
+    });
+    assert.equal(list.statusCode, 200);
+    assert.match(list.body, /Ta bort/);
+    assert.match(list.body, new RegExp(`/admin/signups/${saved.signup.id}/delete`));
+
     const missingConfirm = await app.inject({
       method: "POST",
       url: `/admin/signups/${saved.signup.id}/delete`,

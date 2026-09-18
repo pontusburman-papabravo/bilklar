@@ -510,6 +510,17 @@ a { color: inherit; }
   border-top: 1px solid var(--border);
 }
 
+.admin-row-delete {
+  margin: 0;
+}
+
+.admin-row-delete .btn-link {
+  padding: 0;
+  min-height: 0;
+  font-weight: 700;
+  color: #9b1c1c;
+}
+
 .site-nav__links form { display: inline; margin: 0; }
 
 .site-nav__links--admin { display: flex; }

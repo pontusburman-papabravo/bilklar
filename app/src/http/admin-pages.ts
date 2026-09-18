@@ -33,6 +33,24 @@ const STATUS_LABELS: Record<InterestStatus, string> = {
 
 export { ROLE_LABELS, STATUS_LABELS };
 
+function signupDeleteForm(id: string, variant: "row" | "detail"): string {
+  const action = `/admin/signups/${escapeHtml(id)}/delete`;
+  if (variant === "row") {
+    return `<form method="post" action="${action}" class="admin-row-delete" onsubmit="return confirm('Ta bort personen från betakön? Det går inte att ångra.');">
+      <input type="hidden" name="confirm" value="yes">
+      <button type="submit" class="btn-link">Ta bort</button>
+    </form>`;
+  }
+  return `<form method="post" action="${action}" class="admin-form admin-form--danger" onsubmit="return confirm('Radera anmälan? Det går inte att ångra.');">
+      <p>Radering tar bort waitlist-raden. Används vid begäran eller manuell retention. Detta är separat från produktanvändarens account lifecycle.</p>
+      <label class="consent">
+        <input type="checkbox" name="confirm" value="yes" required>
+        <span>Jag vill radera den här anmälan.</span>
+      </label>
+      ${primaryButton("Radera anmälan")}
+    </form>`;
+}
+
 export function adminPage(
   title: string,
   body: string,
@@ -288,6 +306,7 @@ export function signupsListPage(options: {
         <td>${escapeHtml(signup.city ?? "—")}</td>
         <td>${preview}</td>
         <td>${escapeHtml(formatWhen(signup.createdAt))}</td>
+        <td>${signupDeleteForm(signup.id, "row")}</td>
       </tr>`;
     })
     .join("");
@@ -326,10 +345,10 @@ export function signupsListPage(options: {
        </div>
        <table class="admin-table">
          <thead>
-           <tr><th>Namn</th><th>Roll</th><th>Status</th><th>Ort</th><th>Meddelande</th><th>Inkommen</th></tr>
+           <tr><th>Namn</th><th>Roll</th><th>Status</th><th>Ort</th><th>Meddelande</th><th>Inkommen</th><th>Åtgärd</th></tr>
          </thead>
          <tbody>
-           ${rows || `<tr><td colspan="6">Inga anmälningar ännu.</td></tr>`}
+           ${rows || `<tr><td colspan="7">Inga anmälningar ännu.</td></tr>`}
          </tbody>
        </table>
        <nav class="admin-pagination" aria-label="Paginering">
@@ -365,14 +384,7 @@ export function signupDetailPage(signup: InterestSignup): string {
          </div>
          ${primaryButton("Spara")}
        </form>
-       <form method="post" action="/admin/signups/${escapeHtml(signup.id)}/delete" class="admin-form admin-form--danger" onsubmit="return confirm('Radera anmälan? Det går inte att ångra.');">
-         <p>Radering tar bort waitlist-raden. Används vid begäran eller manuell retention. Detta är separat från produktanvändarens account lifecycle.</p>
-         <label class="consent">
-           <input type="checkbox" name="confirm" value="yes" required>
-           <span>Jag vill radera den här anmälan.</span>
-         </label>
-         ${primaryButton("Radera anmälan")}
-       </form>
+       ${signupDeleteForm(signup.id, "detail")}
      </main>`,
     { signedIn: true, nav: "signups" },
   );
