@@ -69,7 +69,7 @@ describe("admin authentication", () => {
       payload: formBody({ email: EMAIL, password: PASSWORD }),
     });
     assert.equal(ok.statusCode, 302);
-    assert.equal(ok.headers.location, "/admin/signups");
+    assert.equal(ok.headers.location, "/admin");
     const cookie = ok.cookies.find((item) => item.name === "korpasset_admin");
     assert.ok(cookie);
     assert.equal(cookie.httpOnly, true);
