@@ -21,6 +21,7 @@ import {
   requireJourneyAccess,
 } from "../services/authorization.js";
 import { getPool } from "../db/pool.js";
+import { countBetaWaitlist } from "../services/interest.js";
 import {
   createDriveWithFocus,
   driveHasSupervisorRating,
@@ -129,7 +130,9 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
       return reply.redirect("/onboarding");
     }
 
-    return reply.type("text/html").send(renderLandingPage());
+    return reply.type("text/html").send(
+      renderLandingPage({ betaFilled: await countBetaWaitlist() }),
+    );
   });
 
   app.get("/onboarding", async (_request, reply) => {
