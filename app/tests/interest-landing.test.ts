@@ -30,6 +30,38 @@ describe("landing and interest waitlist", () => {
     await app.close();
   });
 
+  it("uses locked brand assets, favicon and Open Graph tags on the homepage", async () => {
+    const app = await createTestApp();
+    const response = await app.inject({ method: "GET", url: "/" });
+    assert.equal(response.statusCode, 200);
+
+    const header = response.body.match(/<header class="site-nav">[\s\S]*?<\/header>/)?.[0];
+    assert.ok(header);
+    assert.match(header, /src="\/brand\/korpasset-logo\.svg"/);
+    assert.match(header, /alt="Körpasset"/);
+    assert.doesNotMatch(header, /korpasset-logo-tagline/);
+    assert.doesNotMatch(header, /ÖVNING IDAG/);
+    assert.doesNotMatch(header, /korpasset-social-1024/);
+    assert.doesNotMatch(header, /korpasset-social-dark-1024/);
+
+    assert.match(response.body, /ÖVNING IDAG\. FRIHET IMORGON\./);
+    assert.match(response.body, /<h1>Övningskör med bättre koll<\/h1>/);
+    assert.match(response.body, /rel="icon"[^>]*href="\/brand\/favicon\.svg"/);
+    assert.match(response.body, /property="og:title"/);
+    assert.match(response.body, /property="og:description"/);
+    assert.match(response.body, /property="og:image"[^>]*korpasset-og-1200x630\.png/);
+    assert.match(response.body, /property="og:url"[^>]*http:\/\/localhost:3000\//);
+    assert.match(response.body, /property="og:type" content="website"/);
+
+    const logo = await app.inject({ method: "GET", url: "/brand/korpasset-logo.svg" });
+    const favicon = await app.inject({ method: "GET", url: "/brand/favicon.svg" });
+    const ogImage = await app.inject({ method: "GET", url: "/brand/korpasset-og-1200x630.png" });
+    assert.equal(logo.statusCode, 200);
+    assert.equal(favicon.statusCode, 200);
+    assert.equal(ogImage.statusCode, 200);
+    await app.close();
+  });
+
   it("keeps product onboarding available", async () => {
     const app = await createTestApp();
     const onboarding = await app.inject({ method: "GET", url: "/onboarding" });

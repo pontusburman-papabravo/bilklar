@@ -23,6 +23,7 @@ export function privacyPage(): string {
 
      <h2>Cookies</h2>
      <p>På landningssidan sätter vi inga analys- eller reklamcookies och gör inga tredjepartsanrop för typsnitt. Om du loggar in i produkten används en nödvändig sessionscookie. Waitlist-admin använder en separat HttpOnly-cookie på <code>/admin</code>.</p>`,
+    "/integritet",
   );
 }
 
@@ -45,6 +46,7 @@ export function termsPage(): string {
 
      <h2>Kontakt</h2>
      <p>Allmänt: <a href="mailto:info@korpasset.se">info@korpasset.se</a>. Support: <a href="mailto:support@korpasset.se">support@korpasset.se</a>.</p>`,
+    "/villkor",
   );
 }
 
@@ -57,5 +59,6 @@ export function contactPage(): string {
      <p>Support och personuppgiftsfrågor: <a href="mailto:support@korpasset.se">support@korpasset.se</a>.</p>
      <p>Personuppgiftsansvarig: Papa Bravo AB.</p>
      <p>Körpasset är en fristående tjänst och är inte utvecklad av, ansluten till eller godkänd av Transportstyrelsen eller Trafikverket.</p>`,
+    "/kontakt",
   );
 }
