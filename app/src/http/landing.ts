@@ -181,15 +181,15 @@ function hero(): string {
 }
 
 function trafficPhotos(): string {
-  return `<section class="photo-strip" aria-label="Svensk trafikmiljö">
+  return `<section class="photo-strip" aria-label="Svensk övningskörning">
     <figure>
-      <img src="/images/landing/roundabout.jpg" width="1280" height="720" alt="Rondell i ett svenskt villaområde, sett från bilen" decoding="async">
+      <img src="/images/landing/residential-street.jpg" width="1280" height="720" alt="Elev och handledare övningskör i sommarkväll" decoding="async">
     </figure>
     <figure>
-      <img src="/images/landing/residential-street.jpg" width="1152" height="864" alt="Bostadsgata där en bil kör rakt fram" decoding="async">
+      <img src="/images/landing/roundabout.jpg" width="1280" height="720" alt="Bil i en solig rondell i svenskt villaområde" decoding="async">
     </figure>
     <figure>
-      <img src="/images/landing/country-road.jpg" width="1280" height="720" alt="Svensk landsväg med mittlinje genom skog" decoding="async">
+      <img src="/images/landing/country-road.jpg" width="1280" height="720" alt="Bil på öppen landsväg i kvällssol" decoding="async">
     </figure>
   </section>`;
 }

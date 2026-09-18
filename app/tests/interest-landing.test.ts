@@ -68,7 +68,7 @@ describe("landing and interest waitlist", () => {
     const header = response.body.match(/<header class="site-nav">[\s\S]*?<\/header>/)?.[0];
     assert.ok(header);
     assert.doesNotMatch(header, /\/images\/landing\//);
-    assert.match(response.body, /aria-label="Svensk trafikmiljö"/);
+    assert.match(response.body, /aria-label="Svensk övningskörning"/);
     assert.match(response.body, /src="\/images\/landing\/roundabout\.jpg"/);
     assert.match(response.body, /src="\/images\/landing\/residential-street\.jpg"/);
     assert.match(response.body, /src="\/images\/landing\/country-road\.jpg"/);
