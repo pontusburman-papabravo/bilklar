@@ -32,4 +32,5 @@ v1 är strikt begränsad till **privat övningskörning** utan trafikskola, exte
 - [MVP v1](mvp-v1.md)
 - [Produktprinciper](product-principles.md)
 - [Onboarding & handoff](onboarding-handoff.md)
+- [ADR-008: App-only konton via Apple och Google](../decisions/ADR-008-app-oauth-accounts.md)
 - [Progression model](../domain/progression-model.md)

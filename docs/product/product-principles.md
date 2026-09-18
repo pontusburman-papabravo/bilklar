@@ -7,7 +7,7 @@ Canonical v1-principer för Körpasset. Dessa är låsta tills ett ADR explicit 
 1. **Eleven äger körkortsresan.** `driving_journey` tillhör eleven. Handledare deltar, administrerar inte.
 2. **Flera handledare är first-class.** Samma elev, flera supervisors — utan att duplicera data eller byta `user_id`.
 3. **Handledaren ska nästan aldrig administrera.** QR/länk ger lågfriktions-handoff. Ingen trafikskoleportal i v1.
-4. **Guest actor får finnas innan full autentisering.** Scan → stable `user_id` → delta → claim senare, utan merge.
+4. **Guest actor får finnas innan full autentisering.** Scan → stable `user_id` → delta → claim senare, utan merge. Guest är inte registrering.
 
 ## Domän och data
 
@@ -38,6 +38,7 @@ Canonical v1-principer för Körpasset. Dessa är låsta tills ett ADR explicit 
 20. **Ingen falsk myndighetsassociation.**
 21. **Officiella källor får beskrivas korrekt.**
 22. **Ingen falsk readiness-precision.**
+23. **Produktkonton skapas bara i appen via Apple eller Google.** Ingen e-post/lösenord, magic link eller passkey för elever och handledare. Se [ADR-008](../decisions/ADR-008-app-oauth-accounts.md).
 
 Fullständig utläggning: [kravspec](../kravspec.md).
 
@@ -49,3 +50,5 @@ Fullständig utläggning: [kravspec](../kravspec.md).
 - [ADR-004: Append-only observations](../decisions/ADR-004-append-only-observations.md)
 - [ADR-005: Observation/focus separation](../decisions/ADR-005-observation-focus-separation.md)
 - [ADR-006: B2C-first](../decisions/ADR-006-b2c-first.md)
+- [ADR-007: PostgreSQL 15](../decisions/ADR-007-postgresql-15.md)
+- [ADR-008: App-only konton via Apple och Google](../decisions/ADR-008-app-oauth-accounts.md)

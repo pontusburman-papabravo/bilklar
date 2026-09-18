@@ -13,7 +13,8 @@ v1 är **privat övningskörning för svenskt B-körkort** — inget mer, inget 
 | Tap-to-rate efter körpass | Betalning |
 | Training Focus och Drive Focus | Progression-UI med falsk precision |
 | Append-only observations | Externa API:er (TABS, STR, m.m.) |
-| Manuell/automat per resa | Native app (Capacitor) |
+| Manuell/automat per resa | E-post/lösenord, magic link eller passkey för användare |
+| Native app (Capacitor) med Apple- och Google-konto | Publik webb-signup |
 
 ## Produktloopen
 
@@ -59,7 +60,7 @@ Varje `driving_journey` anger om resan är `unknown`, `manual` eller `automatic_
 
 ## Första end-to-end-flödet (nästa PR)
 
-1. Elev skapar journey
+1. Elev fortsätter med Apple eller Google i appen och skapar journey
 2. Elev delar QR/länk
 3. Handledare (guest eller befintlig user) accepterar
 4. Elev och handledare planerar Drive Focus
@@ -72,4 +73,5 @@ Varje `driving_journey` anger om resan är `unknown`, `manual` eller `automatic_
 - [Vision](vision.md)
 - [Produktprinciper](product-principles.md)
 - [Data model](../domain/data-model.md)
+- [ADR-008: App-only konton](../decisions/ADR-008-app-oauth-accounts.md)
 - [Skill Taxonomy v1](../domain/skill-taxonomy.md)
