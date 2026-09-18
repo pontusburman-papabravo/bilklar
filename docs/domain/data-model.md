@@ -38,6 +38,8 @@ skills ← skill_definitions (versionerad taxonomi)
 | `journey_status` | `active`, `completed`, `archived` |
 | `auth_provider` | `guest`, `apple`, `google`, `passkey`, `email_magic_link` |
 
+Produkt-auth i v1 är `apple` och `google`. `guest` är tillfällig actor vid QR-handoff, inte ett konto. `passkey` och `email_magic_link` finns i enum men används inte som produktauth ([ADR-008](../decisions/ADR-008-app-oauth-accounts.md)).
+
 ## Tabeller
 
 ### `users`
@@ -61,7 +63,7 @@ Sätt att autentisera en `user`. En user kan ha flera identities.
 | `id` | `uuid` PK | |
 | `user_id` | `uuid` FK → `users` | |
 | `provider` | `auth_provider` | |
-| `provider_subject` | `text` | Unik per provider |
+| `provider_subject` | `text` | Unik per provider. Apple/Google `sub`, aldrig e-post som nyckel |
 | `created_at` | `timestamptz` | |
 | `verified_at` | `timestamptz` | Nullable |
 
@@ -260,5 +262,6 @@ DB säkerställer att `observer_user_id` finns för `supervisor`/`student`, men 
 ## Relaterade dokument
 
 - [Database architecture](../architecture/database.md)
+- [ADR-008: App-only konton via Apple och Google](../decisions/ADR-008-app-oauth-accounts.md)
 - [Progression model](progression-model.md)
 - [Skill Taxonomy v1](skill-taxonomy.md)

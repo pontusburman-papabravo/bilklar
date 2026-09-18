@@ -1,7 +1,7 @@
 # Körpasset — Kravspecifikation v1
 
 **Status:** Canonical  
-**Datum:** 2026-09-16  
+**Datum:** 2026-09-18  
 **Produkt:** Körpasset  
 **Domän:** korpasset.se  
 **Tagline:** Övningskör med en plan.  
@@ -77,7 +77,8 @@ v1 är **privat övningskörning för svenskt B-körkort** — inget mer, inget 
 | Tap-to-rate efter körpass | Betalning |
 | Training Focus och Drive Focus | Progression-UI med falsk precision |
 | Append-only observations | Externa API:er (TABS, STR, m.m.) |
-| Manuell/automat per resa | Native app (Capacitor) |
+| Manuell/automat per resa | E-post/lösenord, magic link eller passkey för användare |
+| Native app (Capacitor) med Apple- och Google-konto | Publik webb-signup |
 | Valfri drive-context (miljö, ljus, väder, trafik) | Obligatorisk context-registrering i första flödet |
 
 ### 2.1 Produktloopen
@@ -100,9 +101,9 @@ New Observations
 
 ### 2.2 Första end-to-end-flödet (implementerat)
 
-1. Elev skapar journey
+1. Elev fortsätter med Apple eller Google i appen och skapar journey
 2. Elev delar QR/länk
-3. Handledare (guest eller befintlig user) accepterar
+3. Handledare (gäst i appen eller redan inloggad Apple/Google-user) accepterar
 4. Elev och handledare planerar Drive Focus (2–3 moment)
 5. Körpass genomförs
 6. Handledare registrerar observations
@@ -114,8 +115,8 @@ New Observations
 
 | Aktör | Äger resan | Får administrera | Får bedöma körpass | Autentisering i v1 |
 | --- | --- | --- | --- | --- |
-| **Elev (student)** | Ja | Ja — inbjudningar | Nej (handledaren bedömer i vertical slice) | Display name + session |
-| **Handledare (supervisor)** | Nej | Nej | Ja, för körpass där hen är tilldelad handledare | Guest actor via invitation, sedan samma `user_id` |
+| **Elev (student)** | Ja | Ja — inbjudningar | Nej (handledaren bedömer i vertical slice) | Apple eller Google i appen |
+| **Handledare (supervisor)** | Nej | Nej | Ja, för körpass där hen är tilldelad handledare | Gäst via invitation i appen, sedan Apple/Google på samma `user_id` |
 | **Trafiklärare (`driving_instructor`)** | Nej | — | — | Finns i datamodellen, **ingen v1-feature** |
 
 Regler:
@@ -136,7 +137,7 @@ Canonical v1-principer. Dessa är låsta tills ett ADR explicit ändrar dem.
 1. **Eleven äger körkortsresan.** `driving_journey` tillhör eleven. Handledare deltar, administrerar inte.
 2. **Flera handledare är first-class.**
 3. **Handledaren ska nästan aldrig administrera.**
-4. **Guest actor får finnas innan full autentisering.** Scan → stable `user_id` → delta → claim senare, utan merge.
+4. **Guest actor får finnas innan full autentisering.** Scan → stable `user_id` → delta → claim senare, utan merge. Guest är inte registrering.
 
 ### Domän och data
 
@@ -181,6 +182,9 @@ Canonical v1-principer. Dessa är låsta tills ett ADR explicit ändrar dem.
     - "100 % körklar"
     - "Godkänd"
     - "Moment avklarat för alltid"
+
+23. **Produktkonton skapas bara i appen via Apple eller Google.**
+    Ingen e-post/lösenord, magic link eller passkey för elever och handledare. Se [ADR-008](decisions/ADR-008-app-oauth-accounts.md).
 
 ### Pass-metaforen
 
@@ -230,10 +234,11 @@ Kraven nedan beskriver det kanoniska v1-flödet. Där vertical slice redan finns
 | --- | --- |
 | ID | FR-1 |
 | Aktör | Elev |
-| Status | Implementerat |
-| Beskrivning | En ny elev anger sitt namn och får en `driving_journey` med `licence_type = B`. |
-| Session | Servern skapar en stable `user_id` och sätter session-cookie. Identity skickas inte in som betrodd klientdata. |
+| Status | Implementerat som namn+session i vertical slice; betakonto enligt ADR-008 |
+| Beskrivning | En inloggad elev (Apple eller Google i appen) anger visningsnamn vid behov och får en `driving_journey` med `licence_type = B`. |
+| Session | Servern skapar eller återanvänder `user_id` från verifierad Apple/Google-identity. Identity skickas inte in som betrodd klientdata. |
 | Efter steg | Eleven landar på sin journey-sida och kan bjuda in handledare. |
+| Slice-fallback | `/onboarding` som skapar guest-elev utan OAuth är utvecklingsfallback, inte betans kontomodell. |
 
 ### FR-2 Inbjudan via länk och QR
 
@@ -254,10 +259,10 @@ Kraven nedan beskriver det kanoniska v1-flödet. Där vertical slice redan finns
 | ID | FR-3 |
 | Aktör | Handledare |
 | Status | Implementerat |
-| Beskrivning | Handledare öppnar länken, anger namn och ansluter. En guest actor med stable `user_id` skapas (eller befintlig session återanvänds). |
+| Beskrivning | Handledare öppnar länken i appen (Universal Link). Redan inloggad Apple/Google-user återanvänds; annars skapas en guest actor med stable `user_id`. |
 | Accept | Atomic conditional UPDATE: exakt en caller vinner. Replay skyddas av unik `token_hash`. |
 | Efter accept | Handledare blir `journey_collaborator` med `role = supervisor` och `status = active`. |
-| Senare claim | Samma `user_id` behålls när auth läggs till via `auth_identities`. Ingen normal guest→registered-merge. |
+| Senare claim | Samma `user_id` behålls när Apple eller Google läggs till via `auth_identities`. Ingen normal guest→registered-merge. |
 
 ### FR-4 Planera Drive Focus
 
@@ -357,8 +362,22 @@ utan dubbletter. `archived`/`completed` räknas inte. Collaborator-access i v1 �
 | ID | FR-10 |
 | Aktör | Handledare |
 | Status | Specificerat, auth-providers inte byggda |
-| Beskrivning | Guest kan senare claima Apple, Google, passkey eller e-post magic link utan att byta `user_id`. |
+| Beskrivning | Guest kan senare claima Apple eller Google i appen utan att byta `user_id`. |
 | Undantag | Claim av identity som redan hör till annan user är ett separat reconciliation-fall och ingår inte i första vertical slice. |
+
+### FR-11 Produktkonto via Apple eller Google
+
+| Fält | Krav |
+| --- | --- |
+| ID | FR-11 |
+| Aktör | Elev eller handledare |
+| Status | Specificerat, inte byggt |
+| Beskrivning | Det finns ingen separat registrering. Första lyckade Sign in with Apple eller Sign in with Google i appen skapar `users` (`account_state = active`) och en rad i `auth_identities`. Samma knapp är återkommande inloggning. |
+| Identitet | `provider_subject` är Apple respektive Google `sub`. E-post är inte nyckel och används inte för auto-merge. |
+| Kanal | Bara iOS- och Android-appen. `korpasset.se` skapar inte produktkonton (intresseanmälan är waitlist, inte signup). |
+| Inte v1 | E-post + lösenord, magic link, OTP, passkey och publik webb-signup. |
+| App Store | Sign in with Apple krävs när Google erbjuds. Konto ska kunna raderas i appen. |
+| Undantag | Waitlist-admin är intern e-post+lösenord och inte ett användarkonto. |
 
 ---
 
@@ -566,13 +585,15 @@ skills ← skill_definitions (versionerad taxonomi)
 | `journey_status` | `active`, `completed`, `archived` |
 | `auth_provider` | `guest`, `apple`, `google`, `passkey`, `email_magic_link` |
 
+Produkt-auth i v1 är `apple` och `google`. `guest` är tillfällig actor vid QR-handoff. `passkey` och `email_magic_link` stannar i enum men används inte som produktauth. Se [ADR-008](decisions/ADR-008-app-oauth-accounts.md).
+
 `driving_instructor`, `observation_source = driving_school` och `focus_source = driving_school` finns för framtida integration men används inte i v1.
 
 ### 8.3 Tabeller (kravnivå)
 
 **`users`** — actor/person. Guest och registrerad delar samma modell. `id` är stable genom guest → registered.
 
-**`auth_identities`** — sätt att autentisera en user. En user kan ha flera identities. Unik `(provider, provider_subject)`.
+**`auth_identities`** — sätt att autentisera en user. En user kan ha flera identities. Unik `(provider, provider_subject)` där `provider_subject` är Apple/Google `sub`, inte e-post.
 
 **`driving_journeys`** — elevägd resa. Studenten är inte collaborator. `licence_type` är `B` i v1.
 
@@ -765,6 +786,7 @@ Fullständig kontoradering är **inte** ett produktflöde i vertical slice. Befi
 | [ADR-005](decisions/ADR-005-observation-focus-separation.md) | Observation ≠ Training Focus ≠ Drive Focus. | Accepted |
 | [ADR-006](decisions/ADR-006-b2c-first.md) | B2C-first. Ingen trafikskola eller extern API i v1. | Accepted |
 | [ADR-007](decisions/ADR-007-postgresql-15.md) | PostgreSQL 15+ p.g.a. column-specific `ON DELETE SET NULL`. | Accepted |
+| [ADR-008](decisions/ADR-008-app-oauth-accounts.md) | Produktkonton bara i appen via Apple och Google. Ingen webb-signup. | Accepted |
 
 Databas: raw SQL-migration, inget ORM i foundation. Docker Compose för lokal utveckling.
 
@@ -861,9 +883,9 @@ FR-6 gäller fortsatt:
 
 Körpasset är beta-ready när en ny elev och en ny handledare, utan hjälp från utvecklingsteamet, kan:
 
-1. öppna/installera Körpasset,
+1. öppna/installera Körpasset och fortsätta med Apple eller Google,
 2. skapa elevens körkortsresa,
-3. ansluta en handledare via QR/länk,
+3. ansluta en handledare via QR/länk i appen,
 4. välja 2–3 moment för nästa körpass,
 5. starta och avsluta körpasset,
 6. låta den tilldelade handledaren bedöma momenten på cirka 15–20 sekunder,
@@ -879,7 +901,8 @@ Beta-ready kräver också:
 - kontakt/feedbackväg,
 - grundläggande error/crash-observability,
 - iOS-distribution via TestFlight,
-- Android-distribution via Google Play test track.
+- Android-distribution via Google Play test track,
+- Sign in with Apple och Sign in with Google i appen.
 
 Betalning ingår inte som blockerare för första beta. Se [Beta Validation och kommersiell gate](#16-beta-validation-och-kommersiell-gate).
 
@@ -887,7 +910,7 @@ Betalning ingår inte som blockerare för första beta. Se [Beta Validation och 
 
 ## 15. korpasset.se
 
-Publik landning för intresseanmälan till betan. Produktloopen ligger kvar bakom session, inbjudningslänk och `/onboarding`.
+Publik landning för intresseanmälan till betan. Intresseanmälan är **inte** kontoregistrering. Produktkonton skapas bara i appen via Apple eller Google. Invitation-URL:er på samma origin ska öppna appen (Universal Links / App Links). Slice-onboarding på `/onboarding` är utvecklingsfallback.
 
 Informationshierarki:
 
