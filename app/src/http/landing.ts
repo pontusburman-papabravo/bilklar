@@ -54,6 +54,7 @@ export function renderLandingPage(options: {
     `${siteHeader()}
      <main>
        ${hero()}
+       ${trafficPhotos()}
        ${betaProgress(betaFilled)}
        ${howItWorks()}
        ${whyItExists()}
@@ -176,6 +177,20 @@ function hero(): string {
       </div>
       ${heroCard()}
     </div>
+  </section>`;
+}
+
+function trafficPhotos(): string {
+  return `<section class="photo-strip" aria-label="Svensk övningskörning">
+    <figure>
+      <img src="/images/landing/residential-street.jpg" width="1280" height="720" alt="Elev och handledare övningskör i sommarkväll" decoding="async">
+    </figure>
+    <figure>
+      <img src="/images/landing/roundabout.jpg" width="1280" height="720" alt="Bil i en solig rondell i svenskt villaområde" decoding="async">
+    </figure>
+    <figure>
+      <img src="/images/landing/country-road.jpg" width="1280" height="720" alt="Bil på öppen landsväg i kvällssol" decoding="async">
+    </figure>
   </section>`;
 }
 
